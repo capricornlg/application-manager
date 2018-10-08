@@ -1,7 +1,7 @@
 # Introduction
 Application Manager is a daemon process running on host to manage different type of applications(process), each application can define start interval(high-precision timer), valid range and timezone, make sure all defined applications running on-time with defined behavior. provide REST APIs and command-line interface, this can used to replace Linux cron-tab and supervisor.
+Application Manager will register as a long running service to start defined applications as child process.
 
-This can used to replace Linux cron-tab and supervisor.
 
 ## Development tecnical
 - [C++11](http://www.cplusplus.com/articles/cpp11/)
