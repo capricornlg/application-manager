@@ -1,5 +1,5 @@
 # Introduction
-application-manager is a daemon process running on host to manage different type of applications(process), make sure all defined applications running on-time with defined behavior. provide REST APIs and command-line interface.
+Application Manager is a daemon process running on host to manage different type of applications(process), each application can define start interval(high-precision timer), valid range and timezone, make sure all defined applications running on-time with defined behavior. provide REST APIs and command-line interface, this can used to replace Linux cron-tab and supervisor.
 
 This can used to replace Linux cron-tab and supervisor.
 
@@ -109,7 +109,7 @@ Register a new application::
   -w [ --workdir ] arg (=/tmp)   working directory
   -a [ --active ] arg (=1)       application active status (start is true, stop
                                  is false)
-  -t [ --time ] arg              start date time for short running app (e.g., 
+  -t [ --start_time ] arg        start date time for short running app (e.g., 
                                  '2018-01-01 09:00:00')
   -s [ --daily_start ] arg       daily start time (e.g., '09:00:00')
   -d [ --daily_end ] arg         daily end time (e.g., '20:00:00')
