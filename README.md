@@ -101,8 +101,8 @@ Period run application |
 Long running applicatin but will restarted periodic |
 Application can be only avialable in a specific time range daily|
 ```
-$ appc reg
-Register a new application::
+$  appc reg
+Register a new application:
   -n [ --name ] arg              application name
   -u [ --user ] arg              application process running user name
   -c [ --cmd ] arg               full command line with arguments
@@ -117,22 +117,27 @@ Register a new application::
                                  env1=value1:env2=value2)
   -i [ --interval ] arg          start interval seconds for short running app
   -x [ --extraTime ] arg         extra timeout for short running app,the value 
-                                 must less than interval  (default 0
+                                 must less than interval  (default 0)
+  -z [ --timezone ] arg          posix timezone for the application, reflect 
+                                 [start_time|daily_start|daily_end] (e.g., 
+                                 'WST+08:00' is Australia Standard Time)
   -k [ --keep_running ] arg (=0) monitor and keep running for short running app
                                  in start interval
   -f [ --force ]                 force without confirm.
   -h [ --help ]                  produce help message
   
-$ appc reg -n def -u kfc -c 'ping www.google.com' -w /opt
-Application already exist, are you sure you want to update the application (y/n)?
-y
+$ appc reg -n abc -u kfc -c 'ping www.google.com' -w /opt -t '2018-01-01 09:00:00' -i 60 -z 'CST+9'
 {
    "active" : 1,
    "command_line" : "ping www.google.com",
-   "name" : "def",
+   "name" : "abc",
    "pid" : -1,
+   "posix_timezone" : "CST+9",
    "return" : 0,
    "run_as" : "kfc",
+   "start_interval_seconds" : 60,
+   "start_interval_timeout" : 0,
+   "start_time" : "2018-01-01 08:00:00",
    "working_dir" : "/opt"
 }
 ```
