@@ -66,7 +66,7 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 		}
 	}
 	app->m_posixTimeZone = GET_JSON_STR_VALUE(jobj, "posix_timezone");
-	if (app->m_posixTimeZone.length())
+	if (app->m_posixTimeZone.length() && app->m_dailyLimit != nullptr)
 	{
 		app->m_dailyLimit->m_startTime = DailyLimitation::convert2tzTime(app->m_dailyLimit->m_startTime, app->m_posixTimeZone);
 		app->m_dailyLimit->m_endTime = DailyLimitation::convert2tzTime(app->m_dailyLimit->m_endTime, app->m_posixTimeZone);

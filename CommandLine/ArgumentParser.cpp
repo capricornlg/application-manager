@@ -147,6 +147,10 @@ void ArgumentParser::processReg()
 	jsobObj["run_as"] = web::json::value::string(m_commandLineVariables["user"].as<string>());
 	jsobObj["working_dir"] = web::json::value::string(m_commandLineVariables["workdir"].as<string>());
 	jsobObj["active"] = web::json::value::number(m_commandLineVariables["active"].as<bool>() ? 1 : 0);
+	if (m_commandLineVariables.count("timezone") > 0)
+	{
+		jsobObj["posix_timezone"] = web::json::value::string(m_commandLineVariables["timezone"].as<string>());
+	}
 	if (m_commandLineVariables.count("start_time") > 0)
 	{
 		jsobObj["start_time"] = web::json::value::string(m_commandLineVariables["start_time"].as<string>());

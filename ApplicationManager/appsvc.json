@@ -13,6 +13,7 @@
       },
       "working_dir": "/opt",
       "start_time": "2018-01-01 16:00",
+      "posix_timezone": "CST+8:00:00",
       "start_interval_seconds": 30,
       "keep_running": true,
       "daily_limitation": {

@@ -27,12 +27,13 @@ void ApplicationShortRun::FromJson(std::shared_ptr<ApplicationShortRun>& app, co
 	std::shared_ptr<Application> fatherApp = app;
 	Application::FromJson(fatherApp, jobj);
 	app->m_startInterval = GET_JSON_INT_VALUE(jobj, "start_interval_seconds");
-	app->m_startTime = Utility::convertStr2Time(GET_JSON_STR_VALUE(jobj, "start_time"));
+	auto start_time = GET_JSON_STR_VALUE(jobj, "start_time");
+	app->m_startTime = Utility::convertStr2Time(start_time);
 	if (HAS_JSON_FIELD(jobj, "start_interval_timeout"))
 	{
 		app->m_bufferTime = GET_JSON_INT_VALUE(jobj, "start_interval_timeout");
 	}
-	if (app->m_posixTimeZone.length())
+	if (start_time.length() && app->m_posixTimeZone.length())
 	{
 		app->m_startTime = DailyLimitation::convert2tzTime(app->m_startTime, app->m_posixTimeZone);
 	}
