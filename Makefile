@@ -21,13 +21,13 @@ deb:
 	fi
 	rm -rf /opt/appmanager/*
 	cp -rf ./release/* /opt/appmanager
-	fpm -s dir -t deb -v ${version} -n application-namager --post-install /opt/appmanager/script/install_ubuntu.sh --before-remove /opt/appmanager/script/pre_uninstall_ubuntu.sh --after-remove /opt/appmanager/script/uninstall_ubuntu.sh /opt/appmanager/
+	fpm -s dir -t deb -v ${version} -n application-manager --post-install /opt/appmanager/script/install_ubuntu.sh --before-remove /opt/appmanager/script/pre_uninstall_ubuntu.sh --after-remove /opt/appmanager/script/uninstall_ubuntu.sh /opt/appmanager/
 	
 install:
 	dpkg -i application-namager_${version}_amd64.deb
 	
 uninstall:
-	dpkg -P application-namager
+	dpkg -P application-manager
 
 clean:
 	cd CommandLine; make clean
