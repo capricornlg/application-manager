@@ -1,7 +1,9 @@
 # Introduction
-Application Manager is a daemon process running on host to manage different type of applications(process), each application can define start interval(high-precision timer), valid range and timezone, make sure all defined applications running on-time with defined behavior. provide REST APIs and command-line interface, this can used to replace Linux cron-tab and supervisor.
-Application Manager will register as a long running service to start defined applications as child process.
+application-manager is a daemon process running on host to manage different type of applications(process), make sure all defined applications running on-time with defined behavior. provide REST APIs and command-line interface.
 
+This can used to replace Linux cron-tab and supervisor.
+
+![diagram.png](https://github.com/jinneec/application-manager/blob/master/doc/diagram.png?raw=true) 
 
 ## Development tecnical
 - [C++11](http://www.cplusplus.com/articles/cpp11/)
@@ -101,15 +103,15 @@ Period run application |
 Long running applicatin but will restarted periodic |
 Application can be only avialable in a specific time range daily|
 ```
-$  appc reg
-Register a new application:
+$ appc reg
+Register a new application::
   -n [ --name ] arg              application name
   -u [ --user ] arg              application process running user name
   -c [ --cmd ] arg               full command line with arguments
   -w [ --workdir ] arg (=/tmp)   working directory
   -a [ --active ] arg (=1)       application active status (start is true, stop
                                  is false)
-  -t [ --start_time ] arg        start date time for short running app (e.g., 
+  -t [ --time ] arg              start date time for short running app (e.g., 
                                  '2018-01-01 09:00:00')
   -s [ --daily_start ] arg       daily start time (e.g., '09:00:00')
   -d [ --daily_end ] arg         daily end time (e.g., '20:00:00')
@@ -117,27 +119,22 @@ Register a new application:
                                  env1=value1:env2=value2)
   -i [ --interval ] arg          start interval seconds for short running app
   -x [ --extraTime ] arg         extra timeout for short running app,the value 
-                                 must less than interval  (default 0)
-  -z [ --timezone ] arg          posix timezone for the application, reflect 
-                                 [start_time|daily_start|daily_end] (e.g., 
-                                 'WST+08:00' is Australia Standard Time)
+                                 must less than interval  (default 0
   -k [ --keep_running ] arg (=0) monitor and keep running for short running app
                                  in start interval
   -f [ --force ]                 force without confirm.
   -h [ --help ]                  produce help message
   
-$ appc reg -n abc -u kfc -c 'ping www.google.com' -w /opt -t '2018-01-01 09:00:00' -i 60 -z 'CST+9'
+$ appc reg -n def -u kfc -c 'ping www.google.com' -w /opt
+Application already exist, are you sure you want to update the application (y/n)?
+y
 {
    "active" : 1,
    "command_line" : "ping www.google.com",
-   "name" : "abc",
+   "name" : "def",
    "pid" : -1,
-   "posix_timezone" : "CST+9",
    "return" : 0,
    "run_as" : "kfc",
-   "start_interval_seconds" : 60,
-   "start_interval_timeout" : 0,
-   "start_time" : "2018-01-01 08:00:00",
    "working_dir" : "/opt"
 }
 ```
