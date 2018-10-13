@@ -6,7 +6,13 @@
 #include <map>
 #include <chrono>
 #include <cpprest/json.h>
-#include <glog/logging.h>
+#include <boost/log/trivial.hpp>
+
+#define LOG_TRC    BOOST_LOG_TRIVIAL(trace)
+#define LOG_DBG    BOOST_LOG_TRIVIAL(debug)
+#define LOG_INF    BOOST_LOG_TRIVIAL(info)
+#define LOG_WAR    BOOST_LOG_TRIVIAL(warning)
+#define LOG_ERR    BOOST_LOG_TRIVIAL(error)
 
 #define GET_STRING_T(sstr) utility::conversions::to_string_t(std::string(sstr))
 #define GET_STD_STRING(sstr)  utility::conversions::to_utf8string(sstr)
@@ -40,7 +46,7 @@ public:
 	static void splitString(const std::string& s, std::vector<std::string>& v, const std::string& c);
 	static bool startWith(const std::string& str, std::string head);
 
-	static void initLogging(const char* arg0);
+	static void initLogging();
 
 	static unsigned long long getThreadId();
 	static bool getUid(std::string userName, long& uid, long& groupid);

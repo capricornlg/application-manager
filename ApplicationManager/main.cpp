@@ -4,7 +4,6 @@
 #include <chrono>
 #include <thread>
 #include <fstream>
-#include <glog/logging.h>
 #include <ace/Init_ACE.h>
 
 #include "RestHandler.h"
@@ -30,8 +29,8 @@ int main(int argc, char * argv[])
 	try
 	{
 		ACE::init();
-		Utility::initLogging(argv[0]);
-		LOG(INFO) << fname;
+		Utility::initLogging();
+		LOG_INF << fname;
 
 		m_applicationPath = Utility::getSelfFullPath();
 		auto config = readConfiguration();
@@ -64,13 +63,13 @@ int main(int argc, char * argv[])
 	}
 	catch (const std::exception& e)
 	{
-		LOG(ERROR) << fname << "ERROR:" << e.what() << std::endl;
+		LOG_ERR << fname << "ERROR:" << e.what();
 	}
 	catch (...)
 	{
-		LOG(ERROR) << fname << "ERROR:" << "unknown exception" << std::endl;
+		LOG_ERR << fname << "ERROR:" << "unknown exception";
 	}
-	LOG(ERROR) << "ERROR exited" << endl;
+	LOG_ERR << "ERROR exited";
 	TIMER.stop();
 	ACE::fini();
 	_exit(0);
@@ -89,7 +88,7 @@ std::shared_ptr<Configuration> readConfiguration()
 		ifstream jsonFile(jsonPath);
 		if (!jsonFile.is_open())
 		{
-			LOG(INFO) << "ERROR can not open configuration file <" << jsonPath << ">" << std::endl;
+			LOG_INF << "ERROR can not open configuration file <" << jsonPath << ">";
 			config = std::make_shared<Configuration>();
 			throw std::runtime_error("can not open configuration file");
 		}
@@ -98,7 +97,7 @@ std::shared_ptr<Configuration> readConfiguration()
 			std::string str((std::istreambuf_iterator<char>(jsonFile)), std::istreambuf_iterator<char>());
 			jsonFile.close();
 
-			LOG(INFO) << str << std::endl;
+			LOG_INF << str;
 			config = Configuration::FromJson(str);
 			config->dump();
 		}
@@ -107,12 +106,12 @@ std::shared_ptr<Configuration> readConfiguration()
 	}
 	catch (const std::exception& e)
 	{
-		LOG(ERROR) << fname << "ERROR:" << e.what() << std::endl;
+		LOG_ERR << fname << "ERROR:" << e.what();
 		throw e;
 	}
 	catch (...)
 	{
-		LOG(ERROR) << fname << "ERROR:" << "unknown exception" << std::endl;
+		LOG_ERR << fname << "ERROR:" << "unknown exception";
 		throw;
 	}
 }

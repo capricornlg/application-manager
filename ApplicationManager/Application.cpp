@@ -14,7 +14,7 @@ Application::Application()
 	:m_active(NORMAL), m_return(0),m_pid(-1)
 {
 	const static char fname[] = "Application::Application() ";
-	LOG(INFO) << fname << "Entered." << std::endl;
+	LOG_INF << fname << "Entered.";
 	m_process = std::make_shared<MyProcess>();
 }
 
@@ -22,7 +22,7 @@ Application::Application()
 Application::~Application()
 {
 	const static char fname[] = "Application::~Application() ";
-	LOG(INFO) << fname << "Entered." << std::endl;
+	LOG_INF << fname << "Entered.";
 }
 
 std::string Application::getName()
@@ -104,7 +104,7 @@ void Application::attach(std::map<std::string, int>& process)
 	{
 		m_process->attach(iter->second);
 		m_pid = m_process->getpid();
-		LOG(INFO) << "Process <" << m_commandLine << "> is running with pid <" << m_pid << ">." << std::endl;
+		LOG_INF << "Process <" << m_commandLine << "> is running with pid <" << m_pid << ">.";
 		process.erase(iter);
 	}
 }
@@ -120,7 +120,7 @@ void Application::invoke()
 			{
 				if (!m_process->running())
 				{
-					LOG(INFO) << fname << "Starting application <" << m_name << ">." << std::endl;
+					LOG_INF << fname << "Starting application <" << m_name << ">.";
 					this->spawnProcess();
 				}
 			}
@@ -128,7 +128,7 @@ void Application::invoke()
 			{
 				if (m_process->running())
 				{
-					LOG(INFO) << fname << "Application <" << m_name << "> was not in daily start time" << std::endl;
+					LOG_INF << fname << "Application <" << m_name << "> was not in daily start time";
 					terminateProcess(m_process);
 				}
 			}
@@ -152,7 +152,7 @@ void Application::stop()
 		terminateProcess(m_process);
 		m_active = STOPPED;
 		m_return = -1;
-		LOG(INFO) << fname << "Application <" << m_name << "> stopped." << std::endl;
+		LOG_INF << fname << "Application <" << m_name << "> stopped.";
 	}
 }
 
@@ -165,7 +165,7 @@ void Application::start(std::shared_ptr<Application>& self)
 	{
 		m_active = NORMAL;
 		invokeNow(self);
-		LOG(INFO) << fname << "Application <" << m_name << "> started." << std::endl;
+		LOG_INF << fname << "Application <" << m_name << "> started.";
 	}
 }
 
@@ -207,13 +207,13 @@ void Application::dump()
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
-	LOG(INFO) << fname << "m_name:" << m_name << std::endl;
-	LOG(INFO) << fname << "m_commandLine:" << m_commandLine << std::endl;
-	LOG(INFO) << fname << "m_workdir:" << m_workdir << std::endl;
-	LOG(INFO) << fname << "m_user:" << m_user << std::endl;
-	LOG(INFO) << fname << "m_status:" << m_active << std::endl;
-	LOG(INFO) << fname << "m_pid:" << m_pid << std::endl;
-	LOG(INFO) << fname << "m_posixTimeZone:" << m_posixTimeZone << std::endl;
+	LOG_INF << fname << "m_name:" << m_name;
+	LOG_INF << fname << "m_commandLine:" << m_commandLine;
+	LOG_INF << fname << "m_workdir:" << m_workdir;
+	LOG_INF << fname << "m_user:" << m_user;
+	LOG_INF << fname << "m_status:" << m_active;
+	LOG_INF << fname << "m_pid:" << m_pid;
+	LOG_INF << fname << "m_posixTimeZone:" << m_posixTimeZone;
 	if (m_dailyLimit != nullptr)
 	{
 		m_dailyLimit->dump();
@@ -226,7 +226,7 @@ void Application::terminateProcess(std::shared_ptr<MyProcess>& process)
 
 	if (process!= nullptr && process->running())
 	{
-		LOG(INFO) << fname << "Will stop process <" << process->getpid() << ">." << std::endl;
+		LOG_INF << fname << "Will stop process <" << process->getpid() << ">.";
 		ACE_OS::kill(-(process->getpid()), 9);
 		process->terminate();
 		//avoid  zombie process
@@ -264,13 +264,13 @@ void Application::spawnProcess()
 	{
 		m_pid = m_process->getpid();
 		// Recover OK
-		LOG(INFO) << fname << "Process <" << m_commandLine << "> started with pid <" << m_pid << ">." << std::endl;
+		LOG_INF << fname << "Process <" << m_commandLine << "> started with pid <" << m_pid << ">.";
 	}
 	else
 	{
 		m_pid = -1;
 		// Recover Failed.
-		LOG(ERROR) << fname << "Process:<" << m_commandLine << "> start failed with error : " << std::strerror(errno) << std::endl;
+		LOG_ERR << fname << "Process:<" << m_commandLine << "> start failed with error : " << std::strerror(errno);
 	}
 }
 

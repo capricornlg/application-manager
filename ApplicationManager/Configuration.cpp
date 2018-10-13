@@ -23,7 +23,7 @@ Configuration::Configuration()
 	:m_scheduleInterval(0), m_restListenPort(DEFAULT_REST_LISTEN_PORT)
 {
 	m_jsonFilePath = Utility::getSelfFullPath() + ".json";
-	LOG(INFO) << "Configuration file <" << m_jsonFilePath << ">" << std::endl;
+	LOG_INF << "Configuration file <" << m_jsonFilePath << ">";
 }
 
 
@@ -48,12 +48,12 @@ std::shared_ptr<Configuration> Configuration::FromJson(const std::string& str)
 	{
 		// Use default value instead
 		config->m_scheduleInterval = DEFAULT_SCHEDULE_INTERVAL;
-		LOG(INFO) << "Default value <" << config->m_scheduleInterval << "> will by used for ScheduleIntervalSec" << std::endl;
+		LOG_INF << "Default value <" << config->m_scheduleInterval << "> will by used for ScheduleIntervalSec";
 	}
 	if (config->m_restListenPort < 1000 || config->m_restListenPort > 65534)
 	{
 		config->m_restListenPort = DEFAULT_REST_LISTEN_PORT;
-		LOG(INFO) << "Default value <" << config->m_restListenPort << "> will by used for RestListenPort" << std::endl;
+		LOG_INF << "Default value <" << config->m_restListenPort << "> will by used for RestListenPort";
 	}
 
 	auto& jArr = jobj.at(GET_STRING_T("Applications")).as_array();
@@ -102,7 +102,7 @@ void Configuration::registerApp(std::shared_ptr<Application> app)
 	{
 		if (m_apps[i]->getName() == app->getName())
 		{
-			LOG(INFO) << fname << "Application <" << app->getName() << "> already exist." << std::endl;
+			LOG_INF << fname << "Application <" << app->getName() << "> already exist.";
 			return;
 		}
 	}
@@ -183,9 +183,9 @@ void Configuration::dump()
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
-	LOG(INFO) << fname << "m_hostDescription:" << m_hostDescription << std::endl;
-	LOG(INFO) << fname << "m_scheduleInterval:" << m_scheduleInterval << std::endl;
-	LOG(INFO) << fname << "m_configContent:" << GET_STD_STRING(this->getConfigContentStr()) << std::endl;
+	LOG_INF << fname << "m_hostDescription:" << m_hostDescription;
+	LOG_INF << fname << "m_scheduleInterval:" << m_scheduleInterval;
+	LOG_INF << fname << "m_configContent:" << GET_STD_STRING(this->getConfigContentStr());
 	for (auto app : m_apps)
 	{
 		app->dump();
@@ -295,7 +295,7 @@ std::string Configuration::prettyJson(const string & jsonStr)
 	else
 	{
 		string msg = "Failed to parse json : " + jsonStr;
-		LOG(ERROR) << msg << std::endl;
+		LOG_ERR << msg;
 		throw std::invalid_argument(msg);
 	}
 }

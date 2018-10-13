@@ -16,8 +16,8 @@ void DailyLimitation::dump()
 {
 	const static char fname[] = "DailyLimitation::dump() ";
 
-	LOG(INFO) << fname << "m_startTime:" << Utility::convertDayTime2Str(m_startTime) << std::endl;
-	LOG(INFO) << fname << "m_endTime:" << Utility::convertDayTime2Str(m_endTime) << std::endl;
+	LOG_INF << fname << "m_startTime:" << Utility::convertDayTime2Str(m_startTime);
+	LOG_INF << fname << "m_endTime:" << Utility::convertDayTime2Str(m_endTime);
 }
 
 web::json::value DailyLimitation::AsJson()
@@ -71,7 +71,7 @@ std::chrono::system_clock::time_point DailyLimitation::convert2tzTime(std::chron
 	// https://stackoverflow.com/questions/4910373/interoperability-between-boostdate-time-and-stdchrono
 	auto timepoint = std::chrono::system_clock::from_time_t(boost::posix_time::to_time_t(target_local_time.utc_time()));
 
-	LOG(INFO) << fname << "time <" << Utility::convertTime2Str(origin_time) << "> with timezone <" << posixTimezone
-		<< "> was convert system time <" << Utility::convertTime2Str(timepoint) << "> from timezone <" << Utility::getSystemPosixTimeZone() << ">." << std::endl;
+	LOG_INF << fname << "time <" << Utility::convertTime2Str(origin_time) << "> with timezone <" << posixTimezone
+		<< "> was convert system time <" << Utility::convertTime2Str(timepoint) << "> from timezone <" << Utility::getSystemPosixTimeZone() << ">.";
 	return std::move(timepoint);
 }

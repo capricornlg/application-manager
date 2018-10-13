@@ -18,10 +18,10 @@ TimerAction::TimerAction(std::shared_ptr<ApplicationShortRun> app)
 	:m_app(app)
 {
 	const static char fname[] = "TimerAction::TimerAction() ";
-	LOG(INFO) << fname << "Entered." << std::endl;
+	LOG_INF << fname << "Entered.";
 
-	LOG(INFO) << "Current time <" << Utility::convertTime2Str(std::chrono::system_clock::now())
-		<< ">, start time <" << Utility::convertTime2Str(app->getStartTime()) << "> App <" << app->getName() << ">." << std::endl;
+	LOG_INF << "Current time <" << Utility::convertTime2Str(std::chrono::system_clock::now())
+		<< ">, start time <" << Utility::convertTime2Str(app->getStartTime()) << "> App <" << app->getName() << ">.";
 
 	int firstSleepSec = 0;
 	if (app->getStartTime() > std::chrono::system_clock::now())
@@ -37,15 +37,15 @@ TimerAction::TimerAction(std::shared_ptr<ApplicationShortRun> app)
 	m_timer = std::make_shared<boost::asio::deadline_timer>(TIMER.getIO(), boost::posix_time::seconds(firstSleepSec));
 	m_timer->async_wait(boost::bind(&TimerAction::onTimeOut, this, boost::asio::placeholders::error));
 
-	LOG(INFO) << "Timer will sleep <" << firstSleepSec << "> seconds for app <" << app->getName() << 
+	LOG_INF << "Timer will sleep <" << firstSleepSec << "> seconds for app <" << app->getName() <<
 		">, next start time is <" << Utility::convertTime2Str(std::chrono::system_clock::now() + std::chrono::seconds(firstSleepSec))
-		<< ">." << std::endl;
+		<< ">.";
 }
 
 TimerAction::~TimerAction()
 {
 	const static char fname[] = "TimerAction::~TimerAction() ";
-	LOG(INFO) << fname << "Entered." << std::endl;
+	LOG_INF << fname << "Entered.";
 }
 
 void TimerAction::onTimeOut(const boost::system::error_code& ec)
@@ -54,7 +54,7 @@ void TimerAction::onTimeOut(const boost::system::error_code& ec)
 
 	if (ec)
 	{
-		LOG(WARNING) << "TimerAction is canceled." << std::endl;
+		LOG_WAR << "TimerAction is canceled.";
 		delete this;
 	}
 	else
@@ -63,7 +63,7 @@ void TimerAction::onTimeOut(const boost::system::error_code& ec)
 		
 		if (app != nullptr && app->isNormal())
 		{
-			LOG(INFO) << fname << "Timeout for app <" << app->getName() << ">." << std::endl;
+			LOG_INF << fname << "Timeout for app <" << app->getName() << ">.";
 			std::shared_ptr<Application> self = app;
 			app->invokeNow(self);
 
@@ -87,6 +87,6 @@ void TimerAction::cancelTimer()
 	}
 	catch (...)
 	{
-		LOG(INFO) << fname << "Cancel timer failed" << std::endl;
+		LOG_INF << fname << "Cancel timer failed";
 	}
 }

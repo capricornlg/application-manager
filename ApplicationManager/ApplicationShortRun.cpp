@@ -11,14 +11,14 @@ ApplicationShortRun::ApplicationShortRun()
 	:m_startInterval(0), m_bufferTime(0), m_timer(NULL)
 {
 	const static char fname[] = "ApplicationShortRun::ApplicationShortRun() ";
-	LOG(INFO) << fname << "Entered." << std::endl;
+	LOG_INF << fname << "Entered.";
 }
 
 
 ApplicationShortRun::~ApplicationShortRun()
 {
 	const static char fname[] = "ApplicationShortRun::~ApplicationShortRun() ";
-	LOG(INFO) << fname << "Entered." << std::endl;
+	LOG_INF << fname << "Entered.";
 	if (m_timer != NULL) m_timer->cancelTimer();
 }
 
@@ -85,7 +85,7 @@ void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
 web::json::value ApplicationShortRun::AsJson(bool returnRuntimeInfo)
 {
 	const static char fname[] = "ApplicationShortRun::AsJson() ";
-	LOG(INFO) << fname << std::endl;
+	LOG_INF << fname;
 	web::json::value result = Application::AsJson(returnRuntimeInfo);
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
@@ -130,7 +130,7 @@ void ApplicationShortRun::dump()
 
 	Application::dump();
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	LOG(INFO) << fname << "m_startTime:" << Utility::convertTime2Str(m_startTime) << std::endl;
-	LOG(INFO) << fname << "m_startInterval:" << m_startInterval << std::endl;
-	LOG(INFO) << fname << "m_bufferTime:" << m_bufferTime << std::endl;
+	LOG_INF << fname << "m_startTime:" << Utility::convertTime2Str(m_startTime);
+	LOG_INF << fname << "m_startInterval:" << m_startInterval;
+	LOG_INF << fname << "m_bufferTime:" << m_bufferTime;
 }

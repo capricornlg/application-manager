@@ -8,9 +8,9 @@
 #include "Utility.h"
 
 #define REST_INFO_PRINT \
-	LOG(INFO) << "Method: " << message.method() << std::endl; \
-	LOG(INFO) << "URI: " << http::uri::decode(message.relative_uri().path()) << std::endl; \
-	LOG(INFO) << "Query: " << http::uri::decode(message.relative_uri().query()) << std::endl << std::endl;
+	LOG_INF << "Method: " << message.method() << std::endl; \
+	LOG_INF << "URI: " << http::uri::decode(message.relative_uri().path()) << std::endl; \
+	LOG_INF << "Query: " << http::uri::decode(message.relative_uri().query());
 
 RestHandler::RestHandler(int port)
 {
@@ -28,7 +28,7 @@ RestHandler::RestHandler(int port)
 
 	this->open();
 
-	LOG(INFO) << fname << "Listening for requests at:" << address << std::endl;
+	LOG_INF << fname << "Listening for requests at:" << address;
 }
 
 RestHandler::~RestHandler()
@@ -211,11 +211,11 @@ void RestHandler::handle_error(pplx::task<void>& t)
 	}
 	catch (const std::exception& e)
 	{
-		LOG(ERROR) << fname << "ERROR:" << e.what() << endl;
+		LOG_ERR << fname << "ERROR:" << e.what();
 	}
 	catch (...)
 	{
-		LOG(ERROR) << fname << "ERROR:" << "unknown exception" << endl;
+		LOG_ERR << fname << "ERROR:" << "unknown exception";
 	}
 }
 

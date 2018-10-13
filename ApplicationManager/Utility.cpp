@@ -15,6 +15,11 @@
 #include <errno.h>
 #include <pwd.h>
 #endif
+#ifdef _WIN32
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
 #include <thread>
 #include <iomanip>
 #include <boost/asio/ip/host_name.hpp>
@@ -22,6 +27,24 @@
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/algorithm/string.hpp>
+
+#include <boost/log/support/date_time.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/core/null_deleter.hpp>
+namespace logging = boost::log;
+namespace src = boost::log::sources;
+namespace sinks = boost::log::sinks;
+namespace expr = boost::log::expressions;
+namespace keywords = boost::log::keywords;
+
 
 using namespace std;
 
@@ -82,11 +105,11 @@ std::map<std::string, int> Utility::getProcessList()
 			}
 			catch (const std::exception& e)
 			{
-				LOG(ERROR) << fname << "ERROR:" << e.what() << endl;
+				LOG_ERR << fname << "ERROR:" << e.what();
 			}
 			catch (...)
 			{
-				LOG(ERROR) << fname << "ERROR:" << "unknown exception" << endl;
+				LOG_ERR << fname << "ERROR:" << "unknown exception";
 			}
 		}
 		closedir(dir);
@@ -155,52 +178,42 @@ std::string Utility::getSelfFullPath()
 	}
 }
 
-void SignalHandle(const char* data, int size)
+void Utility::initLogging()
 {
-	std::string str = std::string(data, size);
-	LOG(ERROR) << str;
-}
-
-void Utility::initLogging(const char* arg0)
-{
-	google::InitGoogleLogging(arg0);
-#if	!defined(WIN32)
-	string logDir;
-	//https://linux.die.net/man/3/get_current_dir_name
-	char* bufferPath = get_current_dir_name();
-	if (0 != bufferPath)
-	{
-		logDir = bufferPath;
-	}
-	else
-	{
-		logDir = "/tmp";
-	}
+	// 1. Initialize terminal logger
+	// Construct the sink
+	typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> text_sink;
+	boost::shared_ptr<text_sink> console_sink = boost::make_shared<text_sink>();
+	boost::shared_ptr<std::ostream> console_stream(&std::clog, boost::null_deleter());
+	console_sink->locked_backend()->add_stream(console_stream);
+	console_sink->set_formatter(
+		expr::format("[%1%][%2%]: %3%")
+		% expr::attr<boost::posix_time::ptime>("TimeStamp")
+		% expr::attr<boost::log::attributes::current_thread_id::value_type>("ThreadID")
+		% expr::smessage
+	);
+	// flush
+	console_sink->locked_backend()->auto_flush(true);
+	// register sink
+	logging::core::get()->add_sink(console_sink);
 	
-	logDir += "/log";
-	if (access(logDir.c_str(), 0) != 0)
-	{
-		if (mkdir(logDir.c_str(), 0757) != 0)
-		{
-			logDir = ".";
-		}
-	}
-	FLAGS_log_dir = logDir;
-#else
-	FLAGS_log_dir = ".";
-#endif
-	google::SetStderrLogging(google::GLOG_INFO);
-	//std::system("mkdir -p log");
-	google::SetLogDestination(google::INFO, "log/INFO.");
-	google::SetLogDestination(google::WARNING, "log/WARN.");
-	google::SetLogDestination(google::ERROR, "log/ERR.");
-	auto logName = string("appmg.") + boost::asio::ip::host_name() + ".";
-	google::SetLogFilenameExtension(logName.c_str());
-	google::InstallFailureSignalHandler();
-	google::InstallFailureWriter(&SignalHandle);
-	FLAGS_stop_logging_if_full_disk = true;		// If disk is full
-	FLAGS_max_log_size = 100;					// Set max log file size(1 GB)
-	FLAGS_logbufsecs = 0;
+
+	// 2. Initialize file logger
+	char* bufferPath = get_current_dir_name();
+	auto file_sink = logging::add_file_log
+	(
+		keywords::auto_flush = true,
+		keywords::file_name = string(bufferPath) + "/log/" + "appsvc_%N.log",          /*< file name pattern >*/
+		keywords::rotation_size = 100 * 1024 * 1024,                                   /*< rotate files every 100 MiB... >*/
+		keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),  /*< ...or at midnight >*/
+		keywords::format = "[%TimeStamp%][%ThreadID%]: %Message%"                      /*< log record format >*/
+	);
+	logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info);
+	logging::add_common_attributes();
+
+	logging::core::get()->add_sink(file_sink);
+
+	LOG_INF << "Process:" << getpid();
 }
 
 unsigned long long Utility::getThreadId()
@@ -357,7 +370,7 @@ bool Utility::getUid(std::string userName, long& uid, long& groupid)
 	}
 	else
 	{
-		LOG(ERROR) << "User does not exist: <" << userName << ">." << std::endl;
+		LOG_ERR << "User does not exist: <" << userName << ">.";
 	}
 	return rt;
 }

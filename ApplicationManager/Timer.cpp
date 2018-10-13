@@ -34,13 +34,13 @@ void Timer::stop()
 
 void Timer::runTimerThread()
 {
-	LOG(INFO) << "Timer thread started <" << Utility::getThreadId() << ">." << std::endl;
+	LOG_INF << "Timer thread started <" << Utility::getThreadId() << ">.";
 	m_running = true;
 	// use work to avoid io_service exit when no job
 	m_ioWork.reset(new boost::asio::io_service::work(m_io));
 	m_io.run();
 	m_running = false;
-	LOG(WARNING) << "Timer thread exited <" << Utility::getThreadId() << ">." << std::endl;
+	LOG_WAR << "Timer thread exited <" << Utility::getThreadId() << ">.";
 }
 
 boost::asio::io_service & Timer::getIO()
