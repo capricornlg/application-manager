@@ -11,13 +11,12 @@ This can used to replace Linux cron-tab and supervisor.
 - [Microsoft cpprestsdk-2.10.1](https://github.com/Microsoft/cpprestsdk)
 - [boost-1.58.0](https://github.com/boostorg/boost)
 - [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
-- [google glog](https://github.com/google/glog)
 - [google CCTZ (++TBD++)](https://github.com/google/cctz)
 
 ## Setup build environment on Ubuntu
 ```
 apt-get install g++ git make zlib1g-dev libssl-dev cmake
-apt-get install libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev libgoogle-glog-dev libcctz-dev
+apt-get install libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev  libcctz-dev
 ```
 
 ## REST APIs
