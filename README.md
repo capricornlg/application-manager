@@ -17,6 +17,8 @@ This can used to replace Linux cron-tab and supervisor.
 ```
 apt-get install g++ git make zlib1g-dev libssl-dev cmake
 apt-get install libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev  libcctz-dev
+apt-get install ruby ruby-dev rubygems
+gem install fpm
 ```
 
 ## REST APIs
