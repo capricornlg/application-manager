@@ -1,9 +1,18 @@
 # Introduction
-application-manager is a daemon process running on host to manage different type of applications(process), make sure all defined applications running on-time with defined behavior. provide REST APIs and command-line interface.
+Application Manager is a daemon process to manage different type of sub-applications(process), each application can be a specific jobs, application namager will make sure all defined applications running on-time with defined behavior. provide REST APIs for integrate with outside app, provide command-line to start/stop and register new app easily.
 
-This can used to replace Linux cron-tab and supervisor.
+The internal timer is multi-threaded with high-precision that can used to replace Linux cron-tab and supervisor.
 
 ![diagram.png](https://github.com/jinneec/application-manager/blob/master/doc/diagram.png?raw=true) 
+
+
+Types of applications supported | Behavior
+---|---
+Long running application | Will always be restarted when exited
+Short runing application | Will be launched periodly
+Periodic long running application |Long running applicatin but will be restart periodic
+Application avialable time range|Application can be only avialable in a specific time range daily (all app can have this behavior)
+
 
 ## Development tecnical
 - [C++11](http://www.cplusplus.com/articles/cpp11/)
@@ -54,7 +63,7 @@ Usage:  appc [COMMAND] [ARG...] [flags]
 ```
 
 
-## Display applications
+## Display application[s]
 
 ```
 $ appc view 
@@ -97,12 +106,6 @@ appc config
 
 ## Register a new application
 
-Supported App type|
----|
-Long Running application | 
-Period run application |
-Long running applicatin but will restarted periodic |
-Application can be only avialable in a specific time range daily|
 ```
 $ appc reg
 Register a new application::
