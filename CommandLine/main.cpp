@@ -7,7 +7,7 @@
 #include <cpprest/http_client.h>
 #include <boost/program_options.hpp>
 #include "ArgumentParser.h"
-#include "../ApplicationManager/Utility.h"
+#include "../common/Utility.h"
 
 using namespace std;
 namespace po = boost::program_options;

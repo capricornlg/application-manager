@@ -66,12 +66,12 @@
     <TargetExt>.out</TargetExt>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\ApplicationManager\Utility.cpp" />
+    <ClCompile Include="..\common\Utility.cpp" />
     <ClCompile Include="ArgumentParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ApplicationManager\Utility.h" />
+    <ClInclude Include="..\common\Utility.h" />
     <ClInclude Include="ArgumentParser.h" />
   </ItemGroup>
   <ItemGroup>

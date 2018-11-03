@@ -5,7 +5,7 @@
 #include <chrono>
 #include <ace/Time_Value.h>
 #include "ApplicationShortRun.h"
-#include "Utility.h"
+#include "../common/Utility.h"
 
 ApplicationShortRun::ApplicationShortRun()
 	:m_startInterval(0), m_bufferTime(0), m_timer(NULL)

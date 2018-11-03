@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include <boost/thread/thread.hpp>
 
-#include "Utility.h"
+#include "../common/Utility.h"
 
 Timer::Timer()
 	:m_running(false)

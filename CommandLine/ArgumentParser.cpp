@@ -1,7 +1,7 @@
 #include "ArgumentParser.h"
 #include <iostream>
 #include <boost/program_options.hpp>
-#include "../ApplicationManager/Utility.h"
+#include "../common/Utility.h"
 
 using namespace std;
 

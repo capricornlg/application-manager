@@ -65,6 +65,7 @@
     <TargetExt>.out</TargetExt>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\Utility.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="ApplicationPeriodRun.cpp" />
     <ClCompile Include="ApplicationShortRun.cpp" />
@@ -75,9 +76,9 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerAction.cpp" />
     <ClCompile Include="TimerActionKill.cpp" />
-    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\Utility.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="ApplicationPeriodRun.h" />
     <ClInclude Include="ApplicationShortRun.h" />
@@ -87,7 +88,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerAction.h" />
     <ClInclude Include="TimerActionKill.h" />
-    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="appsvc.json">

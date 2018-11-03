@@ -7,7 +7,7 @@
 #include <ace/Init_ACE.h>
 
 #include "RestHandler.h"
-#include "Utility.h"
+#include "../common/Utility.h"
 #include "Application.h"
 #include "Configuration.h"
 #include "Timer.h"

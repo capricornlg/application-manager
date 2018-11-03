@@ -5,7 +5,7 @@
 #include <jsoncpp/json/reader.h>
 #include "RestHandler.h"
 #include "Configuration.h"
-#include "Utility.h"
+#include "../common/Utility.h"
 
 #define REST_INFO_PRINT \
 	LOG_INF << "Method: " << message.method() << std::endl; \

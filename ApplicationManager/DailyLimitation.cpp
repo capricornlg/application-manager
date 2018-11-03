@@ -1,7 +1,7 @@
 #include <ctime>
 #include <boost/date_time/local_time/local_time.hpp>
 #include "DailyLimitation.h"
-#include "Utility.h"
+#include "../common/Utility.h"
 
 DailyLimitation::DailyLimitation()
 {

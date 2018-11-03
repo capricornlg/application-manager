@@ -11,7 +11,7 @@
 
 #include "Configuration.h"
 #include "cpprest/http_msg.h"
-#include "Utility.h"
+#include "../common/Utility.h"
 #include "ApplicationShortRun.h"
 #include "ApplicationPeriodRun.h"
 
