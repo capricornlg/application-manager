@@ -19,7 +19,7 @@ SRCS = \
     ApplicationPeriodRun.cpp \
 	Configuration.cpp \
 	RestHandler.cpp \
-	Utility.cpp \
+	../common/Utility.cpp \
 	Timer.cpp \
 	TimerActionKill.cpp \
 	DailyLimitation.cpp \

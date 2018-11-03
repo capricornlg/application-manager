@@ -12,7 +12,7 @@ all : format $(TARGET)
 ## source and object files 
 SRCS = main.cpp \
 	ArgumentParser.cpp \
-	../ApplicationManager/Utility.cpp
+	../common/Utility.cpp
 
 OBJS = $(SRCS:.cpp=.$(OEXT))
 

@@ -1,0 +1,15 @@
+#ifndef TIME_ZONE_HELPER
+#define TIME_ZONE_HELPER
+#include <string>
+#include <chrono>
+
+class TimeZoneHelper
+{
+public:
+	TimeZoneHelper();
+	virtual ~TimeZoneHelper();
+
+	static std::chrono::system_clock::time_point convert2tzTime(std::chrono::system_clock::time_point& dst, std::string& posixTimezone);
+};
+#endif
+

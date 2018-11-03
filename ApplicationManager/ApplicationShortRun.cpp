@@ -6,6 +6,7 @@
 #include <ace/Time_Value.h>
 #include "ApplicationShortRun.h"
 #include "../common/Utility.h"
+#include "../common/TimeZoneHelper.h"
 
 ApplicationShortRun::ApplicationShortRun()
 	:m_startInterval(0), m_bufferTime(0), m_timer(NULL)
@@ -35,7 +36,7 @@ void ApplicationShortRun::FromJson(std::shared_ptr<ApplicationShortRun>& app, co
 	}
 	if (start_time.length() && app->m_posixTimeZone.length())
 	{
-		app->m_startTime = DailyLimitation::convert2tzTime(app->m_startTime, app->m_posixTimeZone);
+		app->m_startTime = TimeZoneHelper::convert2tzTime(app->m_startTime, app->m_posixTimeZone);
 	}
 }
 
