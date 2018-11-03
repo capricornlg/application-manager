@@ -19,11 +19,12 @@ SRCS = \
     ApplicationPeriodRun.cpp \
 	Configuration.cpp \
 	RestHandler.cpp \
-	../common/Utility.cpp \
 	Timer.cpp \
 	TimerActionKill.cpp \
 	DailyLimitation.cpp \
-	TimerAction.cpp
+	TimerAction.cpp \
+	../common/Utility.cpp \
+	../common/TimeZoneHelper.cpp
 		
 
 OBJS = $(SRCS:.cpp=.$(OEXT))
