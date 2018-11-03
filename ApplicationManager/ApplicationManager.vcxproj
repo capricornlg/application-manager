@@ -101,8 +101,12 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>ACE;cpprest;boost_system;boost_thread;boost_program_options;glog;pthread;ssl;crypto;jsoncpp;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>pthread;crypto;ssl;ACE;cpprest;boost_thread;boost_log;boost_log_setup;boost_system;jsoncpp;%(LibraryDependencies)</LibraryDependencies>
     </Link>
+    <ClCompile />
+    <ClCompile>
+      <AdditionalOptions>-DBOOST_LOG_DYN_LINK %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
