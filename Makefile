@@ -1,6 +1,7 @@
 version=1.0
 
 all:
+	cd common; make
 	cd ApplicationManager; make
 	cd CommandLine; make
 	make build_dir
