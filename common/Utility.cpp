@@ -126,19 +126,6 @@ bool Utility::isNumber(string s)
 	return !s.empty() && std::find_if(s.begin(), s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
 
-void Utility::stringReplace(std::string & strBase, const std::string strSrc, const std::string strDst)
-{
-	std::string::size_type position = 0;
-	std::string::size_type srcLen = strSrc.size();
-	std::string::size_type dstLen = strDst.size();
-
-	while ((position = strBase.find(strSrc, position)) != std::string::npos)
-	{
-		strBase.replace(position, srcLen, strDst);
-		position += dstLen;
-	}
-}
-
 std::string Utility::stdStringTrim(const std::string & str)
 {
 	char *line = const_cast <char *> (str.c_str());

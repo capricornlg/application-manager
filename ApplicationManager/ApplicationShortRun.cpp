@@ -41,9 +41,9 @@ void ApplicationShortRun::FromJson(std::shared_ptr<ApplicationShortRun>& app, co
 }
 
 
-void ApplicationShortRun::updatePid()
+void ApplicationShortRun::refreshPid()
 {
-	Application::updatePid();
+	Application::refreshPid();
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (nullptr != m_bufferProcess && m_bufferProcess->running())
 	{
@@ -60,7 +60,7 @@ void ApplicationShortRun::updatePid()
 void ApplicationShortRun::invoke()
 {
 	// Only refresh Pid for short running
-	updatePid();
+	refreshPid();
 }
 
 void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
@@ -69,6 +69,7 @@ void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
 	if (m_bufferTime > 0)
 	{
 		m_bufferProcess = m_process;
+		// This will be deleted automaticlly, so should not use auto_ptr here.
 		auto bufferTimer = new TimerActionKill(m_bufferProcess, m_bufferTime);
 	}
 	else

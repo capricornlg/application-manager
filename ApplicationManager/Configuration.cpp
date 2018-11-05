@@ -137,19 +137,6 @@ web::json::value Configuration::getApplicationJson()
 	return result;
 }
 
-
-std::vector<std::string> Configuration::stopAllApp()
-{
-	std::vector<std::string> stopedApps;
-	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	for_each(m_apps.begin(), m_apps.end(), [&stopedApps](std::shared_ptr<Application>& app) {
-		app->stop();
-		stopedApps.push_back(app->getName());
-	});
-	saveConfigToDisk();
-	return stopedApps;
-}
-
 void Configuration::stopApp(const std::string& appName)
 {
 	getApp(appName)->stop();
@@ -162,19 +149,6 @@ void Configuration::startApp(const std::string& appName)
 	app->start(app);
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	saveConfigToDisk();
-}
-
-std::vector<std::string> Configuration::startAllApp()
-{
-	std::vector<std::string> startedApps;
-	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	for (auto app : m_apps)
-	{
-		app->start(app);
-		startedApps.push_back(app->getName());
-	}
-	saveConfigToDisk();
-	return startedApps;
 }
 
 void Configuration::dump()

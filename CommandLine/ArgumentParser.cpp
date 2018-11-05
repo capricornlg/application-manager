@@ -315,19 +315,19 @@ bool ArgumentParser::confirmInput(const char* msg)
 	return result == "y";
 }
 
-http_response ArgumentParser::requestHttp(const method & mtd, string path)
+http_response ArgumentParser::requestHttp(const method & mtd, const string& path)
 {
 	std::map<string, string> query;
 	return std::move(requestHttp(mtd, path, query));
 }
 
-http_response ArgumentParser::requestHttp(const method & mtd, string path, web::json::value & body)
+http_response ArgumentParser::requestHttp(const method & mtd, const string& path, web::json::value & body)
 {
 	std::map<string, string> query;
 	return std::move(requestHttp(mtd, path, query, &body));
 }
 
-http_response ArgumentParser::requestHttp(const method & mtd, string path, std::map<string, string>& query, web::json::value * body)
+http_response ArgumentParser::requestHttp(const method & mtd, const string& path, std::map<string, string>& query, web::json::value * body)
 {
 	// Create http_client to send the request.
 	auto restPath = (U("http://127.0.0.1:") + GET_STRING_T(std::to_string(m_listenPort)));

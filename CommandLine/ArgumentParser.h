@@ -31,9 +31,9 @@ private:
 	void processStartStop(bool start);
 
 	bool confirmInput(const char* msg);
-	http_response requestHttp(const method & mtd, string path);
-	http_response requestHttp(const method & mtd, string path, web::json::value& body);
-	http_response requestHttp(const method & mtd, string path, std::map<string,string>& query, web::json::value * body = nullptr);
+	http_response requestHttp(const method & mtd, const string& path);
+	http_response requestHttp(const method & mtd, const string& path, web::json::value& body);
+	http_response requestHttp(const method & mtd, const string& path, std::map<string,string>& query, web::json::value * body = nullptr);
 	bool isAppExist(const std::string& appName);
 	void addHttpHeader(http_request& request);
 

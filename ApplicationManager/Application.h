@@ -31,11 +31,10 @@ public:
 	Application();
 	virtual ~Application();
 	std::string getName();
-	std::string getCommandLine();
 	bool isNormal();
 	static void FromJson(std::shared_ptr<Application>& app, const web::json::object& obj);
 
-	virtual void updatePid();
+	virtual void refreshPid();
 	void attach(std::map<std::string, int>& process);
 
 	// Invoke immediately

@@ -107,7 +107,7 @@ std::shared_ptr<Configuration> readConfiguration()
 	catch (const std::exception& e)
 	{
 		LOG_ERR << fname << "ERROR:" << e.what();
-		throw e;
+		throw;
 	}
 	catch (...)
 	{

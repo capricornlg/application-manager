@@ -21,15 +21,15 @@ public:
 
 	static void FromJson(std::shared_ptr<ApplicationShortRun>& app, const web::json::object& jobj);
 
-	virtual void invoke();
-	virtual void invokeNow(std::shared_ptr<Application>& self);
-	virtual void start(std::shared_ptr<Application>& self);
-	virtual web::json::value AsJson(bool returnRuntimeInfo);
+	virtual void invoke() override;
+	virtual void invokeNow(std::shared_ptr<Application>& self) override;
+	virtual void start(std::shared_ptr<Application>& self) override;
+	virtual web::json::value AsJson(bool returnRuntimeInfo) override;
 	void initTimer(std::shared_ptr<ApplicationShortRun> app);
-	virtual void updatePid();
+	virtual void refreshPid() override;
 	int getStartInterval();
 	std::chrono::system_clock::time_point getStartTime();
-	virtual void dump();
+	virtual void dump() override;
 protected:
 	std::chrono::system_clock::time_point m_startTime;
 	int m_startInterval;

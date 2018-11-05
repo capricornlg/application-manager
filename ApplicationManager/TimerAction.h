@@ -13,7 +13,7 @@ class TimerAction
 {
 public:
 	TimerAction();
-	TimerAction(std::shared_ptr<ApplicationShortRun> app);
+	explicit TimerAction(std::shared_ptr<ApplicationShortRun> app);
 	virtual ~TimerAction();
 
 	// Callback function from timer thread

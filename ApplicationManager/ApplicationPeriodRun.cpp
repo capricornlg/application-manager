@@ -16,9 +16,9 @@ ApplicationPeriodRun::~ApplicationPeriodRun()
 	LOG_INF << fname << "Entered.";
 }
 
-void ApplicationPeriodRun::updatePid()
+void ApplicationPeriodRun::refreshPid()
 {
-	ApplicationShortRun::updatePid();
+	ApplicationShortRun::refreshPid();
 
 	auto app = Configuration::instance()->getApp(this->getName());
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);

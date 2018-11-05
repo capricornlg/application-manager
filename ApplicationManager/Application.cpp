@@ -32,12 +32,6 @@ std::string Application::getName()
 	return m_name;
 }
 
-std::string Application::getCommandLine()
-{
-	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	return m_commandLine;
-}
-
 bool Application::isNormal()
 {
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
@@ -74,7 +68,7 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 	}
 }
 
-void Application::updatePid()
+void Application::refreshPid()
 {
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (m_process!= nullptr)
@@ -135,7 +129,7 @@ void Application::invoke()
 			}
 		}
 	}
-	updatePid();
+	refreshPid();
 }
 
 void Application::invokeNow(std::shared_ptr<Application>& self)

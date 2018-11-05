@@ -28,8 +28,6 @@ public:
 	int getRestListenPort();
 	const utility::string_t getConfigContentStr();
 	web::json::value getApplicationJson();
-	std::vector<std::string> stopAllApp();
-	std::vector<std::string> startAllApp();
 	std::shared_ptr<Application> getApp(const std::string& appName);
 	void stopApp(const std::string& appName);
 	void startApp(const std::string& appName);

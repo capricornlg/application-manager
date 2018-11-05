@@ -14,11 +14,11 @@ public:
 	virtual ~ApplicationPeriodRun();
 
 	static void FromJson(std::shared_ptr<ApplicationPeriodRun>& app, const web::json::object& jobj);
-	virtual web::json::value AsJson(bool returnRuntimeInfo);
+	virtual web::json::value AsJson(bool returnRuntimeInfo) override;
 
-	virtual void updatePid();
+	virtual void refreshPid() override;
 
-	virtual void dump();
+	virtual void dump() override;
 };
 
 #endif
