@@ -2,7 +2,6 @@
 PROG_NAME="appsvc"
 PROG_PATH="/opt/appmanager" 
 PROG_ARGS="" 
-LOG_FILE="/var/log/appsvc_watchdog.log"
 
 start_appsvc() {
 	cd $PROG_PATH
@@ -11,7 +10,7 @@ start_appsvc() {
 	log "start appsvc..."
 }
 log(){
-        echo "[`date`]""$1" >> ${LOG_FILE}
+	logger "[`date`]""$1"
 }
 
 start_appsvc
