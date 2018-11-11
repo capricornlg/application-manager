@@ -7,7 +7,7 @@ start_appsvc() {
 	cd $PROG_PATH
 	## Change from /dev/null to something like /var/log/$PROG if you want to save output.
     $PROG_PATH/$PROG_NAME $PROG_ARGS &
-	log "start appsvc..."
+	log "starting Application Manager"
 }
 log(){
 	logger "[`date`]""$1"

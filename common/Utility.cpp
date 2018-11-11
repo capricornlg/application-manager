@@ -9,16 +9,17 @@
 #include <cctype>
 #include <stdlib.h>
 #include <stdio.h>
-#if	!defined(WIN32)
+#include <string.h>
+#ifdef _WIN32
+#include <process.h>
+#include <Windows.h>
+#else
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <pwd.h>
-#endif
-#ifdef _WIN32
-#include <process.h>
-#else
 #include <unistd.h>
+#include <limits.h>
 #endif
 #include <thread>
 #include <iomanip>
@@ -57,66 +58,87 @@ Utility::~Utility()
 {
 }
 
+#if	!defined(WIN32)
+using file_filter_type = std::function<bool(const char*)>;
+
+static  std::vector<std::string> for_each_file(const std::string&dirName, file_filter_type filter)
+{
+	std::vector<std::string> fileList;
+	auto dir = opendir(dirName.data());
+	struct dirent *rent = NULL;
+	if (dir)
+	{
+		while ((rent = readdir(dir)) != NULL)
+		{
+			if (rent->d_name == nullptr || strlen(rent->d_name) == 0 || 
+				0 == strcmp(rent->d_name, "..") || 0 == strcmp(rent->d_name, "."))
+			{
+				continue;
+			}
+			auto path = std::string(dirName).append("/").append(rent->d_name);
+			if (filter(rent->d_name))
+			{
+				//LOG_INF << "Process:" << rent->d_name;
+				fileList.emplace_back(rent->d_name);
+			}
+		}
+		closedir(dir);
+	}
+	return std::move(fileList);
+}
+#endif
+
 std::map<std::string, int> Utility::getProcessList()
 {
 	const static char fname[] = "Utility::getProcessList() ";
 
 	std::map<std::string, int> processList;
+
 #if	!defined(WIN32)
-	DIR* dir = opendir("/proc/");
-	if (dir != NULL)
+	auto procDir = "/proc";
+	auto filterFunc = [](const char* name) 
+	{ 
+		return isNumber(name) && access(std::string("/proc/").append(name).append("/cmdline").c_str(), F_OK) == 0;
+	};
+	auto fileList = for_each_file(procDir, filterFunc);
+	std::for_each(fileList.begin(), fileList.end(), [&](std::vector<std::string>::reference p)
 	{
-		struct stat fstat;
-		struct dirent* rent = NULL;
-		while ((rent = readdir(dir)))
+		try
 		{
-			try
+			// /proc/123/cmdline
+			ifstream file(std::string(procDir).append("/").append(p).append("/cmdline"));
+			if (file.is_open() && !file.eof() && !file.fail() && !file.bad())
 			{
-				if (rent->d_type == DT_DIR && isNumber(rent->d_name))
+				char maxCmdStrBuf[PATH_MAX+1];
+				memset(maxCmdStrBuf, 0, sizeof(maxCmdStrBuf));
+				size_t getSize = file.get(maxCmdStrBuf, PATH_MAX, '\r').gcount();
+				file.close();
+				if (getSize > 0 && !file.fail() && !file.bad())
 				{
-					string path = "/proc/";
-					path += rent->d_name;
-					path += "/cmdline";
-
-					if (stat(path.c_str(), &fstat)) continue;
-					if (S_ISDIR(fstat.st_mode)) continue;
-
-					ifstream file(path.c_str());
-					if (file.is_open() && !file.eof() && !file.fail() && !file.bad())
+					// Parse cmdline : https://stackoverflow.com/questions/1585989/how-to-parse-proc-pid-cmdline
+					for (size_t i = 0; i < getSize; i++)
 					{
-						char maxCmdStrBuf[1024];
-						memset(maxCmdStrBuf, 0, sizeof(maxCmdStrBuf));
-						size_t getSize = file.get(maxCmdStrBuf, 1023, '\r').gcount();
-						file.close();
-						if (getSize > 0 && !file.fail() && !file.bad())
-						{
-							// Parse cmdline : https://stackoverflow.com/questions/1585989/how-to-parse-proc-pid-cmdline
-							for (size_t i = 0; i < getSize; i++)
-							{
-								if (maxCmdStrBuf[i] == '\0') maxCmdStrBuf[i] = ' ';
-								if (maxCmdStrBuf[i] == '\r') maxCmdStrBuf[i] = '\0';
-							}
-							std::string str = maxCmdStrBuf;
-							str = stdStringTrim(str);
-							processList[str] = atoi(rent->d_name);
-						}
+						if (maxCmdStrBuf[i] == '\0') maxCmdStrBuf[i] = ' ';
+						if (maxCmdStrBuf[i] == '\r') maxCmdStrBuf[i] = '\0';
 					}
+					std::string str = maxCmdStrBuf;
+					str = stdStringTrim(str);
+					processList[str] = atoi(p.c_str());
 				}
 			}
-			catch (const std::exception& e)
-			{
-				LOG_ERR << fname << "ERROR:" << e.what();
-			}
-			catch (...)
-			{
-				LOG_ERR << fname << "ERROR:" << "unknown exception";
-			}
 		}
-		closedir(dir);
-	}
+		catch (const std::exception& e)
+		{
+			LOG_ERR << fname << "ERROR:" << e.what();
+		}
+		catch (...)
+		{
+			LOG_ERR << fname << "ERROR:" << "unknown exception";
+		}
+	});
 #endif
 
-	//for_each(processList.begin(), processList.end(), [](std::map<std::string, int>::reference p) {cout << "Process:[" << p.second << "]" << p.first << endl; });
+	for_each(processList.begin(), processList.end(), [](std::map<std::string, int>::reference p) {LOG_INF << "Process:[" << p.second << "]" << p.first << endl; });
 
 	return processList;
 }
@@ -147,22 +169,33 @@ std::string Utility::stdStringTrim(const std::string & str)
 
 std::string Utility::getSelfFullPath()
 {
-	#define MAXBUFSIZE 1024
-	int count = 0;
-	char buf[MAXBUFSIZE] = { 0 };
-#if	!defined(WIN32)
-	count = (int)readlink("/proc/self/exe", buf, MAXBUFSIZE);
-#endif
-	if (count < 0 || count >= MAXBUFSIZE)
+	const static char fname[] = "Utility::getSelfFullPath() ";
+#if	defined(WIN32)
+	char buf[MAX_PATH] = { 0 };
+	::GetModuleFileNameA(NULL, buf, MAX_PATH);
+	// Remove ".exe"
+	size_t idx = 0;
+	while (buf[idx] != '\0')
 	{
-		printf("Failed\n");
-		return buf;
+		if (buf[idx] == '.' && buff[idx + 1] == 'e' && buff[idx + 2] == 'x' && buff[idx + 3] == 'e';
+		{
+			buf[idx] = '\0';
+		}
+	}
+#else
+	#define MAX_PATH PATH_MAX
+	char buf[MAX_PATH] = { 0 };
+	int count = (int)readlink("/proc/self/exe", buf, MAX_PATH);
+	if (count < 0 || count >= MAX_PATH)
+	{
+		LOG_ERR << fname << "ERROR:" << "unknown exception";
 	}
 	else
 	{
 		buf[count] = '\0';
-		return buf;
 	}
+#endif
+	return buf;
 }
 
 void Utility::initLogging()

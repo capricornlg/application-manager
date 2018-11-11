@@ -43,7 +43,7 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 	app->m_name = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "name"));
 	app->m_user = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "run_as"));
 	app->m_commandLine = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "command_line"));
-	if (app->m_commandLine.find('>') != std::string::npo)
+	if (app->m_commandLine.find('>') != std::string::npos)
 	{
 		throw std::invalid_argument("char '>' is not supported for command line");
 	}
