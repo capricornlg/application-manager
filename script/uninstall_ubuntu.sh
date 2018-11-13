@@ -1,7 +1,9 @@
 #!/bin/bash
+apppath=/opt/appmanager
+
 service appsvc stop
 systemctl disable appsvc
-rm -rf /opt/appmanager
+rm -rf $apppath
 
 rm -f /usr/bin/appc
-rm -f /etc/init.d/appmg
+rm -f /etc/init.d/appsvc
