@@ -18,7 +18,7 @@ void Process::attach(int pid)
 
 void Process::killgroup()
 {
-	if (!this->running() && this->getpid() > 1)
+	if (this->running() && this->getpid() > 1)
 	{
 		ACE_OS::kill(-(this->getpid()), 9);
 		this->terminate();
