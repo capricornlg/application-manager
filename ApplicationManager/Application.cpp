@@ -1,13 +1,13 @@
 
-#include "Application.h"
-#include "../common/Utility.h"
-#include "../common/TimeZoneHelper.h"
 #include <iostream>
 #include <mutex>
 #include <algorithm>
 #include <ace/Time_Value.h>
 #include <ace/OS.h>
-
+#include "Application.h"
+#include "../common/Utility.h"
+#include "../common/TimeZoneHelper.h"
+#include "Process.h"
 using namespace std;
 
 
@@ -16,7 +16,7 @@ Application::Application()
 {
 	const static char fname[] = "Application::Application() ";
 	LOG_INF << fname << "Entered.";
-	m_process = std::make_shared<MyProcess>();
+	m_process = std::make_shared<Process>();
 }
 
 
@@ -219,17 +219,14 @@ void Application::dump()
 	}
 }
 
-void Application::terminateProcess(std::shared_ptr<MyProcess>& process)
+void Application::terminateProcess(std::shared_ptr<Process>& process)
 {
 	const static char fname[] = "Application::terminateProcess() ";
 
-	if (process!= nullptr && process->running())
+	if (process!= nullptr)
 	{
 		LOG_INF << fname << "Will stop process <" << process->getpid() << ">.";
-		ACE_OS::kill(-(process->getpid()), 9);
-		process->terminate();
-		//avoid  zombie process
-		process->wait();
+		process->killgroup();
 	}
 }
 
@@ -291,7 +288,3 @@ bool Application::isInDailyTimeRange()
 	return true;
 }
 
-void MyProcess::attach(int pid)
-{
-	this->child_id_ = pid;
-}

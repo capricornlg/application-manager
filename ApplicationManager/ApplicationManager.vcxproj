@@ -74,6 +74,7 @@
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="DailyLimitation.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Process.cpp" />
     <ClCompile Include="RestHandler.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerAction.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="ApplicationShortRun.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="DailyLimitation.h" />
+    <ClInclude Include="Process.h" />
     <ClInclude Include="RestHandler.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerAction.h" />

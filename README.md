@@ -11,7 +11,7 @@ Types of applications supported | Behavior
 Long running application | Will always be restarted when exited
 Short runing application | Will be launched periodly
 Periodic long running application |Long running applicatin but will be restart periodic
-Application avialable time range|Application can be only avialable in a specific time range daily (all app can have this behavior)
+Application avialable time range|Application can be only avialable in a specific time range daily (all app can have this behavior) with timezone definition
 
 
 ## Development tecnical

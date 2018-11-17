@@ -5,7 +5,7 @@
 #include <memory>
 #include <boost/asio/deadline_timer.hpp>
 
-class MyProcess;
+class Process;
 //////////////////////////////////////////////////////////////////////////
 // Each timer action assotiate to a short running application
 // This timer only run one time
@@ -13,14 +13,14 @@ class MyProcess;
 class TimerActionKill
 {
 public:
-	TimerActionKill(std::shared_ptr<MyProcess> process, int bufferTimeSeconds);
+	TimerActionKill(std::shared_ptr<Process> process, int bufferTimeSeconds);
 	virtual ~TimerActionKill();
 
 	// Callback function from timer thread
 	virtual void onTimeOut(const boost::system::error_code& ec);
 
 private:
-	std::shared_ptr<MyProcess> m_process;
+	std::shared_ptr<Process> m_process;
 	std::shared_ptr<boost::asio::deadline_timer> m_timer;
 };
 

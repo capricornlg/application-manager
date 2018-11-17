@@ -15,10 +15,11 @@ all : format $(TARGET)
 SRCS = \
 	main.cpp \
 	Application.cpp \
-    ApplicationShortRun.cpp \
-    ApplicationPeriodRun.cpp \
+	ApplicationShortRun.cpp \
+	ApplicationPeriodRun.cpp \
 	Configuration.cpp \
 	RestHandler.cpp \
+	Process.cpp \
 	Timer.cpp \
 	TimerActionKill.cpp \
 	DailyLimitation.cpp \

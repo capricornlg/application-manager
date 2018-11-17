@@ -35,7 +35,7 @@ protected:
 	int m_startInterval;
 	int m_bufferTime;
 	TimerAction* m_timer;
-	std::shared_ptr<MyProcess> m_bufferProcess;
+	std::shared_ptr<Process> m_bufferProcess;
 };
 
 #endif 

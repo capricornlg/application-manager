@@ -7,19 +7,12 @@
 #include <map>
 #include <mutex>
 #include <cpprest/json.h>
-#include <ace/Process.h>
+#include "Process.h"
 #include "DailyLimitation.h"
 enum STATUS
 {
 	STOPPED = 0,
 	NORMAL
-};
-
-
-class MyProcess : public ACE_Process
-{
-public:
-	void attach(int pid);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -48,7 +41,7 @@ public:
 	virtual web::json::value AsJson(bool returnRuntimeInfo);
 	virtual void dump();
 
-	static void terminateProcess(std::shared_ptr<MyProcess>& process);
+	static void terminateProcess(std::shared_ptr<Process>& process);
 	virtual void spawnProcess();
 	bool isInDailyTimeRange();
 
@@ -62,7 +55,7 @@ protected:
 	int m_return;
 	std::string m_posixTimeZone;
 	
-	std::shared_ptr<MyProcess> m_process;
+	std::shared_ptr<Process> m_process;
 	int m_pid;
 	std::recursive_mutex m_mutex;
 	std::shared_ptr<DailyLimitation> m_dailyLimit;

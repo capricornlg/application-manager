@@ -8,7 +8,7 @@
 #include "Timer.h"
 #include "Application.h"
 
-TimerActionKill::TimerActionKill(std::shared_ptr<MyProcess> process, int bufferTimeSeconds)
+TimerActionKill::TimerActionKill(std::shared_ptr<Process> process, int bufferTimeSeconds)
 	:m_process(process)
 {
 	const static char fname[] = "TimerActionKill::TimerActionKill() ";
