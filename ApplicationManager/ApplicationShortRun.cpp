@@ -74,7 +74,7 @@ void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
 	}
 	else
 	{
-		terminateProcess(m_process);
+		if (m_process != nullptr) m_process->killgroup();
 	}
 	// Spawn new process
 	m_process = std::make_shared<Process>();

@@ -41,7 +41,6 @@ public:
 	virtual web::json::value AsJson(bool returnRuntimeInfo);
 	virtual void dump();
 
-	static void terminateProcess(std::shared_ptr<Process>& process);
 	virtual void spawnProcess();
 	bool isInDailyTimeRange();
 

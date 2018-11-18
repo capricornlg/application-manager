@@ -37,7 +37,7 @@ void TimerActionKill::onTimeOut(const boost::system::error_code& ec)
 	else
 	{
 		LOG_INF << fname << "Timeout for process <" << m_process->getpid() << ">.";
-		Application::terminateProcess(m_process);
+		if (m_process != nullptr) m_process->killgroup();
 	}
 	delete this;
 }

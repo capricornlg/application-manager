@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <mutex>
 #include <algorithm>
@@ -128,7 +127,7 @@ void Application::invoke()
 				if (m_process->running())
 				{
 					LOG_INF << fname << "Application <" << m_name << "> was not in daily start time";
-					terminateProcess(m_process);
+					m_process->killgroup();
 				}
 			}
 		}
@@ -148,7 +147,7 @@ void Application::stop()
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (m_active != STOPPED)
 	{
-		terminateProcess(m_process);
+		if (m_process != nullptr) m_process->killgroup();
 		m_active = STOPPED;
 		m_return = -1;
 		LOG_INF << fname << "Application <" << m_name << "> stopped.";
@@ -216,17 +215,6 @@ void Application::dump()
 	if (m_dailyLimit != nullptr)
 	{
 		m_dailyLimit->dump();
-	}
-}
-
-void Application::terminateProcess(std::shared_ptr<Process>& process)
-{
-	const static char fname[] = "Application::terminateProcess() ";
-
-	if (process!= nullptr)
-	{
-		LOG_INF << fname << "Will stop process <" << process->getpid() << ">.";
-		process->killgroup();
 	}
 }
 
