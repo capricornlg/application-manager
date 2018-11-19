@@ -284,7 +284,7 @@ void ArgumentParser::processStartStop(bool start)
 	po::options_description desc("Start application:");
 	desc.add_options()
 		("help,h", "produce help message")
-		("name,n", po::value<std::string>(), "start application by name. use 'all' to start all applications.")
+		("name,n", po::value<std::string>(), "start/stop application by name.")
 		;
 	
 	moveForwardCommandLineVariables(desc);

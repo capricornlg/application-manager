@@ -18,6 +18,11 @@ PROGC="appc"
 PROG_PATH="/opt/appmanager" ## Not need, but sometimes helpful (if $PROG resides in /opt for example).
 PROG_ARGS="" 
 
+log(){
+	logger "[`date`]""$1"
+	echo $1
+}
+
 start() {
     ulimit -c 65535
     APPMG_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/${PROG} | grep -v grep |wc -l`
@@ -25,7 +30,7 @@ start() {
     #echo "APPMG_INSTENCE_NUM:${APPMG_INSTENCE_NUM}  WATCHDOG_INSTENCE_NUM:${WATCHDOG_INSTENCE_NUM}"
     if [ "${APPMG_INSTENCE_NUM}" = "1" -a "${WATCHDOG_INSTENCE_NUM}" = "1" ];then
         ## Program is running, exit with error.
-        echo "Error! $PROG is currently running!" 1>&2
+        log "Error! $PROG is currently running!"
         exit 1
     else
         if [ "${WATCHDOG_INSTENCE_NUM}" -ge "1" ];then
@@ -38,7 +43,7 @@ start() {
 }
 
 stop() {
-    echo "begin stop"
+    log "Begin stop $PROG"
     APPMG_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/${PROG} | grep -v grep |wc -l`
     WATCHDOG_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/script/${PROG_WATCHDOG} | grep -v grep |wc -l`
     #echo "APPMG_INSTENCE_NUM:${APPMG_INSTENCE_NUM}  WATCHDOG_INSTENCE_NUM:${WATCHDOG_INSTENCE_NUM}"
@@ -46,11 +51,12 @@ stop() {
          killall -9 ${PROG_WATCHDOG}
     fi
     if [ "${APPMG_INSTENCE_NUM}" -ge "1" ];then
-        $PROG_PATH/$PROGC stop -n all -f 2>&1 >/var/log/$PROGC".log"
+        appc view | awk '{if (NR>1){cmd="appc stop -n "$6;system(cmd)}}'
+        sleep 2
         killall -9 ${PROG}
-        echo "$PROG stopped"
+        log "$PROG stopped"
     else
-        echo "Error! $PROG not started!" 1>&2
+        log "Error! $PROG not started!"
         exit 1
     fi
 }
@@ -58,7 +64,7 @@ stop() {
 ## Check to see if we are running as root first.
 ## Found at http://www.cyberciti.biz/tips/shell-root-user-check-script.html
 if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root" 1>&2
+    log "This script must be run as root"
     exit 1
 fi
 case "$1" in

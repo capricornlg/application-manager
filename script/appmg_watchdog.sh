@@ -1,16 +1,18 @@
 #! /bin/sh
 PROG_NAME="appsvc"
 PROG_PATH="/opt/appmanager" 
-PROG_ARGS="" 
+PROG_ARGS=""
+
+log(){
+	logger "[`date`]""$1"
+	echo $1
+}
 
 start_appsvc() {
 	cd $PROG_PATH
 	## Change from /dev/null to something like /var/log/$PROG if you want to save output.
     $PROG_PATH/$PROG_NAME $PROG_ARGS &
 	log "starting Application Manager"
-}
-log(){
-	logger "[`date`]""$1"
 }
 
 start_appsvc
