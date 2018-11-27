@@ -22,10 +22,6 @@ while true ; do
      if [ "${APPSVC_INSTENCE_NUM}" -lt "1" ];then
          log "${PROG_NAME} was killed."		 
          start_appsvc
-    elif [ "${APPSVC_INSTENCE_NUM}" -gt "1" ];then
-        log "more than 1 ${PROG_NAME},killall ${PROG_NAME}."
-        killall -9 $PROG_NAME
-        start_appsvc
      fi
      appsvc_STAT=`ps aux | grep -w ${PROG_PATH}/${PRO_NAME} | grep T | grep -v grep | wc -l`
      if [ "${appsvc_STAT}" -gt "0" ];then
