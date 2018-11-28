@@ -1,6 +1,6 @@
 TARGET = common.a
 CXX = g++
-CXXFLAGS = -std=c++11 -ggdb3 -Wall -O2 -DBOOST_LOG_DYN_LINK
+CXXFLAGS = -std=c++11 -ggdb3 -Wall -O2
 OEXT = o
 
 INCLUDES =
