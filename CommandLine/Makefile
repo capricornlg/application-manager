@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++11 -ggdb3 -Wall -O2
 OEXT = o
 
 INCLUDES =
-DEP_LIBS = -lpthread -lssl -lcrypto -lcpprest -lboost_system -lboost_thread -lboost_program_options
+DEP_LIBS = -lpthread -lssl -lcrypto -lcpprest -lboost_system -lboost_thread -lboost_program_options -Wl,-Bstatic -llog4cpp -Wl,-Bdynamic
 
 all : format $(TARGET) 
 
