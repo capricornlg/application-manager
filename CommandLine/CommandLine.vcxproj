@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>pthread;ssl;crypto;cpprest;boost_system;boost_thread;boost_log;boost_log_setup;boost_program_options;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>pthread;ssl;crypto;cpprest;boost_system;boost_thread;log4cpp;boost_program_options;%(LibraryDependencies)</LibraryDependencies>
     </Link>
     <ClCompile>
       <AdditionalOptions>-DBOOST_LOG_DYN_LINK %(AdditionalOptions)</AdditionalOptions>

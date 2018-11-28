@@ -6,13 +6,21 @@
 #include <map>
 #include <chrono>
 #include <cpprest/json.h>
-#include <boost/log/trivial.hpp>
 
-#define LOG_TRC    BOOST_LOG_TRIVIAL(trace)
-#define LOG_DBG    BOOST_LOG_TRIVIAL(debug)
-#define LOG_INF    BOOST_LOG_TRIVIAL(info)
-#define LOG_WAR    BOOST_LOG_TRIVIAL(warning)
-#define LOG_ERR    BOOST_LOG_TRIVIAL(error)
+#include <log4cpp/Category.hh>
+#include <log4cpp/Appender.hh>
+#include <log4cpp/FileAppender.hh>
+#include <log4cpp/Priority.hh>
+#include <log4cpp/PatternLayout.hh>
+#include <log4cpp/RollingFileAppender.hh>
+
+using namespace log4cpp;
+
+#define LOG_TRC    log4cpp::Category::getRoot() << log4cpp::Priority::TRACE
+#define LOG_DBG    log4cpp::Category::getRoot() << log4cpp::Priority::DEBUG
+#define LOG_INF    log4cpp::Category::getRoot() << log4cpp::Priority::INFO
+#define LOG_WAR    log4cpp::Category::getRoot() << log4cpp::Priority::WARN
+#define LOG_ERR    log4cpp::Category::getRoot() << log4cpp::Priority::ERROR
 
 #define GET_STRING_T(sstr) utility::conversions::to_string_t(std::string(sstr))
 #define GET_STD_STRING(sstr)  utility::conversions::to_utf8string(sstr)

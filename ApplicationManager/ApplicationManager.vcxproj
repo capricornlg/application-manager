@@ -106,7 +106,7 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>pthread;crypto;ssl;ACE;cpprest;boost_thread;boost_log;boost_log_setup;boost_system;jsoncpp;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>pthread;crypto;ssl;ACE;cpprest;boost_thread;boost_system;jsoncpp;log4cpp;%(LibraryDependencies)</LibraryDependencies>
     </Link>
     <ClCompile />
     <ClCompile>

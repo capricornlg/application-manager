@@ -1,12 +1,12 @@
 
 TARGET = appsvc
 CXX = g++
-CXXFLAGS = -std=c++11 -ggdb3 -Wall -O2 -DBOOST_LOG_DYN_LINK
+CXXFLAGS = -std=c++11 -ggdb3 -Wall -O2
 OEXT = o
 
 # https://blog.csdn.net/humadivinity/article/details/78890754
 INCLUDES =
-DEP_LIBS = -lpthread -lcrypto -lssl -lACE -lcpprest -lboost_thread -lboost_log -lboost_log_setup -lboost_system -Wl,-Bstatic -ljsoncpp -Wl,-Bdynamic
+DEP_LIBS = -lpthread -lcrypto -lssl -lACE -lcpprest -lboost_thread -lboost_system -Wl,-Bstatic -llog4cpp -ljsoncpp -Wl,-Bdynamic
 
 
 all : format $(TARGET) 

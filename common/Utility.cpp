@@ -29,23 +29,14 @@
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include <boost/log/support/date_time.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/core/null_deleter.hpp>
-namespace logging = boost::log;
-namespace src = boost::log::sources;
-namespace sinks = boost::log::sinks;
-namespace expr = boost::log::expressions;
-namespace keywords = boost::log::keywords;
-
+#include <log4cpp/Category.hh>
+#include <log4cpp/Appender.hh>
+#include <log4cpp/FileAppender.hh>
+#include <log4cpp/Priority.hh>
+#include <log4cpp/PatternLayout.hh>
+#include <log4cpp/RollingFileAppender.hh>
+#include <log4cpp/OstreamAppender.hh>
+using namespace log4cpp;
 
 using namespace std;
 
@@ -138,7 +129,7 @@ std::map<std::string, int> Utility::getProcessList()
 	});
 #endif
 
-	for_each(processList.begin(), processList.end(), [](std::map<std::string, int>::reference p) {LOG_INF << "Process:[" << p.second << "]" << p.first << endl; });
+	for_each(processList.begin(), processList.end(), [&](std::map<std::string, int>::reference p) {LOG_INF << "Process:[" << p.second << "]" << p.first; });
 
 	return processList;
 }
@@ -200,38 +191,28 @@ std::string Utility::getSelfFullPath()
 
 void Utility::initLogging()
 {
-	// 1. Initialize terminal logger
-	// Construct the sink
-	typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> text_sink;
-	boost::shared_ptr<text_sink> console_sink = boost::make_shared<text_sink>();
-	boost::shared_ptr<std::ostream> console_stream(&std::clog, boost::null_deleter());
-	console_sink->locked_backend()->add_stream(console_stream);
-	console_sink->set_formatter(
-		expr::format("[%1%][%2%]: %3%")
-		% expr::attr<boost::posix_time::ptime>("TimeStamp")
-		% expr::attr<boost::log::attributes::current_thread_id::value_type>("ThreadID")
-		% expr::smessage
-	);
-	// flush
-	console_sink->locked_backend()->auto_flush(true);
-	// register sink
-	logging::core::get()->add_sink(console_sink);
+	auto consoleLayout = new PatternLayout();
+	consoleLayout->setConversionPattern("%d: %p %c %x: %m%n");
+	auto consoleAppender = new OstreamAppender("console", &std::cout);
+	consoleAppender->setLayout(consoleLayout);
+
+	//RollingFileAppender(const std::string&name, const std::string&fileName,
+	//	size_tmaxFileSize = 10 * 1024 * 1024, unsigned intmaxBackupIndex = 1,
+	//	boolappend = true, mode_t mode = 00644);
+	auto rollingFileAppender = new RollingFileAppender(
+		"rollingFileAppender",
+		"log/appsvc.log",
+		10 * 1024 * 1024,
+		10);
 	
+	auto pLayout = new PatternLayout();
+	pLayout->setConversionPattern("%d: %p %c %x: %m%n");
+	rollingFileAppender->setLayout(pLayout);
 
-	// 2. Initialize file logger
-	char* bufferPath = get_current_dir_name();
-	auto file_sink = logging::add_file_log
-	(
-		keywords::auto_flush = true,
-		keywords::file_name = string(bufferPath) + "/log/" + "appsvc_%N.log",          /*< file name pattern >*/
-		keywords::rotation_size = 100 * 1024 * 1024,                                   /*< rotate files every 100 MiB... >*/
-		keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),  /*< ...or at midnight >*/
-		keywords::format = "[%TimeStamp%][%ThreadID%]: %Message%"                      /*< log record format >*/
-	);
-	logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info);
-	logging::add_common_attributes();
-
-	logging::core::get()->add_sink(file_sink);
+	Category & root = Category::getRoot();
+	root.addAppender(rollingFileAppender);
+	root.addAppender(consoleAppender);
+	root.setPriority(Priority::DEBUG);
 
 	LOG_INF << "Process:" << getpid();
 }

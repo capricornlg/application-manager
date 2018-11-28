@@ -15,17 +15,17 @@ Application avialable time range|Application can be only avialable in a specific
 
 
 ## Development tecnical
-- [C++11](http://www.cplusplus.com/articles/cpp11/)
+- [C++11](http://www.cplusplus.com/articles/cpp11)
 - [ACE-6.3.3](https://github.com/DOCGroup/ACE_TAO)
 - [Microsoft cpprestsdk-2.10.1](https://github.com/Microsoft/cpprestsdk)
 - [boost-1.58.0](https://github.com/boostorg/boost)
 - [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
-- [google CCTZ (++TBD++)](https://github.com/google/cctz)
+- [log4cpp](http://log4cpp.sourceforge.net)
 
 ## Setup build environment on Ubuntu
 ```
 apt-get install g++ git make zlib1g-dev libssl-dev cmake
-apt-get install libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev  libcctz-dev
+apt-get install libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev liblog4cpp5-dev
 apt-get install ruby ruby-dev rubygems
 gem install fpm
 ```

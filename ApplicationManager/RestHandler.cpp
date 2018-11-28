@@ -8,8 +8,8 @@
 #include "../common/Utility.h"
 
 #define REST_INFO_PRINT \
-	LOG_INF << "Method: " << message.method() << std::endl; \
-	LOG_INF << "URI: " << http::uri::decode(message.relative_uri().path()) << std::endl; \
+	LOG_INF << "Method: " << message.method(); \
+	LOG_INF << "URI: " << http::uri::decode(message.relative_uri().path()); \
 	LOG_INF << "Query: " << http::uri::decode(message.relative_uri().query());
 
 RestHandler::RestHandler(int port)
