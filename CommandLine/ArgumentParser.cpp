@@ -309,7 +309,7 @@ void ArgumentParser::processStartStop(bool start)
 
 bool ArgumentParser::confirmInput(const char* msg)
 {
-	std::cout << msg << std::endl;
+	std::cout << msg << ":";
 	std::string result;
 	std::cin >> result;
 	return result == "y";
