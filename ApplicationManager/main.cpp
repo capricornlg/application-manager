@@ -63,11 +63,11 @@ int main(int argc, char * argv[])
 	}
 	catch (const std::exception& e)
 	{
-		LOG_ERR << fname << "ERROR:" << e.what();
+		LOG_ERR << fname << e.what();
 	}
 	catch (...)
 	{
-		LOG_ERR << fname << "ERROR:" << "unknown exception";
+		LOG_ERR << fname << "unknown exception";
 	}
 	LOG_ERR << "ERROR exited";
 	TIMER.stop();
@@ -88,7 +88,7 @@ std::shared_ptr<Configuration> readConfiguration()
 		ifstream jsonFile(jsonPath);
 		if (!jsonFile.is_open())
 		{
-			LOG_INF << "ERROR can not open configuration file <" << jsonPath << ">";
+			LOG_ERR << "can not open configuration file <" << jsonPath << ">";
 			config = std::make_shared<Configuration>();
 			throw std::runtime_error("can not open configuration file");
 		}
@@ -106,12 +106,12 @@ std::shared_ptr<Configuration> readConfiguration()
 	}
 	catch (const std::exception& e)
 	{
-		LOG_ERR << fname << "ERROR:" << e.what();
+		LOG_ERR << fname << e.what();
 		throw;
 	}
 	catch (...)
 	{
-		LOG_ERR << fname << "ERROR:" << "unknown exception";
+		LOG_ERR << fname << "unknown exception";
 		throw;
 	}
 }

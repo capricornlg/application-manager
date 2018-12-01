@@ -211,11 +211,11 @@ void RestHandler::handle_error(pplx::task<void>& t)
 	}
 	catch (const std::exception& e)
 	{
-		LOG_ERR << fname << "ERROR:" << e.what();
+		LOG_ERR << fname << e.what();
 	}
 	catch (...)
 	{
-		LOG_ERR << fname << "ERROR:" << "unknown exception";
+		LOG_ERR << fname << "unknown exception";
 	}
 }
 

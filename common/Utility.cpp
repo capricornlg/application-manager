@@ -120,11 +120,11 @@ std::map<std::string, int> Utility::getProcessList()
 		}
 		catch (const std::exception& e)
 		{
-			LOG_ERR << fname << "ERROR:" << e.what();
+			LOG_ERR << fname << e.what();
 		}
 		catch (...)
 		{
-			LOG_ERR << fname << "ERROR:" << "unknown exception";
+			LOG_ERR << fname << "unknown exception";
 		}
 	});
 #endif
@@ -179,7 +179,7 @@ std::string Utility::getSelfFullPath()
 	int count = (int)readlink("/proc/self/exe", buf, MAX_PATH);
 	if (count < 0 || count >= MAX_PATH)
 	{
-		LOG_ERR << fname << "ERROR:" << "unknown exception";
+		LOG_ERR << fname << "unknown exception";
 	}
 	else
 	{

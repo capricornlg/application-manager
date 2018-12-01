@@ -38,7 +38,21 @@ std::shared_ptr<Configuration> Configuration::instance()
 
 std::shared_ptr<Configuration> Configuration::FromJson(const std::string& str)
 {
-	auto jval = web::json::value::parse(GET_STRING_T(str));
+	web::json::value jval;
+	try
+	{
+		jval = web::json::value::parse(GET_STRING_T(str));
+	}
+	catch (const std::exception& e)
+	{
+		LOG_ERR << "Failed to parse configuration file with error <" << e.what() << ">";
+		throw std::invalid_argument("Failed to parse configuration file, please check json configuration file format");
+	}
+	catch (...)
+	{
+		LOG_ERR << "Failed to parse configuration file with error <unknown exception>";
+		throw std::invalid_argument("Failed to parse configuration file, please check json configuration file format");
+	}
 	web::json::object jobj = jval.as_object();
 	auto config = std::make_shared<Configuration>();
 	config->m_hostDescription = GET_JSON_STR_VALUE(jobj, "HostDescription");
