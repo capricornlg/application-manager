@@ -205,13 +205,13 @@ void Application::dump()
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
-	LOG_INF << fname << "m_name:" << m_name;
-	LOG_INF << fname << "m_commandLine:" << m_commandLine;
-	LOG_INF << fname << "m_workdir:" << m_workdir;
-	LOG_INF << fname << "m_user:" << m_user;
-	LOG_INF << fname << "m_status:" << m_active;
-	LOG_INF << fname << "m_pid:" << m_pid;
-	LOG_INF << fname << "m_posixTimeZone:" << m_posixTimeZone;
+	LOG_DBG << fname << "m_name:" << m_name;
+	LOG_DBG << fname << "m_commandLine:" << m_commandLine;
+	LOG_DBG << fname << "m_workdir:" << m_workdir;
+	LOG_DBG << fname << "m_user:" << m_user;
+	LOG_DBG << fname << "m_status:" << m_active;
+	LOG_DBG << fname << "m_pid:" << m_pid;
+	LOG_DBG << fname << "m_posixTimeZone:" << m_posixTimeZone;
 	if (m_dailyLimit != nullptr)
 	{
 		m_dailyLimit->dump();

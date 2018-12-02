@@ -87,6 +87,6 @@ void TimerAction::cancelTimer()
 	}
 	catch (...)
 	{
-		LOG_INF << fname << "Cancel timer failed";
+		LOG_WAR << fname << "Cancel timer failed";
 	}
 }

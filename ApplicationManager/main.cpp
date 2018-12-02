@@ -97,7 +97,7 @@ std::shared_ptr<Configuration> readConfiguration()
 			std::string str((std::istreambuf_iterator<char>(jsonFile)), std::istreambuf_iterator<char>());
 			jsonFile.close();
 
-			LOG_INF << str;
+			LOG_DBG << str;
 			config = Configuration::FromJson(str);
 			config->dump();
 		}

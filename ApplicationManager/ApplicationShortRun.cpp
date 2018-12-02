@@ -132,7 +132,7 @@ void ApplicationShortRun::dump()
 
 	Application::dump();
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	LOG_INF << fname << "m_startTime:" << Utility::convertTime2Str(m_startTime);
-	LOG_INF << fname << "m_startInterval:" << m_startInterval;
-	LOG_INF << fname << "m_bufferTime:" << m_bufferTime;
+	LOG_DBG << fname << "m_startTime:" << Utility::convertTime2Str(m_startTime);
+	LOG_DBG << fname << "m_startInterval:" << m_startInterval;
+	LOG_DBG << fname << "m_bufferTime:" << m_bufferTime;
 }

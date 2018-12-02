@@ -15,8 +15,8 @@ void DailyLimitation::dump()
 {
 	const static char fname[] = "DailyLimitation::dump() ";
 
-	LOG_INF << fname << "m_startTime:" << Utility::convertDayTime2Str(m_startTime);
-	LOG_INF << fname << "m_endTime:" << Utility::convertDayTime2Str(m_endTime);
+	LOG_DBG << fname << "m_startTime:" << Utility::convertDayTime2Str(m_startTime);
+	LOG_DBG << fname << "m_endTime:" << Utility::convertDayTime2Str(m_endTime);
 }
 
 web::json::value DailyLimitation::AsJson()

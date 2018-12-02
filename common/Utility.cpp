@@ -69,7 +69,7 @@ static  std::vector<std::string> for_each_file(const std::string&dirName, file_f
 			auto path = std::string(dirName).append("/").append(rent->d_name);
 			if (filter(rent->d_name))
 			{
-				//LOG_INF << "Process:" << rent->d_name;
+				LOG_DBG << "Process:" << rent->d_name;
 				fileList.emplace_back(rent->d_name);
 			}
 		}
@@ -129,7 +129,7 @@ std::map<std::string, int> Utility::getProcessList()
 	});
 #endif
 
-	for_each(processList.begin(), processList.end(), [&](std::map<std::string, int>::reference p) {LOG_INF << "Process:[" << p.second << "]" << p.first; });
+	for_each(processList.begin(), processList.end(), [&](std::map<std::string, int>::reference p) { LOG_DBG << "Scan System Process:[" << p.second << "]" << p.first; });
 
 	return processList;
 }
@@ -214,7 +214,7 @@ void Utility::initLogging()
 	root.addAppender(consoleAppender);
 	root.setPriority(Priority::DEBUG);
 
-	LOG_INF << "Process:" << getpid();
+	LOG_INF << "Logging process ID:" << getpid();
 }
 
 unsigned long long Utility::getThreadId()

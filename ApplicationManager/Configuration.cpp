@@ -171,9 +171,9 @@ void Configuration::dump()
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
-	LOG_INF << fname << "m_hostDescription:" << m_hostDescription;
-	LOG_INF << fname << "m_scheduleInterval:" << m_scheduleInterval;
-	LOG_INF << fname << "m_configContent:" << GET_STD_STRING(this->getConfigContentStr());
+	LOG_DBG << fname << "m_hostDescription:" << m_hostDescription;
+	LOG_DBG << fname << "m_scheduleInterval:" << m_scheduleInterval;
+	LOG_DBG << fname << "m_configContent:" << GET_STD_STRING(this->getConfigContentStr());
 	for (auto app : m_apps)
 	{
 		app->dump();
