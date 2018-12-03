@@ -1,5 +1,6 @@
 #include "ArgumentParser.h"
 #include <iostream>
+#include <functional>
 #include <boost/program_options.hpp>
 #include "../common/Utility.h"
 
@@ -388,14 +389,15 @@ void ArgumentParser::printApps(web::json::value json)
 
 	int index = 1;
 	auto jsonArr = json.as_array();
-	for_each(jsonArr.begin(), jsonArr.end(), [&index](web::json::value &x) {
+	auto reduceFunc = std::bind(&ArgumentParser::reduceStr, this, std::placeholders::_1, std::placeholders::_2);
+	for_each(jsonArr.begin(), jsonArr.end(), [&index, &reduceFunc](web::json::value &x) {
 		auto jobj = x.as_object();
 		std::cout << setw(3) << index++;
-		std::cout << setw(6) << GET_JSON_STR_VALUE(jobj, "run_as");
+		std::cout << setw(6) << reduceFunc(GET_JSON_STR_VALUE(jobj, "run_as"), 6);
 		std::cout << setw(7) << (GET_JSON_INT_VALUE(jobj, "active") == 1 ? "start" : "stop");
 		std::cout << setw(6) << (GET_JSON_INT_VALUE(jobj, "pid") > 0 ? GET_JSON_INT_VALUE(jobj, "pid") : 0);
 		std::cout << setw(7) << GET_JSON_INT_VALUE(jobj, "return");
-		std::cout << setw(12) << GET_JSON_STR_VALUE(jobj, "name");
+		std::cout << setw(12) << reduceFunc(GET_JSON_STR_VALUE(jobj, "name"), 12);
 		std::cout << GET_JSON_STR_VALUE(jobj, "command_line");
 
 		std::cout << std::endl;
@@ -409,4 +411,16 @@ void ArgumentParser::moveForwardCommandLineVariables(po::options_description& de
 	opts.erase(opts.begin());
 	po::store(po::command_line_parser(opts).options(desc).run(), m_commandLineVariables);
 	po::notify(m_commandLineVariables);
+}
+
+string ArgumentParser::reduceStr(string source, int limit)
+{
+	if (source.length() >= (size_t)limit)
+	{
+		return std::move(source.substr(0, limit - 2).append("*"));
+	}
+	else
+	{
+		return source;
+	}
 }

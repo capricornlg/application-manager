@@ -40,6 +40,7 @@ private:
 private:
 	void printApps(web::json::value json);
 	void moveForwardCommandLineVariables(po::options_description& desc);
+	string reduceStr(string source, int limit);
 
 private:
 	po::variables_map m_commandLineVariables;
