@@ -24,7 +24,6 @@ log(){
 }
 
 start() {
-    ulimit -c 65535
     APPMG_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/${PROG} | grep -v grep |wc -l`
     WATCHDOG_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/script/${PROG_WATCHDOG} | grep -v grep |wc -l`
     #echo "APPMG_INSTENCE_NUM:${APPMG_INSTENCE_NUM}  WATCHDOG_INSTENCE_NUM:${WATCHDOG_INSTENCE_NUM}"
@@ -56,8 +55,7 @@ stop() {
         killall -9 ${PROG}
         log "$PROG stopped"
     else
-        log "Error! $PROG not started!"
-        exit 1
+        log "$PROG not started"
     fi
 }
 

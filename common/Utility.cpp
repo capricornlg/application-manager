@@ -189,8 +189,26 @@ std::string Utility::getSelfFullPath()
 	return buf;
 }
 
+bool Utility::isDirExist(std::string path)
+{
+	if (path.length())
+	{
+		DIR* dir = opendir(path.c_str());
+		if (dir != nullptr)
+		{
+			closedir(dir);
+			return true;
+		}
+	}
+	return false;
+}
+
 void Utility::initLogging()
 {
+	if (!isDirExist("./log"))
+	{
+		mkdir("./log", 00644);
+	}
 	auto consoleLayout = new PatternLayout();
 	consoleLayout->setConversionPattern("%d: %p %c %x: %m%n");
 	auto consoleAppender = new OstreamAppender("console", &std::cout);

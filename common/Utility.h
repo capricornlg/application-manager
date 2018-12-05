@@ -46,6 +46,7 @@ public:
 	// OS related
 	static std::map<std::string, int> getProcessList();
 	static std::string getSelfFullPath();
+	static bool isDirExist(std::string path);
 
 	// String related
 	static bool isNumber(std::string s);
