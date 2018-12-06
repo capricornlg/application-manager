@@ -2,6 +2,7 @@
   "HostDescription": "Host01",
   "ScheduleIntervalSec": 2,
   "RestListenPort": 6060,
+  "LogLevel": "DEBUG",
   "Applications": [
     {
       "name": "TestApp",

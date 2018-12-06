@@ -18,7 +18,7 @@ start_appsvc() {
 start_appsvc
 while true ; do
      APPSVC_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/${PROG_NAME} | grep -v grep |wc -l`
-     echo $APPSVC_INSTENCE_NUM
+     #echo $APPSVC_INSTENCE_NUM
      if [ "${APPSVC_INSTENCE_NUM}" -lt "1" ];then
          log "${PROG_NAME} was killed."		 
          start_appsvc

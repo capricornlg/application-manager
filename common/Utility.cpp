@@ -230,9 +230,36 @@ void Utility::initLogging()
 	Category & root = Category::getRoot();
 	root.addAppender(rollingFileAppender);
 	root.addAppender(consoleAppender);
-	root.setPriority(Priority::DEBUG);
+	
+	// Log level
+	std::string levelEnv = "INFO";
+	auto env = getenv("LOG_LEVEL");
+	if (env != nullptr) levelEnv = env;
+	setLogLevel(levelEnv);
 
 	LOG_INF << "Logging process ID:" << getpid();
+}
+
+void Utility::setLogLevel(const std::string & level)
+{
+	std::map<std::string, Priority::PriorityLevel> levelMap = {
+		{ "NOTSET", Priority::NOTSET },
+		{ "DEBUG", Priority::DEBUG },
+		{ "INFO", Priority::INFO },
+		{ "NOTICE", Priority::NOTICE },
+		{ "WARN", Priority::WARN },
+		{ "ERROR", Priority::ERROR },
+		{ "CRIT", Priority::CRIT },
+		{ "ALERT", Priority::ALERT },
+		{ "FATAL", Priority::FATAL },
+		{ "FATAL", Priority::FATAL }
+	};
+
+	if (level.length()> 0 && levelMap.find(level) != levelMap.end())
+	{
+		LOG_INF << "Setting log level to " << level;
+		Category::getRoot().setPriority(levelMap[level]);
+	}
 }
 
 unsigned long long Utility::getThreadId()

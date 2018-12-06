@@ -58,6 +58,7 @@ std::shared_ptr<Configuration> Configuration::FromJson(const std::string& str)
 	config->m_hostDescription = GET_JSON_STR_VALUE(jobj, "HostDescription");
 	config->m_scheduleInterval = GET_JSON_INT_VALUE(jobj, "ScheduleIntervalSec");
 	config->m_restListenPort = GET_JSON_INT_VALUE(jobj, "RestListenPort");
+	config->m_logLevel = GET_JSON_STR_VALUE(jobj, "LogLevel");
 	if (config->m_scheduleInterval < 1 || config->m_scheduleInterval > 100)
 	{
 		// Use default value instead
@@ -163,6 +164,11 @@ void Configuration::startApp(const std::string& appName)
 	app->start(app);
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	saveConfigToDisk();
+}
+
+const std::string Configuration::getLogLevel() const
+{
+	return m_logLevel;
 }
 
 void Configuration::dump()

@@ -55,6 +55,7 @@ public:
 	static bool startWith(const std::string& str, std::string head);
 
 	static void initLogging();
+	static void setLogLevel(const std::string & level);
 
 	static unsigned long long getThreadId();
 	static bool getUid(std::string userName, long& uid, long& groupid);

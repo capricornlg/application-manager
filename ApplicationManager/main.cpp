@@ -34,6 +34,7 @@ int main(int argc, char * argv[])
 
 		m_applicationPath = Utility::getSelfFullPath();
 		auto config = readConfiguration();
+		Utility::setLogLevel(config->getLogLevel());
 		m_httpHandler = std::make_shared<RestHandler>(config->getRestListenPort());
 
 		auto apps = config->getApps();

@@ -31,6 +31,7 @@ public:
 	std::shared_ptr<Application> getApp(const std::string& appName);
 	void stopApp(const std::string& appName);
 	void startApp(const std::string& appName);
+	const std::string getLogLevel() const;
 
 	static std::string prettyJson(const std::string & jsonStr);
 	void dump();
@@ -44,6 +45,7 @@ private:
 	std::string m_hostDescription;
 	int m_scheduleInterval;
 	int m_restListenPort;
+	std::string m_logLevel;
 
 	std::recursive_mutex m_mutex;
 	std::string m_jsonFilePath;
