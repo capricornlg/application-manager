@@ -207,7 +207,7 @@ void Utility::initLogging()
 {
 	if (!isDirExist("./log"))
 	{
-		mkdir("./log", 00644);
+		mkdir("./log", 00655);
 	}
 	auto consoleLayout = new PatternLayout();
 	consoleLayout->setConversionPattern("%d: %p %c %x: %m%n");
@@ -221,7 +221,9 @@ void Utility::initLogging()
 		"rollingFileAppender",
 		"log/appsvc.log",
 		10 * 1024 * 1024,
-		10);
+		10,
+		true,
+		00664);
 	
 	auto pLayout = new PatternLayout();
 	pLayout->setConversionPattern("%d: %p %c %x: %m%n");
@@ -252,7 +254,7 @@ void Utility::setLogLevel(const std::string & level)
 		{ "CRIT", Priority::CRIT },
 		{ "ALERT", Priority::ALERT },
 		{ "FATAL", Priority::FATAL },
-		{ "FATAL", Priority::FATAL }
+		{ "EMERG", Priority::EMERG }
 	};
 
 	if (level.length()> 0 && levelMap.find(level) != levelMap.end())
