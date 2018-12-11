@@ -12,7 +12,7 @@ TimerActionKill::TimerActionKill(std::shared_ptr<Process> process, int bufferTim
 	:m_process(process)
 {
 	const static char fname[] = "TimerActionKill::TimerActionKill() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 		
 	m_timer = std::make_shared<boost::asio::deadline_timer>(TIMER.getIO(), boost::posix_time::seconds(bufferTimeSeconds));
 	m_timer->async_wait(boost::bind(&TimerActionKill::onTimeOut, this, boost::asio::placeholders::error));
@@ -23,7 +23,7 @@ TimerActionKill::TimerActionKill(std::shared_ptr<Process> process, int bufferTim
 TimerActionKill::~TimerActionKill()
 {
 	const static char fname[] = "TimerActionKill::~TimerActionKill() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 }
 
 void TimerActionKill::onTimeOut(const boost::system::error_code& ec)

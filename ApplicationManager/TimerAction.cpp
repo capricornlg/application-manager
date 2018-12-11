@@ -18,7 +18,7 @@ TimerAction::TimerAction(std::shared_ptr<ApplicationShortRun> app)
 	:m_app(app)
 {
 	const static char fname[] = "TimerAction::TimerAction() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 
 	LOG_INF << "Current time <" << Utility::convertTime2Str(std::chrono::system_clock::now())
 		<< ">, start time <" << Utility::convertTime2Str(app->getStartTime()) << "> App <" << app->getName() << ">.";
@@ -45,7 +45,7 @@ TimerAction::TimerAction(std::shared_ptr<ApplicationShortRun> app)
 TimerAction::~TimerAction()
 {
 	const static char fname[] = "TimerAction::~TimerAction() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 }
 
 void TimerAction::onTimeOut(const boost::system::error_code& ec)

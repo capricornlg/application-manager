@@ -6,14 +6,14 @@
 ApplicationPeriodRun::ApplicationPeriodRun()
 {
 	const static char fname[] = "ApplicationPeriodRun::ApplicationPeriodRun() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 }
 
 
 ApplicationPeriodRun::~ApplicationPeriodRun()
 {
 	const static char fname[] = "ApplicationPeriodRun::~ApplicationPeriodRun() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 }
 
 void ApplicationPeriodRun::refreshPid()
@@ -37,7 +37,7 @@ void ApplicationPeriodRun::FromJson(std::shared_ptr<ApplicationPeriodRun>& app, 
 web::json::value ApplicationPeriodRun::AsJson(bool returnRuntimeInfo)
 {
 	const static char fname[] = "ApplicationPeriodRun::AsJson() ";
-	LOG_INF << fname;
+	LOG_DBG << fname << "Entered.";
 
 	web::json::value result = ApplicationShortRun::AsJson(returnRuntimeInfo);
 	result[GET_STRING_T("keep_running")] = web::json::value::boolean(true);

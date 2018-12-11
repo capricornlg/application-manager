@@ -12,14 +12,14 @@ ApplicationShortRun::ApplicationShortRun()
 	:m_startInterval(0), m_bufferTime(0), m_timer(NULL)
 {
 	const static char fname[] = "ApplicationShortRun::ApplicationShortRun() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 }
 
 
 ApplicationShortRun::~ApplicationShortRun()
 {
 	const static char fname[] = "ApplicationShortRun::~ApplicationShortRun() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 	if (m_timer != NULL) m_timer->cancelTimer();
 }
 
@@ -87,7 +87,7 @@ void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
 web::json::value ApplicationShortRun::AsJson(bool returnRuntimeInfo)
 {
 	const static char fname[] = "ApplicationShortRun::AsJson() ";
-	LOG_INF << fname;
+	LOG_DBG << fname << "Entered.";
 	web::json::value result = Application::AsJson(returnRuntimeInfo);
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
@@ -99,6 +99,9 @@ web::json::value ApplicationShortRun::AsJson(bool returnRuntimeInfo)
 
 void ApplicationShortRun::start(std::shared_ptr<Application>& self)
 {
+	const static char fname[] = "ApplicationShortRun::start() ";
+	LOG_DBG << fname << "Entered.";
+
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (m_active == STOPPED)
 	{
@@ -109,6 +112,9 @@ void ApplicationShortRun::start(std::shared_ptr<Application>& self)
 
 void ApplicationShortRun::initTimer(std::shared_ptr<ApplicationShortRun> app)
 {
+	const static char fname[] = "ApplicationShortRun::initTimer() ";
+	LOG_DBG << fname << "Entered.";
+
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (m_timer != NULL) m_timer->cancelTimer();
 	m_timer = new TimerAction(app);

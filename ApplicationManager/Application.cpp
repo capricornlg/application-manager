@@ -14,7 +14,7 @@ Application::Application()
 	:m_active(NORMAL), m_return(0),m_pid(-1)
 {
 	const static char fname[] = "Application::Application() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 	m_process = std::make_shared<Process>();
 }
 
@@ -22,7 +22,7 @@ Application::Application()
 Application::~Application()
 {
 	const static char fname[] = "Application::~Application() ";
-	LOG_INF << fname << "Entered.";
+	LOG_DBG << fname << "Entered.";
 }
 
 std::string Application::getName()

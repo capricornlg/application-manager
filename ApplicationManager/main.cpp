@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
 	{
 		ACE::init();
 		Utility::initLogging();
-		LOG_INF << fname;
+		LOG_DBG << fname << "Entered.";
 
 		m_applicationPath = Utility::getSelfFullPath();
 		auto config = readConfiguration();
