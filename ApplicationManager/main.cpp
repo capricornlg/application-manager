@@ -26,6 +26,8 @@ void monitorAllApps(const boost::system::error_code &ec);
 int main(int argc, char * argv[])
 {
 	const static char fname[] = "main() ";
+	PRINT_VERSION();
+
 	try
 	{
 		ACE::init();

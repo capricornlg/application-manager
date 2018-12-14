@@ -15,6 +15,7 @@ int getListenPort();
 
 int main(int argc, char * argv[])
 {
+	PRINT_VERSION();
 	try
 	{
 		int port = getListenPort();

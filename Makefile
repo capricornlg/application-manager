@@ -1,6 +1,9 @@
-version=1.0
-
+VERSION=1.0
+PACKAGE_NAME=application-manager
+BUILD_DATE=$(shell date "+%Y%m%d%H%M")
+BUILD_TAG=${PACKAGE_NAME}-${VERSION}-${BUILD_DATE}
 all:
+	echo ${BUILD_TAG}
 	cd common; make
 	cd ApplicationManager; make
 	cd CommandLine; make
@@ -22,13 +25,13 @@ deb:
 	fi
 	rm -rf /opt/appmanager/*
 	cp -rf ./release/* /opt/appmanager
-	fpm -s dir -t deb -v ${version} -n application-manager --post-install /opt/appmanager/script/install_ubuntu.sh --before-remove /opt/appmanager/script/pre_uninstall_ubuntu.sh --after-remove /opt/appmanager/script/uninstall_ubuntu.sh /opt/appmanager/
+	fpm -s dir -t deb -v ${VERSION} -n ${PACKAGE_NAME} --post-install /opt/appmanager/script/install_ubuntu.sh --before-remove /opt/appmanager/script/pre_uninstall_ubuntu.sh --after-remove /opt/appmanager/script/uninstall_ubuntu.sh /opt/appmanager/
 	
 install:
-	dpkg -i application-namager_${version}_amd64.deb
+	dpkg -i ${PACKAGE_NAME}_${VERSION}_amd64.deb
 	
 uninstall:
-	dpkg -P application-manager
+	dpkg -P ${PACKAGE_NAME}
 
 clean:
 	cd CommandLine; make clean

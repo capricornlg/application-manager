@@ -22,6 +22,12 @@ using namespace log4cpp;
 #define LOG_WAR    log4cpp::Category::getRoot() << log4cpp::Priority::WARN
 #define LOG_ERR    log4cpp::Category::getRoot() << log4cpp::Priority::ERROR
 
+#define __MICRO_KEY__(str) #str                // No expand micro
+#define __MICRO_VAR__(str) __MICRO_KEY__(str)  // Expand micro
+
+#define PRINT_VERSION() if (argc >= 2 && (std::string("version") == argv[1] || std::string("-v") == argv[1] || std::string("-V") == argv[1])) \
+                        { std::cout << "Build: " << __MICRO_VAR__(BUILD_TAG) << std::endl; return 0; }
+
 #define GET_STRING_T(sstr) utility::conversions::to_string_t(std::string(sstr))
 #define GET_STD_STRING(sstr)  utility::conversions::to_utf8string(sstr)
 

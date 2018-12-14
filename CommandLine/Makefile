@@ -1,3 +1,7 @@
+VERSION=1.0
+PACKAGE_NAME=application-manager
+BUILD_DATE=$(shell date "+%Y%m%d%H%M")
+BUILD_TAG=${PACKAGE_NAME}-${VERSION}-${BUILD_DATE}
 
 TARGET = appc
 CXX = g++
@@ -25,7 +29,7 @@ OBJS = $(SRCS:.cpp=.$(OEXT))
 #compile all cpp files
 # ===================
 %.${OEXT}: %.cpp
-	${CXX} ${CXXFLAGS} ${INCLUDES} -c $<;
+	${CXX} ${CXXFLAGS} ${INCLUDES} -DBUILD_TAG=${BUILD_TAG} -c $<;
 
 # Executable binary
 $(TARGET): $(OBJS) 

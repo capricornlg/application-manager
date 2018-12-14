@@ -247,13 +247,11 @@ void Application::spawnProcess()
 	if (m_process->spawn(option) >= 0)
 	{
 		m_pid = m_process->getpid();
-		// Recover OK
 		LOG_INF << fname << "Process <" << m_commandLine << "> started with pid <" << m_pid << ">.";
 	}
 	else
 	{
 		m_pid = -1;
-		// Recover Failed.
 		LOG_ERR << fname << "Process:<" << m_commandLine << "> start failed with error : " << std::strerror(errno);
 	}
 }
