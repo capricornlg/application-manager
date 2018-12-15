@@ -220,8 +220,8 @@ void Utility::initLogging()
 	auto rollingFileAppender = new RollingFileAppender(
 		"rollingFileAppender",
 		"log/appsvc.log",
-		10 * 1024 * 1024,
-		10,
+		20 * 1024 * 1024,
+		5,
 		true,
 		00664);
 	
