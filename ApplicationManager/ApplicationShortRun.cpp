@@ -115,9 +115,16 @@ void ApplicationShortRun::initTimer(std::shared_ptr<ApplicationShortRun> app)
 	const static char fname[] = "ApplicationShortRun::initTimer() ";
 	LOG_DBG << fname << "Entered.";
 
+	// Note: use self shared_ptr here is used to pass reference counter pass to TimerAction.
+	// This is not good design here.
+
+	// To avoid shared_ptr reference each other between ApplicationShortRun and TimerAction
+	// so do not use shared_ptr for m_timer here, m_timer will be deleted itself.
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (m_timer != NULL) m_timer->cancelTimer();
 	m_timer = new TimerAction(app);
+
+	
 }
 
 int ApplicationShortRun::getStartInterval()

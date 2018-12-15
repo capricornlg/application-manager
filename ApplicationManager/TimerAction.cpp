@@ -59,6 +59,8 @@ void TimerAction::onTimeOut(const boost::system::error_code& ec)
 	}
 	else
 	{
+		// To handle the case when ApplicationShortRun was removed from Configuration,
+		// so use week_ptr of m_app here to check each time.
 		std::shared_ptr<ApplicationShortRun> app = m_app.lock();
 		
 		if (app != nullptr && app->isNormal())
