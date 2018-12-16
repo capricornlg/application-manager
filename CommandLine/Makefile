@@ -1,5 +1,5 @@
 VERSION=1.0
-PACKAGE_NAME=application-manager
+PACKAGE_NAME=appmanager
 BUILD_DATE=$(shell date "+%Y%m%d%H%M")
 BUILD_TAG=${PACKAGE_NAME}-${VERSION}-${BUILD_DATE}
 
@@ -36,7 +36,7 @@ $(TARGET): $(OBJS)
 	$(CXX) ${CXXFLAGS} -o $@ $^ $(DEP_LIBS)
 
 format:
-	#dos2unix *.cpp
+	dos2unix *.cpp
 
 .PHONY: clean
 clean:

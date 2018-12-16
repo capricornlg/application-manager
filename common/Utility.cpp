@@ -210,7 +210,7 @@ void Utility::initLogging()
 		mkdir("./log", 00655);
 	}
 	auto consoleLayout = new PatternLayout();
-	consoleLayout->setConversionPattern("%d: %p %c %x: %m%n");
+	consoleLayout->setConversionPattern("%d: [%t] %p %c: %m%n");
 	auto consoleAppender = new OstreamAppender("console", &std::cout);
 	consoleAppender->setLayout(consoleLayout);
 
@@ -226,7 +226,7 @@ void Utility::initLogging()
 		00664);
 	
 	auto pLayout = new PatternLayout();
-	pLayout->setConversionPattern("%d: %p %c %x: %m%n");
+	pLayout->setConversionPattern("%d: [%t] %p %c: %m%n");
 	rollingFileAppender->setLayout(pLayout);
 
 	Category & root = Category::getRoot();

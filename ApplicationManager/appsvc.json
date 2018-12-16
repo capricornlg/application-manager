@@ -5,7 +5,7 @@
   "LogLevel": "DEBUG",
   "Applications": [
     {
-      "name": "TestApp",
+      "name": "period",
       "run_as": "root",
       "command_line": "/bin/sleep 20",
       "env": {
@@ -21,6 +21,12 @@
         "daily_start": "09:00:00",
         "daily_end": "23:00:00"
       }
+    },
+    {
+      "command_line": "ping www.baidu.com",
+      "name": "ping",
+      "run_as": "root",
+      "working_dir": "/tmp"
     }
   ]
 }

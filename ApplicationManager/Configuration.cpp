@@ -92,6 +92,7 @@ web::json::value Configuration::AsJson(bool returnRuntimeInfo)
 	result[GET_STRING_T("HostDescription")] = web::json::value::string(GET_STRING_T(m_hostDescription));
 	result[GET_STRING_T("RestListenPort")] = web::json::value::number(m_restListenPort);
 	result[GET_STRING_T("ScheduleIntervalSec")] = web::json::value::number(m_scheduleInterval);
+	result[GET_STRING_T("LogLevel")] = web::json::value::string(GET_STRING_T(m_logLevel));
 
 	auto arr = web::json::value::array(m_apps.size());
 	for (size_t i = 0; i < m_apps.size(); ++i)

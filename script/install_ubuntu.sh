@@ -2,7 +2,7 @@
 apppath=/opt/appmanager
 if [ ! -d $apppath ];then
 	mkdir -p $apppath
-elif [ -d /etc/init.d/appsvc ];then
+elif [ -f "/etc/init.d/appsvc" ];then
 	service appsvc stop
 	sleep 2
 fi

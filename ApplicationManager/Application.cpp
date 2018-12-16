@@ -195,7 +195,7 @@ web::json::value Application::AsJson(bool returnRuntimeInfo)
 		});
 		result[GET_STRING_T("env")] = envs;
 	}
-	result[GET_STRING_T("posix_timezone")] = web::json::value::string(m_posixTimeZone);
+	if (m_posixTimeZone.length()) result[GET_STRING_T("posix_timezone")] = web::json::value::string(m_posixTimeZone);
 	return result;
 }
 
