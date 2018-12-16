@@ -4,6 +4,7 @@
 #include <ace/Time_Value.h>
 #include <ace/OS.h>
 #include "Application.h"
+#include "TimerActionKill.h"
 #include "../common/Utility.h"
 #include "../common/TimeZoneHelper.h"
 #include "Process.h"
@@ -119,7 +120,7 @@ void Application::invoke()
 				if (!m_process->running())
 				{
 					LOG_INF << fname << "Starting application <" << m_name << ">.";
-					this->spawnProcess();
+					m_pid = this->spawnProcess(m_process);
 				}
 			}
 			else
@@ -165,6 +166,55 @@ void Application::start(std::shared_ptr<Application>& self)
 		invokeNow(self);
 		LOG_INF << fname << "Application <" << m_name << "> started.";
 	}
+}
+
+std::string Application::testRun(size_t timeoutSeconds)
+{
+	const static char fname[] = "Application::testRun() ";
+	std::string stdoutMsg;
+	auto process = std::make_shared<Process>();
+
+	auto pipePtr = std::make_shared<ACE_Pipe>();
+	ACE_HANDLE pipeHandler[2]; // 0 for read, 1 for write
+	FILE* readPipeFile = nullptr;
+	if (pipePtr->open(pipeHandler) < 0)
+	{
+		LOG_ERR << fname << "Create pipe failed with error : " << std::strerror(errno);
+}
+	else
+	{
+		readPipeFile = ACE_OS::fdopen(pipePtr->read_handle(), "r");
+		if (readPipeFile == nullptr)
+		{
+			LOG_ERR << fname << "Get file stream failed with error : " << std::strerror(errno);
+		}
+		else
+		{
+			if (this->spawnProcess(process, pipePtr) > 0)
+			{
+				auto bufferTimer = new TimerActionKill(process, timeoutSeconds);
+				while (true)
+				{
+					char buffer[1024] = { 0 };
+					char* result = fgets(buffer, sizeof(buffer), readPipeFile);
+					if (result == nullptr)
+					{
+						LOG_ERR << fname << "Get line from pipe failed with error : " << std::strerror(errno);
+						break;
+					}
+					LOG_DBG << fname << "Read line : " << buffer;
+					stdoutMsg += buffer;
+					stdoutMsg += "\r\n";
+				}
+			}
+		}
+	}
+
+	// clean pipe handlers and file
+	if (pipePtr) pipePtr->close();
+	if (readPipeFile) ACE_OS::fclose(readPipeFile);
+
+	return stdoutMsg;
 }
 
 web::json::value Application::AsJson(bool returnRuntimeInfo)
@@ -218,10 +268,11 @@ void Application::dump()
 	}
 }
 
-void Application::spawnProcess()
+int Application::spawnProcess(std::shared_ptr<Process> process, std::shared_ptr<ACE_Pipe> pipe)
 {
 	const static char fname[] = "Application::spawnProcess() ";
 
+	int pid;
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	long gid, uid;
 	Utility::getUid(m_user, uid, gid);
@@ -244,16 +295,22 @@ void Application::spawnProcess()
 	{
 		option.setenv(pair.first.c_str(), "%s", pair.second.c_str());
 	});
-	if (m_process->spawn(option) >= 0)
+	if (pipe != nullptr) option.set_handles(ACE_STDIN, pipe->write_handle(), pipe->write_handle());
+	if (process->spawn(option) >= 0)
 	{
-		m_pid = m_process->getpid();
-		LOG_INF << fname << "Process <" << m_commandLine << "> started with pid <" << m_pid << ">.";
+		pid = process->getpid();
+		LOG_INF << fname << "Process <" << m_commandLine << "> started with pid <" << pid << ">.";
 	}
 	else
 	{
-		m_pid = -1;
+		pid = -1;
 		LOG_ERR << fname << "Process:<" << m_commandLine << "> start failed with error : " << std::strerror(errno);
 	}
+	// release the duplicated handles after spawn
+	option.release_handles();
+	// close write in parent side (write handler is used for child process in our case)
+	if (pipe != nullptr) pipe->close_write();
+	return pid;
 }
 
 bool Application::isInDailyTimeRange()

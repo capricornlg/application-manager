@@ -80,7 +80,7 @@ void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
 	m_process = std::make_shared<Process>();
 	if (this->isInDailyTimeRange())
 	{
-		spawnProcess();
+		spawnProcess(m_process);
 	}
 }
 

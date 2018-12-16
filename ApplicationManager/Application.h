@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <mutex>
+#include <ace/Pipe.h>
 #include <cpprest/json.h>
 #include "Process.h"
 #include "DailyLimitation.h"
@@ -37,11 +38,12 @@ public:
 	
 	virtual void stop();
 	virtual void start(std::shared_ptr<Application>& self);
+	std::string testRun(size_t timeoutSeconds);
 
 	virtual web::json::value AsJson(bool returnRuntimeInfo);
 	virtual void dump();
 
-	virtual void spawnProcess();
+	int spawnProcess(std::shared_ptr<Process> process, std::shared_ptr<ACE_Pipe> pipe = nullptr);
 	bool isInDailyTimeRange();
 
 protected:
