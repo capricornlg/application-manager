@@ -73,6 +73,13 @@ void ArgumentParser::parse()
 		// POST /app/$app-name?action=stop
 		processStartStop(false);
 	}
+	else if(cmd == "restart")
+	{
+		auto tmpOpts = m_pasrsedOptions;
+		processStartStop(false);
+		m_pasrsedOptions = tmpOpts;
+		processStartStop(true);
+	}
 }
 
 void ArgumentParser::printMainHelp()
@@ -82,6 +89,7 @@ void ArgumentParser::printMainHelp()
 	std::cout << "  config      Display configurations" << std::endl;
 	std::cout << "  start       Start a application" << std::endl;
 	std::cout << "  stop        Stop a application" << std::endl;
+	std::cout << "  restart     Restart a application" << std::endl;
 	std::cout << "  reg         Add a new application" << std::endl;
 	std::cout << "  unreg       Remove an application" << std::endl;
 
@@ -136,7 +144,7 @@ void ArgumentParser::processReg()
 	{
 		if (m_commandLineVariables.count("force") == 0)
 		{
-			if (!confirmInput("Application already exist, are you sure you want to update the application (y/n)?"))
+			if (!confirmInput("Application already exist, are you sure you want to update the application? [y/n]"))
 			{
 				return;
 			}
@@ -221,7 +229,7 @@ void ArgumentParser::processUnReg()
 	{
 		if (m_commandLineVariables.count("force") == 0)
 		{
-			if (!confirmInput("Are you sure you want to remove the application (y/n)?"))
+			if (!confirmInput("Are you sure you want to remove the application? [y/n]"))
 			{
 				return;
 			}
