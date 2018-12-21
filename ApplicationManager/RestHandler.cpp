@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 #include <cpprest/json.h> // JSON library 
 #include <jsoncpp/json/config.h>
 #include <jsoncpp/json/value.h>
@@ -48,10 +49,11 @@ void RestHandler::close()
 
 void RestHandler::handle_get(http_request message)
 {
+	const static char fname[] = "RestHandler::handle_get() ";
+	bool locked = false;
 	try
 	{
 		REST_INFO_PRINT;
-
 		auto path = GET_STD_STRING(http::uri::decode(message.relative_uri().path()));
 
 		if (path == string("/app-manager/applications"))
@@ -64,8 +66,51 @@ void RestHandler::handle_get(http_request message)
 		}
 		else if (Utility::startWith(path, "/app/"))
 		{
-			auto app = path.substr(strlen("/app/"), path.length() - strlen("/app/"));
-			message.reply(status_codes::OK, Configuration::prettyJson(GET_STD_STRING(Configuration::instance()->getApp(app)->AsJson(true).serialize())));
+			// Get app name from path
+			std::string app;
+			std::vector<std::string> pathVec;
+			Utility::splitString(path, pathVec, "/");
+			if (pathVec.size() >= 2) app = pathVec[1];
+			// /app/someapp
+			std::string getPath = std::string("/app/").append(app);
+			// /app/someapp/output
+			std::string outputPath = getPath + "/output";
+			if (path == getPath)
+			{
+				message.reply(status_codes::OK, Configuration::prettyJson(GET_STD_STRING(Configuration::instance()->getApp(app)->AsJson(true).serialize())));
+			}
+			else if (path == outputPath)
+			{
+				locked = m_testAppMutex.try_lock();
+				if (locked)
+				{
+					auto querymap = web::uri::split_query(web::http::uri::decode(message.relative_uri().query()));
+					int timeout = 5; // default use 5 seconds
+					const int maxTimeout = 100; // set max timeout to 100s
+					if (querymap.find(U("timeout")) != querymap.end())
+					{
+						// max than 1 and less than 100
+						auto requestTimeout = std::max(std::stoi(GET_STD_STRING(querymap.find(U("timeout"))->second)), 1);
+						timeout = std::min(requestTimeout, maxTimeout);
+						LOG_DBG << fname << "Use timeout :" << timeout;
+					}
+					else
+					{
+						LOG_DBG << fname << "Use default timeout :" << timeout;
+					}
+					web::json::value jsonResult = web::json::value::object();
+					jsonResult[GET_STRING_T("output")] = web::json::value::string(GET_STRING_T(Configuration::instance()->getApp(app)->testRun(timeout)));
+					message.reply(status_codes::OK, jsonResult);
+				}
+				else
+				{
+					throw std::invalid_argument("Do not allow test more than one application at the same time");
+				}
+			}
+			else
+			{
+				throw std::invalid_argument("No such path");
+			}
 		}
 		else
 		{
@@ -80,6 +125,7 @@ void RestHandler::handle_get(http_request message)
 	{
 		message.reply(web::http::status_codes::InternalError, U("unknown exception"));
 	}
+	if (locked) m_testAppMutex.unlock();
 }
 
 void RestHandler::handle_put(http_request message)
@@ -92,7 +138,6 @@ void RestHandler::handle_put(http_request message)
 		auto path = GET_STD_STRING(http::uri::decode(message.relative_uri().path()));
 		if (Utility::startWith(path, "/app/"))
 		{
-			//auto appName = path.substr(strlen("/app/"), path.length() - strlen("/app/"));
 			auto jsonApp = message.extract_json(true).get();
 			if (jsonApp.is_null())
 			{

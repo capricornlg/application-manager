@@ -29,6 +29,7 @@ private:
 	void processView();
 	void processConfig();
 	void processStartStop(bool start);
+	void processTest();
 
 	bool confirmInput(const char* msg);
 	http_response requestHttp(const method & mtd, const string& path);

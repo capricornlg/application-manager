@@ -1,6 +1,7 @@
 #include <iostream>
 #include <mutex>
 #include <algorithm>
+#include <sstream>
 #include <ace/Time_Value.h>
 #include <ace/OS.h>
 #include "Application.h"
@@ -171,7 +172,7 @@ void Application::start(std::shared_ptr<Application>& self)
 std::string Application::testRun(size_t timeoutSeconds)
 {
 	const static char fname[] = "Application::testRun() ";
-	std::string stdoutMsg;
+	std::stringstream stdoutMsg;
 	auto process = std::make_shared<Process>();
 
 	auto pipePtr = std::make_shared<ACE_Pipe>();
@@ -180,7 +181,7 @@ std::string Application::testRun(size_t timeoutSeconds)
 	if (pipePtr->open(pipeHandler) < 0)
 	{
 		LOG_ERR << fname << "Create pipe failed with error : " << std::strerror(errno);
-}
+	}
 	else
 	{
 		readPipeFile = ACE_OS::fdopen(pipePtr->read_handle(), "r");
@@ -203,8 +204,7 @@ std::string Application::testRun(size_t timeoutSeconds)
 						break;
 					}
 					LOG_DBG << fname << "Read line : " << buffer;
-					stdoutMsg += buffer;
-					stdoutMsg += "\r\n";
+					stdoutMsg << buffer << '\n';
 				}
 			}
 		}
@@ -214,7 +214,7 @@ std::string Application::testRun(size_t timeoutSeconds)
 	if (pipePtr) pipePtr->close();
 	if (readPipeFile) ACE_OS::fclose(readPipeFile);
 
-	return stdoutMsg;
+	return std::move(stdoutMsg.str());
 }
 
 web::json::value Application::AsJson(bool returnRuntimeInfo)

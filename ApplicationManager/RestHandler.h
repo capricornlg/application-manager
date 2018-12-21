@@ -3,6 +3,7 @@
 #define REST_HANDLER
 
 #include <iostream>
+#include <mutex>
 #include <cpprest/http_client.h>
 #include <cpprest/http_listener.h> // HTTP server 
 
@@ -34,6 +35,7 @@ private:
 	bool checkToken(const std::string& token);
 	std::string getToken(const http_request& message);
 	std::shared_ptr<http_listener> m_listener;
+	std::mutex m_testAppMutex;
 
 };
 #endif

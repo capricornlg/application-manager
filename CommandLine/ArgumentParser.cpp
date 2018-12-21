@@ -80,6 +80,11 @@ void ArgumentParser::parse()
 		m_pasrsedOptions = tmpOpts;
 		processStartStop(true);
 	}
+	else if (cmd == "test")
+	{
+		// GET /app/$app-name/output
+		processTest();
+	}
 }
 
 void ArgumentParser::printMainHelp()
@@ -92,6 +97,7 @@ void ArgumentParser::printMainHelp()
 	std::cout << "  restart     Restart a application" << std::endl;
 	std::cout << "  reg         Add a new application" << std::endl;
 	std::cout << "  unreg       Remove an application" << std::endl;
+	std::cout << "  test        Test run an application and get output" << std::endl;
 
 	std::cout << std::endl;
 	std::cout << "Run 'appc COMMAND --help' for more information on a command." << std::endl;
@@ -312,6 +318,39 @@ void ArgumentParser::processStartStop(bool start)
 	query["action"] = start ? "start" : "stop";
 	string restPath = string("/app/") + m_commandLineVariables["name"].as<string>();
 	auto response = requestHttp(methods::POST, restPath, query);
+	RESPONSE_CHECK_WITH_RETURN;
+	std::cout << GET_STD_STRING(response.extract_utf8string(true).get()) << std::endl;
+}
+
+void ArgumentParser::processTest()
+{
+	po::options_description desc("Start application:");
+	desc.add_options()
+		("help,h", "produce help message")
+		("name,n", po::value<std::string>(), "test run application by name.")
+		("timeout,t", po::value<int>()->default_value(5), "timeout seconds for the test run (default 5).")
+		;
+
+	moveForwardCommandLineVariables(desc);
+	HELP_ARG_CHECK_WITH_RETURN;
+	if (m_commandLineVariables.count("name") == 0)
+	{
+		std::cout << desc << std::endl;
+		return;
+	}
+	if (!isAppExist(m_commandLineVariables["name"].as<string>()))
+	{
+		throw std::invalid_argument("no such application");
+	}
+
+	std::map<string, string> query;
+	if (m_commandLineVariables.count("timeout") > 0)
+	{
+		query["timeout"] = std::to_string(m_commandLineVariables["timeout"].as<int>());
+	}
+	// /app/testapp/output?timeout=5
+	string restPath = string("/app/").append(m_commandLineVariables["name"].as<string>()).append("/output");
+	auto response = requestHttp(methods::GET, restPath, query);
 	RESPONSE_CHECK_WITH_RETURN;
 	std::cout << GET_STD_STRING(response.extract_utf8string(true).get()) << std::endl;
 }
