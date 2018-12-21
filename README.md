@@ -157,15 +157,21 @@ Success
 
 ## Start a application
 ```
-appc start -n ping
+$ appc start -n ping
 ```
 
 ## Stop a application
 ```
-appc stop -n ping
+$ appc stop -n ping
 ```
 
 ## Test run a application and get stdout
-```
-appc test -n ping
+``` sh
+$ appc test -n ping 
+PING www.a.shifen.com (220.181.112.244) 56(84) bytes of data.
+64 bytes from 220.181.112.244: icmp_seq=1 ttl=55 time=20.0 ms
+64 bytes from 220.181.112.244: icmp_seq=2 ttl=55 time=20.1 ms
+64 bytes from 220.181.112.244: icmp_seq=3 ttl=55 time=20.1 ms
+64 bytes from 220.181.112.244: icmp_seq=4 ttl=55 time=20.1 ms
+64 bytes from 220.181.112.244: icmp_seq=5 ttl=55 time=20.1 ms
 ```
