@@ -93,7 +93,7 @@ appc config
       {
          "active" : 1,
          "command_line" : "ping www.google.com",
-         "name" : "def",
+         "name" : "ping",
          "run_as" : "kfc",
          "working_dir" : "/opt"
       }
@@ -129,13 +129,13 @@ Register a new application::
   -f [ --force ]                 force without confirm.
   -h [ --help ]                  produce help message
   
-$ appc reg -n def -u kfc -c 'ping www.google.com' -w /opt
+$ appc reg -n ping -u kfc -c 'ping www.google.com' -w /opt
 Application already exist, are you sure you want to update the application (y/n)?
 y
 {
    "active" : 1,
    "command_line" : "ping www.google.com",
-   "name" : "def",
+   "name" : "ping",
    "pid" : -1,
    "return" : 0,
    "run_as" : "kfc",
@@ -148,7 +148,7 @@ y
 
 ## Remove a application
 ```
-appc unreg -n abc
+appc unreg -n ping
 Are you sure you want to remove the application (y/n)?
 y
 Success
@@ -156,10 +156,15 @@ Success
 
 ## Start a application
 ```
-appc start -n def
+appc start -n ping
 ```
 
 ## Stop a application
 ```
-appc stop -n def
+appc stop -n ping
+```
+
+## Test run a application and get stdout
+```
+appc test -n ping
 ```

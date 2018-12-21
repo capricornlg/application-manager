@@ -204,7 +204,7 @@ std::string Application::testRun(size_t timeoutSeconds)
 						break;
 					}
 					LOG_DBG << fname << "Read line : " << buffer;
-					stdoutMsg << buffer << '\n';
+					stdoutMsg << buffer;
 				}
 			}
 		}
