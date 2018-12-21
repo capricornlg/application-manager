@@ -98,9 +98,7 @@ void RestHandler::handle_get(http_request message)
 					{
 						LOG_DBG << fname << "Use default timeout :" << timeout;
 					}
-					web::json::value jsonResult = web::json::value::object();
-					jsonResult[GET_STRING_T("output")] = web::json::value::string(GET_STRING_T(Configuration::instance()->getApp(app)->testRun(timeout)));
-					message.reply(status_codes::OK, jsonResult);
+					message.reply(status_codes::OK, Configuration::instance()->getApp(app)->testRun(timeout));
 				}
 				else
 				{
