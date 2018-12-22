@@ -1,6 +1,6 @@
 
-#ifndef _TIMER_ACTION_
-#define _TIMER_ACTION_
+#ifndef TIMER_ACTION_H
+#define TIMER_ACTION_H
 #include <mutex>
 #include <memory>
 #include <boost/asio/deadline_timer.hpp>

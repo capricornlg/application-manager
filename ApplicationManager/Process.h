@@ -1,5 +1,5 @@
-#ifndef APP_PROCESS
-#define APP_PROCESS
+#ifndef APP_PROCESS_H
+#define APP_PROCESS_H
 #include <map>
 #include <ace/Process.h>
 

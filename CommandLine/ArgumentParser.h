@@ -1,5 +1,5 @@
-#ifndef ARGUMENT_PARSER
-#define ARGUMENT_PARSER
+#ifndef ARGUMENT_PARSER_H
+#define ARGUMENT_PARSER_H
 #include <string>
 #include <iomanip>
 #include <cpprest/json.h>

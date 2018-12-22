@@ -1,6 +1,6 @@
 
-#ifndef _TIMER_
-#define _TIMER_
+#ifndef TIMER_H
+#define TIMER_H
 
 #include <boost/serialization/singleton.hpp>
 #include <boost/asio.hpp>
