@@ -1,6 +1,6 @@
 
-#ifndef DAILY_LIMITATION
-#define DAILY_LIMITATION
+#ifndef DAILY_LIMITATION_H
+#define DAILY_LIMITATION_H
 #include <string>
 #include <chrono>
 #include <memory>

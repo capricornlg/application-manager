@@ -1,6 +1,6 @@
 
-#ifndef REST_HANDLER
-#define REST_HANDLER
+#ifndef REST_HANDLER_H
+#define REST_HANDLER_H
 
 #include <iostream>
 #include <mutex>

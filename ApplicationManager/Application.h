@@ -1,6 +1,5 @@
-
-#ifndef APPLICATION_DEFINITION
-#define APPLICATION_DEFINITION
+#ifndef APPLICATION_DEFINITION_H
+#define APPLICATION_DEFINITION_H
 
 #include <memory>
 #include <string>

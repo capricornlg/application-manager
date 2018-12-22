@@ -1,5 +1,5 @@
-#ifndef TIME_ZONE_HELPER
-#define TIME_ZONE_HELPER
+#ifndef TIME_ZONE_HELPER_H
+#define TIME_ZONE_HELPER_H
 #include <string>
 #include <chrono>
 

@@ -163,7 +163,7 @@ y
 
 
 
-## Remove a application
+## Remove an application
 ```
 appc unreg -n ping
 Are you sure you want to remove the application (y/n)?
@@ -171,17 +171,17 @@ y
 Success
 ```
 
-## Start a application
+## Start an application
 ```
 $ appc start -n ping
 ```
 
-## Stop a application
+## Stop an application
 ```
 $ appc stop -n ping
 ```
 
-## Test run a application and get stdout
+## Test run an application and get stdout
 ``` sh
 $ appc test -n ping 
 PING www.a.shifen.com (220.181.112.244) 56(84) bytes of data.

@@ -1,6 +1,6 @@
 
-#ifndef UTILITY
-#define UTILITY
+#ifndef UTILITY_H
+#define UTILITY_H
 
 #include <string>
 #include <map>

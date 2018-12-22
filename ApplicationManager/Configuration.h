@@ -1,6 +1,6 @@
 
-#ifndef CONFIGURATION
-#define CONFIGURATION
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
 #include <memory>
 #include <vector>
