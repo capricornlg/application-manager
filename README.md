@@ -55,8 +55,10 @@ Commands:
   config      Display configurations
   start       Start a application
   stop        Stop a application
+  restart     Restart a application
   reg         Add a new application
   unreg       Remove an application
+  test        Test run an application and get output
 
 Run 'appc COMMAND --help' for more information on a command.
 
@@ -67,14 +69,14 @@ Usage:  appc [COMMAND] [ARG...] [flags]
 ## Display application[s]
 
 ```
-$ appc view 
+$ appc view
 id user  active pid   return name        command_line
-1  root  start  19574 0      abc         sleep 30
-2  kfc   start  19575 0      def         ping www.google.com
+1  root  stop   0     0      period      /bin/sleep 20
+2  root  stop   0     0      ping        ping www.baidu.com
 
-$ appc view -n def
+$ appc view -n ping
 id user  active pid   return name        command_line
-1  kfc   start  19575 0      def         ping www.google.com
+1  root  stop   0     0      ping        ping www.baidu.com
 ```
 
 ## Display configurations
@@ -85,21 +87,35 @@ appc config
 {
    "Applications" : [
       {
-         "active" : 1,
-         "command_line" : "sleep 30",
-         "name" : "abc",
+         "active" : 0,
+         "command_line" : "/bin/sleep 20",
+         "daily_limitation" : {
+            "daily_end" : "23:00:00",
+            "daily_start" : "09:00:00"
+         },
+         "env" : {
+            "TEST_ENV1" : "value",
+            "TEST_ENV2" : "value"
+         },
+         "keep_running" : true,
+         "name" : "period",
+         "posix_timezone" : "CST+8:00:00",
          "run_as" : "root",
+         "start_interval_seconds" : 30,
+         "start_interval_timeout" : 0,
+         "start_time" : "2018-01-01 16:00:00",
          "working_dir" : "/opt"
       },
       {
-         "active" : 1,
-         "command_line" : "ping www.google.com",
+         "active" : 0,
+         "command_line" : "ping www.baidu.com",
          "name" : "ping",
-         "run_as" : "kfc",
-         "working_dir" : "/opt"
+         "run_as" : "root",
+         "working_dir" : "/tmp"
       }
    ],
    "HostDescription" : "Host01",
+   "LogLevel" : "DEBUG",
    "RestListenPort" : 6060,
    "ScheduleIntervalSec" : 2
 }
