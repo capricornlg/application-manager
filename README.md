@@ -35,7 +35,7 @@ gem install fpm
 Method | URI
 ---|---
 GET | /app/$app-name
-GET | /app/$app-name/output
+GET | /app/$app-name/output?timeout=5
 GET | /app-manager/applications
 GET | /app-manager/config
 PUT | /app/$app-name
