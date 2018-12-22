@@ -68,8 +68,7 @@ void RestHandler::handle_get(http_request message)
 		{
 			// Get app name from path
 			std::string app;
-			std::vector<std::string> pathVec;
-			Utility::splitString(path, pathVec, "/");
+			std::vector<std::string> pathVec = Utility::splitString(path, "/");
 			if (pathVec.size() >= 2) app = pathVec[1];
 			// /app/someapp
 			std::string getPath = std::string("/app/").append(app);
