@@ -118,7 +118,7 @@ void ArgumentParser::processReg()
 		("start_time,t", po::value<std::string>(), "start date time for short running app (e.g., '2018-01-01 09:00:00')")
 		("daily_start,s", po::value<std::string>(), "daily start time (e.g., '09:00:00')")
 		("daily_end,d", po::value<std::string>(), "daily end time (e.g., '20:00:00')")
-		("env,e", po::value<std::string>(), "environment variables (e.g., env1=value1:env2=value2)")
+		("env,e", po::value<std::vector<std::string>>(), "environment variables (e.g., env1=value1)")
 		("interval,i", po::value<int>(), "start interval seconds for short running app")
 		("extraTime,x", po::value<int>(), "extra timeout for short running app,the value must less than interval  (default 0)")
 		("timezone,z", po::value<std::string>(), "posix timezone for the application, reflect [start_time|daily_start|daily_end] (e.g., 'WST+08:00' is Australia Standard Time)")
@@ -196,15 +196,13 @@ void ArgumentParser::processReg()
 
 	if (m_commandLineVariables.count("env"))
 	{
-		std::vector<string> envs;
-		Utility::splitString(m_commandLineVariables["env"].as<string>(), envs, ":");
+		std::vector<string> envs = m_commandLineVariables["env"].as<std::vector<std::string>>();
 		if (envs.size())
 		{
 			web::json::value objEnvs = web::json::value::object();
 			std::for_each(envs.begin(), envs.end(), [&objEnvs](string env)
 			{
-				std::vector<string> envVec;
-				Utility::splitString(env, envVec, "=");
+				std::vector<string> envVec = Utility::splitString(env, "=");
 				if (envVec.size() == 2)
 				{
 					objEnvs[GET_STRING_T(envVec.at(0))] = web::json::value::string(GET_STRING_T(envVec.at(1)));

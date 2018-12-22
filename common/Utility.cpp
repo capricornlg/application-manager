@@ -372,8 +372,9 @@ std::string Utility::decode64(const std::string & val)
 	});
 }
 
-void Utility::splitString(const std::string & source, std::vector<std::string>& result, const std::string & splitFlag)
+std::vector<std::string> Utility::splitString(const std::string & source, const std::string & splitFlag)
 {
+	std::vector<std::string> result;
 	std::string::size_type pos1, pos2;
 	pos2 = source.find(splitFlag);
 	pos1 = 0;
@@ -390,6 +391,7 @@ void Utility::splitString(const std::string & source, std::vector<std::string>& 
 		string str = stdStringTrim(source.substr(pos1));
 		if (str.length() > 0) result.push_back(str);
 	}
+	return std::move(result);
 }
 
 bool Utility::startWith(const std::string & str, std::string head)

@@ -57,7 +57,7 @@ public:
 	// String related
 	static bool isNumber(std::string s);
 	static std::string stdStringTrim(const std::string &str);
-	static void splitString(const std::string& s, std::vector<std::string>& v, const std::string& c);
+	static std::vector<std::string> splitString(const std::string& s, const std::string& c);
 	static bool startWith(const std::string& str, std::string head);
 
 	static void initLogging();
