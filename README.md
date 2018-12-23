@@ -6,12 +6,12 @@ The internal timer is multi-threaded with high-precision that can used to replac
 ![diagram.png](https://github.com/jinneec/application-manager/blob/master/doc/diagram.png?raw=true) 
 
 
-Types of applications supported | Behavior
+Supported applications  | Behavior
 ---|---
 Long running application | Will always be restarted when exited
 Short runing application | Will be launched periodly
 Periodic long running application |Long running applicatin but will be restart periodic
-Application avialable time range|Application can be only avialable in a specific time range daily (all app can have this behavior) with timezone definition
+Extra Features | Application can define avialable time range in a day <br> Application can have customerized envionment variables
 
 
 ## Development tecnical
@@ -183,7 +183,7 @@ $ appc stop -n ping
 
 ## Test run an application and get stdout
 ``` sh
-$ appc test -n ping 
+$ appc test -n ping -t 5
 PING www.a.shifen.com (220.181.112.244) 56(84) bytes of data.
 64 bytes from 220.181.112.244: icmp_seq=1 ttl=55 time=20.0 ms
 64 bytes from 220.181.112.244: icmp_seq=2 ttl=55 time=20.1 ms
