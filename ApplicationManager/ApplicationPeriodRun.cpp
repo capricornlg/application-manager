@@ -18,8 +18,10 @@ ApplicationPeriodRun::~ApplicationPeriodRun()
 
 void ApplicationPeriodRun::refreshPid()
 {
+	// 1. Do the same thing with short running app (refresh pid and return code)
 	ApplicationShortRun::refreshPid();
 
+	// 2. Start again when the short running app exited
 	auto app = Configuration::instance()->getApp(this->getName());
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (!m_process->running() && this->isNormal() && std::chrono::system_clock::now() > getStartTime())

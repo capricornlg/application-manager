@@ -45,6 +45,7 @@ int main(int argc, char * argv[])
 
 		if (USE_SEPERATE_TIMER_THREAD)
 		{
+			// Timer will have a new thread, main thread will used to monitor process
 			TIMER.init();
 			while (true)
 			{
@@ -60,6 +61,8 @@ int main(int argc, char * argv[])
 		}
 		else
 		{
+			// main thread will be used to handle asio::io_service events and block here
+			// Application monitor will use an async_wait timer event
 			monitorAllApps(boost::system::error_code());
 			TIMER.runTimerThread();
 		}
