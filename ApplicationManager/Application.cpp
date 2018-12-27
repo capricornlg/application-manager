@@ -76,6 +76,7 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 void Application::refreshPid()
 {
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
+	// Try to get return code.
 	if (m_process!= nullptr)
 	{
 		if (m_process->running())
@@ -317,14 +318,17 @@ bool Application::isInDailyTimeRange()
 {
 	if (m_dailyLimit != nullptr)
 	{
+		// Convert now to day time [%H:%M:%S], less than 24h
 		auto now = Utility::convertStr2DayTime(Utility::convertDayTime2Str(std::chrono::system_clock::now()));
 
 		if (m_dailyLimit->m_startTime < m_dailyLimit->m_endTime)
 		{
+			// Start less than End means valid range should between start and end.
 			return (now >= m_dailyLimit->m_startTime && now < m_dailyLimit->m_endTime);
 		}
 		else if (m_dailyLimit->m_startTime > m_dailyLimit->m_endTime)
 		{
+			// Start greater than End means from end to start is invalid range (the valid range is across 0:00).
 			return !(now >= m_dailyLimit->m_endTime && now < m_dailyLimit->m_startTime);
 		}
 	}

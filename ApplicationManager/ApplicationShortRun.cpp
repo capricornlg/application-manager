@@ -43,7 +43,10 @@ void ApplicationShortRun::FromJson(std::shared_ptr<ApplicationShortRun>& app, co
 
 void ApplicationShortRun::refreshPid()
 {
+	// 1. Call parent to get the new pid
 	Application::refreshPid();
+	// 2. Try to get return code from Buffer process again
+	//    If there have buffer process, current process is still running, so get return code from buffer process
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (nullptr != m_bufferProcess && m_bufferProcess->running())
 	{
@@ -68,6 +71,7 @@ void ApplicationShortRun::invokeNow(std::shared_ptr<Application>& self)
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	if (m_bufferTime > 0)
 	{
+		// Use m_bufferProcess to allow old process running more time
 		m_bufferProcess = m_process;
 		// This will be deleted automaticlly, so should not use auto_ptr here.
 		auto bufferTimer = new TimerActionKill(m_bufferProcess, m_bufferTime);
