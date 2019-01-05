@@ -168,7 +168,7 @@ std::string Utility::getSelfFullPath()
 	size_t idx = 0;
 	while (buf[idx] != '\0')
 	{
-		if (buf[idx] == '.' && buff[idx + 1] == 'e' && buff[idx + 2] == 'x' && buff[idx + 3] == 'e';
+		if (buf[idx] == '.' && buff[idx + 1] == 'e' && buff[idx + 2] == 'x' && buff[idx + 3] == 'e')
 		{
 			buf[idx] = '\0';
 		}
