@@ -13,7 +13,7 @@ using namespace std;
 
 
 Application::Application()
-	:m_active(NORMAL), m_return(0),m_pid(-1)
+	:m_active(NORMAL), m_return(0),m_pid(-1), m_processIndex(0)
 {
 	const static char fname[] = "Application::Application() ";
 	LOG_DBG << fname << "Entered.";
@@ -301,6 +301,7 @@ int Application::spawnProcess(std::shared_ptr<Process> process, std::shared_ptr<
 	{
 		pid = process->getpid();
 		LOG_INF << fname << "Process <" << m_commandLine << "> started with pid <" << pid << ">.";
+		process->setCgroup(m_name, ++m_processIndex);
 	}
 	else
 	{

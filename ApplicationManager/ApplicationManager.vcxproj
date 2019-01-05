@@ -73,6 +73,7 @@
     <ClCompile Include="ApplicationShortRun.cpp" />
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="DailyLimitation.cpp" />
+    <ClCompile Include="LinuxCgroup.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="RestHandler.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="ApplicationShortRun.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="DailyLimitation.h" />
+    <ClInclude Include="LinuxCgroup.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="RestHandler.h" />
     <ClInclude Include="Timer.h" />

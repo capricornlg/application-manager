@@ -53,6 +53,10 @@ public:
 	static std::map<std::string, int> getProcessList();
 	static std::string getSelfFullPath();
 	static bool isDirExist(std::string path);
+	static bool isFileExist(std::string path);
+	static bool createDirectory(const std::string& path, mode_t mode = 0775);
+	static bool createRecursiveDirectory(const std::string& path, mode_t mode = 0775);
+	static bool removeDir(const std::string& path);
 
 	// String related
 	static bool isNumber(std::string s);

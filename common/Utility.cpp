@@ -191,24 +191,75 @@ std::string Utility::getSelfFullPath()
 
 bool Utility::isDirExist(std::string path)
 {
-	if (path.length())
+#if defined (WIN32)
+	DWORD dwAttrib = GetFileAttributes(path.c_str());
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+#else
+	struct stat pathStat;
+	return (::stat(path.c_str(), &pathStat) == 0 && S_ISDIR(pathStat.st_mode));
+#endif
+}
+
+bool Utility::isFileExist(std::string path)
+{
+	return (::access(path.c_str(), F_OK) == 0);
+}
+
+bool Utility::createDirectory(const std::string & path, mode_t mode)
+{
+	const static char fname[] = "Utility::createDirectory() ";
+
+	if (!isDirExist(path))
 	{
-		DIR* dir = opendir(path.c_str());
-		if (dir != nullptr)
+		if (mkdir(path.c_str(), mode) < 0)
 		{
-			closedir(dir);
-			return true;
+			LOG_ERR << fname << "Create directory <" << path << "> failed with error: " << std::strerror(errno);
+			return false;
 		}
 	}
-	return false;
+	return true;
+}
+
+bool Utility::createRecursiveDirectory(const std::string & path, mode_t mode)
+{
+	// TODO: on windows, path can both contain '/' and '\'
+	auto dirVec = splitString(path, "/");
+	std::string pstr;
+	if (path.length() && path[0] == '/') pstr = "/";
+	for (auto str : dirVec)
+	{
+		pstr += str;
+		pstr += "/";
+		if (!createDirectory(pstr))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Utility::removeDir(const std::string & path)
+{
+	const static char fname[] = "Utility::removeDir() ";
+
+	if (isDirExist(path))
+	{
+		if (rmdir(path.c_str()) == 0)
+		{
+			LOG_INF << fname << "Removed directory : " << path;
+		}
+		else
+		{
+			LOG_WAR << fname << "Failed to remove directory : " << path;
+			return false;
+		}
+	}
+	return true;
 }
 
 void Utility::initLogging()
 {
-	if (!isDirExist("./log"))
-	{
-		mkdir("./log", 00655);
-	}
+	createDirectory("./log", 00655);
 	auto consoleLayout = new PatternLayout();
 	consoleLayout->setConversionPattern("%d: [%t] %p %c: %m%n");
 	auto consoleAppender = new OstreamAppender("console", &std::cout);

@@ -57,6 +57,7 @@ protected:
 	
 	std::shared_ptr<Process> m_process;
 	int m_pid;
+	int m_processIndex;	// used for organize cgroup path dir
 	std::recursive_mutex m_mutex;
 	std::shared_ptr<DailyLimitation> m_dailyLimit;
 	std::map<std::string, std::string> m_envMap;

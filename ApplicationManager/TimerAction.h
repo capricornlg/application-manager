@@ -12,7 +12,6 @@ class ApplicationShortRun;
 class TimerAction
 {
 public:
-	TimerAction();
 	explicit TimerAction(std::shared_ptr<ApplicationShortRun> app);
 	virtual ~TimerAction();
 

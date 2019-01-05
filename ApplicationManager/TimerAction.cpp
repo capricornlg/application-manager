@@ -9,11 +9,6 @@
 #include "ApplicationShortRun.h"
 
 
-
-TimerAction::TimerAction()
-{
-}
-
 TimerAction::TimerAction(std::shared_ptr<ApplicationShortRun> app)
 	:m_app(app)
 {

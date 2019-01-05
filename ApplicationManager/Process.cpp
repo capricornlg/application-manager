@@ -1,7 +1,7 @@
 #include <thread>
 #include "Process.h"
 #include "../common/Utility.h"
-
+#include "LinuxCgroup.h"
 
 Process::Process()
 {
@@ -25,7 +25,7 @@ void Process::killgroup()
 	{
 		ACE_OS::kill(-(this->getpid()), 9);
 		this->terminate();
-		if (this->wait() < 0)
+		if (this->wait() < 0 && errno != 10)	// 10 is ECHILD:No child processes
 		{
 			//avoid  zombie process (Interrupted system call)
 			LOG_WAR << fname << "Wait process <" << getpid() << "> to exit failed with error : " << std::strerror(errno);
@@ -40,4 +40,12 @@ void Process::killgroup()
 			}
 		}
 	}
+}
+
+void Process::setCgroup(std::string appName, int index)
+{
+	/*long long mem = 1024l * 1024 * 500;
+	int cpus = 99;
+	m_cgroup = std::make_shared<LinuxCgroup>(mem, mem, cpus);
+	m_cgroup->setCgroup(appName, getpid(), index);*/
 }
