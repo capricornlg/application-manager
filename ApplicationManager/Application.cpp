@@ -57,6 +57,10 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 	{
 		app->m_dailyLimit = DailyLimitation::FromJson(jobj.at(GET_STRING_T("daily_limitation")).as_object());
 	}
+	if (HAS_JSON_FIELD(jobj, "resource_limitation"))
+	{
+		app->m_resourceLimit = ResourceLimitation::FromJson(jobj.at(GET_STRING_T("resource_limitation")).as_object());
+	}
 	if (HAS_JSON_FIELD(jobj, "env"))
 	{
 		auto env = jobj.at(GET_STRING_T("env")).as_object();
@@ -237,6 +241,10 @@ web::json::value Application::AsJson(bool returnRuntimeInfo)
 	{
 		result[GET_STRING_T("daily_limitation")] = m_dailyLimit->AsJson();
 	}
+	if (m_resourceLimit != nullptr)
+	{
+		result[GET_STRING_T("resource_limitation")] = m_resourceLimit->AsJson();
+	}
 	if (m_envMap.size())
 	{
 		web::json::value envs = web::json::value::object();
@@ -263,10 +271,8 @@ void Application::dump()
 	LOG_DBG << fname << "m_status:" << m_active;
 	LOG_DBG << fname << "m_pid:" << m_pid;
 	LOG_DBG << fname << "m_posixTimeZone:" << m_posixTimeZone;
-	if (m_dailyLimit != nullptr)
-	{
-		m_dailyLimit->dump();
-	}
+	if (m_dailyLimit != nullptr) m_dailyLimit->dump();
+	if (m_resourceLimit != nullptr) m_resourceLimit->dump();
 }
 
 int Application::spawnProcess(std::shared_ptr<Process> process, std::shared_ptr<ACE_Pipe> pipe)
@@ -301,7 +307,7 @@ int Application::spawnProcess(std::shared_ptr<Process> process, std::shared_ptr<
 	{
 		pid = process->getpid();
 		LOG_INF << fname << "Process <" << m_commandLine << "> started with pid <" << pid << ">.";
-		process->setCgroup(m_name, ++m_processIndex);
+		process->setCgroup(m_name, ++m_processIndex, m_resourceLimit);
 	}
 	else
 	{

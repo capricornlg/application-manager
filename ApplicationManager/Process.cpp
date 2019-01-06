@@ -42,10 +42,12 @@ void Process::killgroup()
 	}
 }
 
-void Process::setCgroup(std::string appName, int index)
+void Process::setCgroup(std::string appName, int index, std::shared_ptr<ResourceLimitation>& limit)
 {
-	/*long long mem = 1024l * 1024 * 500;
-	int cpus = 99;
-	m_cgroup = std::make_shared<LinuxCgroup>(mem, mem, cpus);
-	m_cgroup->setCgroup(appName, getpid(), index);*/
+	// https://blog.csdn.net/u011547375/article/details/9851455
+	if (limit != nullptr)
+	{
+		m_cgroup = std::make_shared<LinuxCgroup>(limit->m_memoryMb, limit->m_memoryVirtMb - limit->m_memoryMb, limit->m_cpuShares);
+		m_cgroup->setCgroup(appName, getpid(), index);
+	}
 }

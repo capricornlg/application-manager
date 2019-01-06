@@ -39,7 +39,7 @@ private:
 	void addHttpHeader(http_request& request);
 
 private:
-	void printApps(web::json::value json);
+	void printApps(web::json::value json, bool reduce);
 	void moveForwardCommandLineVariables(po::options_description& desc);
 	string reduceStr(string source, int limit);
 

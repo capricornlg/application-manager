@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <ace/Process.h>
 #include "LinuxCgroup.h"
+#include "ResourceLimitation.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Process Object
@@ -17,9 +18,10 @@ public:
 
 	void attach(int pid);
 	void killgroup();
-	void setCgroup(std::string appName,int index);
+	void setCgroup(std::string appName,int index, std::shared_ptr<ResourceLimitation>& limit);
 private:
 	std::shared_ptr<LinuxCgroup> m_cgroup;
+	std::shared_ptr<ResourceLimitation> m_resourceLimit;
 };
 
 #endif 

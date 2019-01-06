@@ -9,6 +9,7 @@
 #include <cpprest/json.h>
 #include "Process.h"
 #include "DailyLimitation.h"
+#include "ResourceLimitation.h"
 enum STATUS
 {
 	STOPPED = 0,
@@ -60,6 +61,7 @@ protected:
 	int m_processIndex;	// used for organize cgroup path dir
 	std::recursive_mutex m_mutex;
 	std::shared_ptr<DailyLimitation> m_dailyLimit;
+	std::shared_ptr<ResourceLimitation> m_resourceLimit;
 	std::map<std::string, std::string> m_envMap;
 };
 

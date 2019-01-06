@@ -16,8 +16,8 @@ private:
 	void writeFile(const std::string& cgroupPath, long long value);
 
 private:
-	long long m_memLimitBytes;
-	long long m_memSwapBytes;
+	long long m_memLimitMb;
+	long long m_memSwapMb;
 	long long m_cpuShares;
 
 	int m_pid;

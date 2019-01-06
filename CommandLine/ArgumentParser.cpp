@@ -118,6 +118,10 @@ void ArgumentParser::processReg()
 		("start_time,t", po::value<std::string>(), "start date time for short running app (e.g., '2018-01-01 09:00:00')")
 		("daily_start,s", po::value<std::string>(), "daily start time (e.g., '09:00:00')")
 		("daily_end,d", po::value<std::string>(), "daily end time (e.g., '20:00:00')")
+		("memory,m", po::value<int>(), "memory limit in MByte")
+		("virtual_memory,v", po::value<int>(), "virtual memory limit in MByte")
+		("cpu_shares,p", po::value<int>(), "CPU shares (relative weight)")
+		("daily_end,d", po::value<std::string>(), "daily end time (e.g., '20:00:00')")
 		("env,e", po::value<std::vector<std::string>>(), "environment variables (e.g., -e env1=value1 -e env2=value2)")
 		("interval,i", po::value<int>(), "start interval seconds for short running app")
 		("extraTime,x", po::value<int>(), "extra timeout for short running app,the value must less than interval  (default 0)")
@@ -193,6 +197,16 @@ void ArgumentParser::processReg()
 		jsobObj["daily_limitation"] = objDailyLimitation;
 	}
 
+	if (m_commandLineVariables.count("memory") || m_commandLineVariables.count("virtual_memory") ||
+		m_commandLineVariables.count("cpu_shares"))
+	{
+		web::json::value objResourceLimitation = web::json::value::object();
+		if (m_commandLineVariables.count("memory")) objResourceLimitation["memory_mb"] = web::json::value::number(m_commandLineVariables["memory"].as<int>());
+		if (m_commandLineVariables.count("virtual_memory")) objResourceLimitation["memory_virt_mb"] = web::json::value::number(m_commandLineVariables["virtual_memory"].as<int>());
+		if (m_commandLineVariables.count("cpu_shares")) objResourceLimitation["cpu_shares"] = web::json::value::number(m_commandLineVariables["cpu_shares"].as<int>());
+		jsobObj["resource_limitation"] = objResourceLimitation;
+	}
+
 
 	if (m_commandLineVariables.count("env"))
 	{
@@ -255,28 +269,31 @@ void ArgumentParser::processView()
 	desc.add_options()
 		("help,h", "produce help message")
 		("name,n", po::value<std::string>(), "view application by name.")
+		("long,l", "display the complete information without reduce")
 		;
 	
 	moveForwardCommandLineVariables(desc);
 	HELP_ARG_CHECK_WITH_RETURN;
 
-	if (m_commandLineVariables.empty())
+	bool reduce = !(m_commandLineVariables.count("long"));
+
+	if (m_commandLineVariables.count("name") > 0)
 	{
-		string restPath = "/app-manager/applications";
+		string restPath = string("/app/") + m_commandLineVariables["name"].as<string>();
 		auto response = requestHttp(methods::GET, restPath);
 		RESPONSE_CHECK_WITH_RETURN;
-		printApps(response.extract_json(true).get());
+		auto arr = web::json::value::array(1);
+		arr[0] = response.extract_json(true).get();
+		printApps(arr, reduce);
 	}
 	else
 	{
-		if (m_commandLineVariables.count("name") > 0)
+		if (m_commandLineVariables.empty() || (!reduce && m_commandLineVariables.size() == 1))
 		{
-			string restPath = string("/app/") + m_commandLineVariables["name"].as<string>();
+			string restPath = "/app-manager/applications";
 			auto response = requestHttp(methods::GET, restPath);
 			RESPONSE_CHECK_WITH_RETURN;
-			auto arr = web::json::value::array(1);
-			arr[0] = response.extract_json(true).get();
-			printApps(arr);
+			printApps(response.extract_json(true).get(), reduce);
 		}
 		else
 		{
@@ -418,7 +435,7 @@ void ArgumentParser::addHttpHeader(http_request & request)
 	request.headers().add("token", token);
 }
 
-void ArgumentParser::printApps(web::json::value json)
+void ArgumentParser::printApps(web::json::value json, bool reduce)
 {
 	// Title:
 	std::cout << left;
@@ -435,14 +452,23 @@ void ArgumentParser::printApps(web::json::value json)
 	int index = 1;
 	auto jsonArr = json.as_array();
 	auto reduceFunc = std::bind(&ArgumentParser::reduceStr, this, std::placeholders::_1, std::placeholders::_2);
-	for_each(jsonArr.begin(), jsonArr.end(), [&index, &reduceFunc](web::json::value &x) {
+	for_each(jsonArr.begin(), jsonArr.end(), [&index, &reduceFunc, reduce](web::json::value &x) {
 		auto jobj = x.as_object();
 		std::cout << setw(3) << index++;
 		std::cout << setw(6) << reduceFunc(GET_JSON_STR_VALUE(jobj, "run_as"), 6);
 		std::cout << setw(7) << (GET_JSON_INT_VALUE(jobj, "active") == 1 ? "start" : "stop");
 		std::cout << setw(6) << (GET_JSON_INT_VALUE(jobj, "pid") > 0 ? GET_JSON_INT_VALUE(jobj, "pid") : 0);
 		std::cout << setw(7) << GET_JSON_INT_VALUE(jobj, "return");
-		std::cout << setw(12) << reduceFunc(GET_JSON_STR_VALUE(jobj, "name"), 12);
+		auto name = GET_JSON_STR_VALUE(jobj, "name");
+		if (reduce)
+		{
+			name = reduceFunc(name, 12);
+		}
+		else if (name.length() >= 12)
+		{
+			name += " ";
+		}
+		std::cout << setw(12) << name;
 		std::cout << GET_JSON_STR_VALUE(jobj, "command_line");
 
 		std::cout << std::endl;

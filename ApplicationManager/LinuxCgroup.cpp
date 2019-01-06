@@ -8,17 +8,22 @@ std::string LinuxCgroup::cgroupMemRootName;
 std::string LinuxCgroup::cgroupCpuRootName;
 std::string LinuxCgroup::cgroupBaseDir = "/appmanager";
 LinuxCgroup::LinuxCgroup(long long memLimitBytes, long long memSwapBytes, long long cpuShares)
-	:m_memLimitBytes(memLimitBytes), m_memSwapBytes(memSwapBytes), m_cpuShares(cpuShares), m_pid(0), cgroupEnabled(false)
+	:m_memLimitMb(memLimitBytes), m_memSwapMb(memSwapBytes), m_cpuShares(cpuShares), m_pid(0), cgroupEnabled(false)
 {
 	const static char fname[] = "LinuxCgroup::LinuxCgroup() ";
 
-	// It is important to set the "memory.limit_in_bytes" before setting the "memory.memsw.limit_in_bytes"
-	if (m_memLimitBytes == 0 && m_memSwapBytes > 0)
+	if (m_memLimitMb > 0 && m_memLimitMb < 4)
 	{
-		m_memLimitBytes = m_memSwapBytes;
-		LOG_WAR << fname << "m_memLimitBytes is setting to m_memSwapBytes";
+		m_memLimitMb = 4;
+		LOG_WAR << fname << "memory_mb should not less than 4M";
 	}
-	cgroupEnabled = (m_memLimitBytes > 0 || m_memSwapBytes > 0 || m_cpuShares > 0);
+	// It is important to set the "memory.limit_in_bytes" before setting the "memory.memsw.limit_in_bytes"
+	if (m_memLimitMb == 0 && m_memSwapMb > 0)
+	{
+		m_memLimitMb = m_memSwapMb;
+		LOG_WAR << fname << "m_memLimitMb is setting to m_memSwapMb";
+	}
+	cgroupEnabled = (m_memLimitMb > 0 || m_memSwapMb > 0 || m_cpuShares > 0);
 
 	if (cgroupEnabled)
 	{
@@ -27,10 +32,10 @@ LinuxCgroup::LinuxCgroup(long long memLimitBytes, long long memSwapBytes, long l
 		if (!retrieved) { retrieveCgroupHeirarchy(); retrieved = true; }
 
 		// Check whether swap limit is enabled for OS, by default, Ubuntu does not enable swap limit
-		if (m_memSwapBytes > 0 && !Utility::isFileExist(cgroupMemRootName + "/memory.memsw.limit_in_bytes"))
+		if (m_memSwapMb > 0 && !Utility::isFileExist(cgroupMemRootName + "/memory.memsw.limit_in_bytes"))
 		{
 			LOG_WAR << fname << "Your kernel does not support swap limit capabilities or the cgroup is not mounted.";
-			m_memSwapBytes = 0;
+			m_memSwapMb = 0;
 		}
 		cgroupMemRootName += cgroupBaseDir;
 		cgroupCpuRootName += cgroupBaseDir;
@@ -60,14 +65,14 @@ void LinuxCgroup::setCgroup(const std::string& appName, int pid, int index)
 	cgroupMemoryPath = cgroupMemRootName + "/" + appName + "/" + std::to_string(index);
 	cgroupCpuPath = cgroupCpuRootName + "/" + appName + "/" + std::to_string(index);
 
-	if (m_memLimitBytes > 0 && Utility::createRecursiveDirectory(cgroupMemoryPath, 0711))
+	if (m_memLimitMb > 0 && Utility::createRecursiveDirectory(cgroupMemoryPath, 0711))
 	{
-		this->setPhysicalMemory(cgroupMemoryPath, m_memLimitBytes);
+		this->setPhysicalMemory(cgroupMemoryPath, m_memLimitMb * 1024 * 1024);
 	}
 
-	if (m_memSwapBytes > 0 && Utility::createRecursiveDirectory(cgroupMemoryPath, 0711))
+	if (m_memSwapMb > 0 && Utility::createRecursiveDirectory(cgroupMemoryPath, 0711))
 	{
-		this->setSwapMemory(cgroupMemoryPath, m_memSwapBytes);
+		this->setSwapMemory(cgroupMemoryPath, m_memSwapMb * 1024 * 1024);
 	}
 	
 	if (m_cpuShares > 0 && Utility::createRecursiveDirectory(cgroupCpuPath, 0711))

@@ -76,6 +76,7 @@
     <ClCompile Include="LinuxCgroup.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Process.cpp" />
+    <ClCompile Include="ResourceLimitation.cpp" />
     <ClCompile Include="RestHandler.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerAction.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="DailyLimitation.h" />
     <ClInclude Include="LinuxCgroup.h" />
     <ClInclude Include="Process.h" />
+    <ClInclude Include="ResourceLimitation.h" />
     <ClInclude Include="RestHandler.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerAction.h" />
@@ -117,4 +119,9 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
