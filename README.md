@@ -8,10 +8,10 @@ The internal timer is multi-threaded with high-precision that can used to replac
 
 Supported applications  | Behavior
 ---|---
-==Long running== application | Will always be restarted when exited
-==Short runing== application | Will be launched periodly
-==Periodic long running== application |Long running applicatin but will be restart periodic
-Extra Features | Application can define avialable ==time range== in a day <br> Application can have customerized ==envionment variables== <br> Application can define resource ==(memory & CPU) limitation== (cgroup on Linux)
+<font color="#0000dd">Long running</font> application | Will always be restarted when exited
+<font color="#0000dd">Short runing</font> application | Will be launched periodly
+<font color="#0000dd">Periodic long running</font> application |Long running applicatin but will be restart periodic
+Extra Features | Application can define avialable <font color="#0000dd">time range</font> in a day <br> Application can have customerized <font color="#0000dd">envionment variables</font> <br> Application can define resource <font color="#0000dd">(memory & CPU) limitation</font> (cgroup on Linux)
 
 
 ## Development tecnical
