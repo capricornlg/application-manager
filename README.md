@@ -11,7 +11,7 @@ Supported applications  | Behavior
 Long running application | Will always be restarted when exited
 Short runing application | Will be launched periodly
 Periodic long running application |Long running applicatin but will be restart periodic
-Extra Features | Application can define avialable time range in a day <br> Application can have customerized envionment variables
+Extra Features | Application can define avialable time range in a day <br> Application can have customerized envionment variables <br> Application can define resource (memory & CPU) limitation (cgroup on Linux)
 
 
 ## Development tecnical
@@ -125,26 +125,34 @@ appc config
 
 ```
 $ appc reg
-Register a new application::
+Register a new application:
   -n [ --name ] arg              application name
   -u [ --user ] arg              application process running user name
   -c [ --cmd ] arg               full command line with arguments
   -w [ --workdir ] arg (=/tmp)   working directory
   -a [ --active ] arg (=1)       application active status (start is true, stop
                                  is false)
-  -t [ --time ] arg              start date time for short running app (e.g., 
+  -t [ --start_time ] arg        start date time for short running app (e.g., 
                                  '2018-01-01 09:00:00')
   -s [ --daily_start ] arg       daily start time (e.g., '09:00:00')
   -d [ --daily_end ] arg         daily end time (e.g., '20:00:00')
-  -e [ --env ] arg               environment variables (e.g., 
-                                 env1=value1:env2=value2)
+  -m [ --memory ] arg            memory limit in MByte
+  -v [ --virtual_memory ] arg    virtual memory limit in MByte
+  -p [ --cpu_shares ] arg        CPU shares (relative weight)
+  -d [ --daily_end ] arg         daily end time (e.g., '20:00:00')
+  -e [ --env ] arg               environment variables (e.g., -e env1=value1 -e
+                                 env2=value2)
   -i [ --interval ] arg          start interval seconds for short running app
   -x [ --extraTime ] arg         extra timeout for short running app,the value 
-                                 must less than interval  (default 0
+                                 must less than interval  (default 0)
+  -z [ --timezone ] arg          posix timezone for the application, reflect 
+                                 [start_time|daily_start|daily_end] (e.g., 
+                                 'WST+08:00' is Australia Standard Time)
   -k [ --keep_running ] arg (=0) monitor and keep running for short running app
                                  in start interval
   -f [ --force ]                 force without confirm.
   -h [ --help ]                  produce help message
+
   
 $ appc reg -n ping -u kfc -c 'ping www.google.com' -w /opt
 Application already exist, are you sure you want to update the application (y/n)?

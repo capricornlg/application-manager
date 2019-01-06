@@ -228,6 +228,7 @@ bool Utility::createRecursiveDirectory(const std::string & path, mode_t mode)
 	if (path.length() && path[0] == '/') pstr = "/";
 	for (auto str : dirVec)
 	{
+		if (str.length() == 0) continue;
 		pstr += str;
 		pstr += "/";
 		if (!createDirectory(pstr))

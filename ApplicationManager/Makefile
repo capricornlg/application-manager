@@ -27,6 +27,8 @@ SRCS = \
 	Timer.cpp \
 	TimerActionKill.cpp \
 	DailyLimitation.cpp \
+	ResourceLimitation.cpp \
+	LinuxCgroup.cpp \
 	TimerAction.cpp \
 	../common/Utility.cpp \
 	../common/TimeZoneHelper.cpp
