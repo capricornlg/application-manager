@@ -8,10 +8,10 @@ The internal timer is multi-threaded with high-precision that can used to replac
 
 Supported applications  | Behavior
 ---|---
-Long running application | Will always be restarted when exited
-Short runing application | Will be launched periodly
-Periodic long running application |Long running applicatin but will be restart periodic
-Extra Features | Application can define avialable time range in a day <br> Application can have customerized envionment variables <br> Application can define resource (memory & CPU) limitation (cgroup on Linux)
+==Long running== application | Will always be restarted when exited
+==Short runing== application | Will be launched periodly
+==Periodic long running== application |Long running applicatin but will be restart periodic
+Extra Features | Application can define avialable ==time range== in a day <br> Application can have customerized ==envionment variables== <br> Application can define resource ==(memory & CPU) limitation== (cgroup on Linux)
 
 
 ## Development tecnical
@@ -83,7 +83,6 @@ id user  active pid   return name        command_line
 
 ```
 $ appc config
-appc config
 {
    "Applications" : [
       {
@@ -100,6 +99,11 @@ appc config
          "keep_running" : true,
          "name" : "period",
          "posix_timezone" : "CST+8:00:00",
+         "resource_limitation" : {
+            "cpu_shares" : 100,
+            "memory_mb" : 200,
+            "memory_virt_mb" : 300
+         },
          "run_as" : "root",
          "start_interval_seconds" : 30,
          "start_interval_timeout" : 0,
