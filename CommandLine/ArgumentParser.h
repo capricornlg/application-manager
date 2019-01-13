@@ -35,10 +35,12 @@ private:
 	http_response requestHttp(const method & mtd, const string& path);
 	http_response requestHttp(const method & mtd, const string& path, web::json::value& body);
 	http_response requestHttp(const method & mtd, const string& path, std::map<string,string>& query, web::json::value * body = nullptr);
-	bool isAppExist(const std::string& appName);
+	
 	void addHttpHeader(http_request& request);
 
 private:
+	bool isAppExist(const std::string& appName);
+	std::map<std::string, bool> getAppList();
 	void printApps(web::json::value json, bool reduce);
 	void moveForwardCommandLineVariables(po::options_description& desc);
 	string reduceStr(string source, int limit);

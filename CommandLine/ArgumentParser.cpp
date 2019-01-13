@@ -314,27 +314,51 @@ void ArgumentParser::processStartStop(bool start)
 	po::options_description desc("Start application:");
 	desc.add_options()
 		("help,h", "produce help message")
+		("all,a", "action for all applications")
 		("name,n", po::value<std::string>(), "start/stop application by name.")
 		;
 	
 	moveForwardCommandLineVariables(desc);
 	HELP_ARG_CHECK_WITH_RETURN;
-	if (m_commandLineVariables.count("name") == 0) 
+	if (m_commandLineVariables.empty()) 
 	{
 		std::cout << desc << std::endl;
 		return;
 	}
-	if (!isAppExist(m_commandLineVariables["name"].as<string>()))
+	std::vector<std::string> appList;
+	bool all = m_commandLineVariables.count("all");
+	if (all)
 	{
-		throw std::invalid_argument("no such application");
+		auto appMap = this->getAppList();
+		std::for_each(appMap.begin(), appMap.end(), [&appList, &start](const std::pair<std::string, bool>& pair)
+		{
+			if (start != pair.second)
+			{
+				appList.push_back(pair.first);
+			}
+		});
 	}
-
-	std::map<string, string> query;
-	query["action"] = start ? "start" : "stop";
-	string restPath = string("/app/") + m_commandLineVariables["name"].as<string>();
-	auto response = requestHttp(methods::POST, restPath, query);
-	RESPONSE_CHECK_WITH_RETURN;
-	std::cout << GET_STD_STRING(response.extract_utf8string(true).get()) << std::endl;
+	else
+	{
+		auto appName = m_commandLineVariables["name"].as<string>();
+		if (!isAppExist(appName))
+		{
+			throw std::invalid_argument("no such application");
+		}
+		appList.push_back(appName);
+	}
+	for (auto app : appList)
+	{
+		std::map<string, string> query;
+		query["action"] = start ? "start" : "stop";
+		string restPath = string("/app/") + app;
+		auto response = requestHttp(methods::POST, restPath, query);
+		std::cout << query["action"] << " <" << app << "> :" << GET_STD_STRING(response.extract_utf8string(true).get()) << std::endl;
+	}
+	if (appList.size() == 0)
+	{
+		std::cout << "No application processed." << std::endl;
+	}
 }
 
 void ArgumentParser::processTest()
@@ -415,17 +439,21 @@ http_response ArgumentParser::requestHttp(const method & mtd, const string& path
 
 bool ArgumentParser::isAppExist(const std::string& appName)
 {
+	static auto apps = getAppList();
+	return apps.find(appName) != apps.end();
+}
+
+std::map<std::string, bool> ArgumentParser::getAppList()
+{
+	std::map<std::string, bool> apps;
 	auto jsonValue = requestHttp(methods::GET, "/app-manager/applications").extract_json(true).get();
 	auto arr = jsonValue.as_array();
 	for (auto iter = arr.begin(); iter != arr.end(); iter++)
 	{
 		auto jobj = iter->as_object();
-		if (GET_JSON_STR_VALUE(jobj, "name") == appName)
-		{
-			return true;
-		}
+		apps[GET_JSON_STR_VALUE(jobj, "name")] = GET_JSON_INT_VALUE(jobj, "active") == 1;
 	}
-	return false;
+	return apps;
 }
 
 void ArgumentParser::addHttpHeader(http_request & request)
