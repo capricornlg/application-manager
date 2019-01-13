@@ -56,9 +56,9 @@ static  std::vector<std::string> for_each_file(const std::string&dirName, file_f
 {
 	std::vector<std::string> fileList;
 	auto dir = opendir(dirName.data());
-	struct dirent *rent = NULL;
 	if (dir)
 	{
+		struct dirent *rent = NULL;
 		while ((rent = readdir(dir)) != NULL)
 		{
 			if (rent->d_name == nullptr || strlen(rent->d_name) == 0 || 
