@@ -32,7 +32,8 @@ deb:
 rpm:
 	rm -f *.rpm
 	fpm -s dir -t rpm -v ${VERSION} -n ${PACKAGE_NAME} --vendor ${VENDER} --description ${VENDER} --post-install ${TMP_DIR}/script/install_ubuntu.sh --before-remove ${TMP_DIR}/script/pre_uninstall_ubuntu.sh --after-remove ${TMP_DIR}/script/uninstall_ubuntu.sh -C ${RELEASE_DIR}
-
+cppcheck:
+	cppcheck --enable=all --quiet --std=c++11 --platform=native .
 install:
 	dpkg -i ./${PACKAGE_NAME}_${VERSION}_amd64.deb
 	
