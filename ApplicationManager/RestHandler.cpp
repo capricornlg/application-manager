@@ -50,7 +50,6 @@ void RestHandler::close()
 void RestHandler::handle_get(http_request message)
 {
 	const static char fname[] = "RestHandler::handle_get() ";
-	bool locked = false;
 	try
 	{
 		REST_INFO_PRINT;
