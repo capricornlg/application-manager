@@ -72,37 +72,46 @@ void RestHandler::handle_get(http_request message)
 			if (pathVec.size() >= 2) app = pathVec[1];
 			// /app/someapp
 			std::string getPath = std::string("/app/").append(app);
-			// /app/someapp/output
-			std::string outputPath = getPath + "/output";
+			// /app/someapp/testrun
+			std::string testRunPath = getPath + "/testrun";
+			// /app/someapp/testrun/output
+			std::string testRunOutputPath = getPath + "/testrun/output";
 			if (path == getPath)
 			{
 				message.reply(status_codes::OK, Configuration::prettyJson(GET_STD_STRING(Configuration::instance()->getApp(app)->AsJson(true).serialize())));
 			}
-			else if (path == outputPath)
+			else if (path == testRunOutputPath)
 			{
-				locked = m_testAppMutex.try_lock();
-				if (locked)
+				auto querymap = web::uri::split_query(web::http::uri::decode(message.relative_uri().query()));
+				if (querymap.find(U("process_uuid")) != querymap.end())
 				{
-					auto querymap = web::uri::split_query(web::http::uri::decode(message.relative_uri().query()));
-					int timeout = 5; // default use 5 seconds
-					const int maxTimeout = 100; // set max timeout to 100s
-					if (querymap.find(U("timeout")) != querymap.end())
-					{
-						// max than 1 and less than 100
-						auto requestTimeout = std::max(std::stoi(GET_STD_STRING(querymap.find(U("timeout"))->second)), 1);
-						timeout = std::min(requestTimeout, maxTimeout);
-						LOG_DBG << fname << "Use timeout :" << timeout;
-					}
-					else
-					{
-						LOG_DBG << fname << "Use default timeout :" << timeout;
-					}
-					message.reply(status_codes::OK, Configuration::instance()->getApp(app)->testRun(timeout));
+					auto uuid = GET_STD_STRING(querymap.find(U("process_uuid"))->second);
+					LOG_DBG << fname << "Use process uuid :" << uuid;
+					message.reply(status_codes::OK, Configuration::instance()->getApp(app)->getTestOutput(uuid));
 				}
 				else
 				{
-					throw std::invalid_argument("Do not allow test more than one application at the same time");
+					LOG_DBG << fname << "process_uuid is required for get testrun output";
+					throw std::invalid_argument("process_uuid is required for get testrun output");
 				}
+			}
+			else if (path == testRunPath)
+			{
+				auto querymap = web::uri::split_query(web::http::uri::decode(message.relative_uri().query()));
+				int timeout = 5; // default use 5 seconds
+				const int maxTimeout = 100; // set max timeout to 100s
+				if (querymap.find(U("timeout")) != querymap.end())
+				{
+					// max than 1 and less than 100
+					auto requestTimeout = std::max(std::stoi(GET_STD_STRING(querymap.find(U("timeout"))->second)), 1);
+					timeout = std::min(requestTimeout, maxTimeout);
+					LOG_DBG << fname << "Use timeout :" << timeout;
+				}
+				else
+				{
+					LOG_DBG << fname << "Use default timeout :" << timeout;
+				}
+				message.reply(status_codes::OK, Configuration::instance()->getApp(app)->testRun(timeout));
 			}
 			else
 			{
@@ -122,7 +131,6 @@ void RestHandler::handle_get(http_request message)
 	{
 		message.reply(web::http::status_codes::InternalError, U("unknown exception"));
 	}
-	if (locked) m_testAppMutex.unlock();
 }
 
 void RestHandler::handle_put(http_request message)

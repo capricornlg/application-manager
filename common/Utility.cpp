@@ -29,6 +29,10 @@
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+
 #include <log4cpp/Category.hh>
 #include <log4cpp/Appender.hh>
 #include <log4cpp/FileAppender.hh>
@@ -422,6 +426,13 @@ std::string Utility::decode64(const std::string & val)
 	return boost::algorithm::trim_right_copy_if(std::string(It(std::begin(val)), It(std::end(val))), [](char c) {
 		return c == '\0';
 	});
+}
+
+std::string Utility::createUUID()
+{
+	static boost::uuids::random_generator generator;
+	boost::uuids::uuid uuid1 = generator();
+	return boost::uuids::to_string(uuid1);
 }
 
 std::vector<std::string> Utility::splitString(const std::string & source, const std::string & splitFlag)

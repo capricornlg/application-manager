@@ -8,6 +8,7 @@
 #include <ace/Pipe.h>
 #include <cpprest/json.h>
 #include "Process.h"
+#include "MonitoredProcess.h"
 #include "DailyLimitation.h"
 #include "ResourceLimitation.h"
 enum STATUS
@@ -39,6 +40,7 @@ public:
 	virtual void stop();
 	virtual void start(std::shared_ptr<Application>& self);
 	std::string testRun(size_t timeoutSeconds);
+	std::string getTestOutput(const std::string& processUuid);
 
 	virtual web::json::value AsJson(bool returnRuntimeInfo);
 	virtual void dump();
@@ -57,6 +59,7 @@ protected:
 	std::string m_posixTimeZone;
 	
 	std::shared_ptr<Process> m_process;
+	std::shared_ptr<MonitoredProcess> m_testProcess;
 	int m_pid;
 	int m_processIndex;	// used for organize cgroup path dir
 	std::recursive_mutex m_mutex;

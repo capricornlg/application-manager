@@ -5,6 +5,7 @@
 
 Process::Process()
 {
+	m_uuid = Utility::createUUID();
 }
 
 
@@ -50,4 +51,9 @@ void Process::setCgroup(std::string appName, int index, std::shared_ptr<Resource
 		m_cgroup = std::make_shared<LinuxCgroup>(limit->m_memoryMb, limit->m_memoryVirtMb - limit->m_memoryMb, limit->m_cpuShares);
 		m_cgroup->setCgroup(appName, getpid(), index);
 	}
+}
+
+std::string Process::getuuid()
+{
+	return m_uuid;
 }

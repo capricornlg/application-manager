@@ -35,7 +35,6 @@ private:
 	bool checkToken(const std::string& token);
 	std::string getToken(const http_request& message);
 	std::shared_ptr<http_listener> m_listener;
-	std::mutex m_testAppMutex;
 
 };
 #endif

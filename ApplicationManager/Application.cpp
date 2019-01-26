@@ -5,6 +5,7 @@
 #include <ace/Time_Value.h>
 #include <ace/OS.h>
 #include "Application.h"
+#include "MonitoredProcess.h"
 #include "TimerActionKill.h"
 #include "../common/Utility.h"
 #include "../common/TimeZoneHelper.h"
@@ -177,49 +178,39 @@ void Application::start(std::shared_ptr<Application>& self)
 std::string Application::testRun(size_t timeoutSeconds)
 {
 	const static char fname[] = "Application::testRun() ";
-	std::stringstream stdoutMsg;
-	auto process = std::make_shared<Process>();
 
-	auto pipePtr = std::make_shared<ACE_Pipe>();
-	ACE_HANDLE pipeHandler[2]; // 0 for read, 1 for write
-	FILE* readPipeFile = nullptr;
-	if (pipePtr->open(pipeHandler) < 0)
+	if (m_testProcess != nullptr && m_testProcess->running())
 	{
-		LOG_ERR << fname << "Create pipe failed with error : " << std::strerror(errno);
+		m_testProcess->killgroup();
+	}
+	m_testProcess = std::make_shared<MonitoredProcess>();
+
+	if (this->spawnProcess(m_testProcess) > 0)
+	{
+		auto bufferTimer = new TimerActionKill(m_testProcess, timeoutSeconds);
+		return m_testProcess->getuuid();
 	}
 	else
 	{
-		readPipeFile = ACE_OS::fdopen(pipePtr->read_handle(), "r");
-		if (readPipeFile == nullptr)
-		{
-			LOG_ERR << fname << "Get file stream failed with error : " << std::strerror(errno);
-		}
-		else
-		{
-			if (this->spawnProcess(process, pipePtr) > 0)
-			{
-				auto bufferTimer = new TimerActionKill(process, timeoutSeconds);
-				while (true)
-				{
-					char buffer[1024] = { 0 };
-					char* result = fgets(buffer, sizeof(buffer), readPipeFile);
-					if (result == nullptr)
-					{
-						LOG_ERR << fname << "Get line from pipe failed with error : " << std::strerror(errno);
-						break;
-					}
-					LOG_DBG << fname << "Read line : " << buffer;
-					stdoutMsg << buffer;
-				}
-			}
-		}
+		throw std::invalid_argument("Start process failed");
 	}
+}
 
-	// clean pipe handlers and file
-	if (pipePtr) pipePtr->close();
-	if (readPipeFile) ACE_OS::fclose(readPipeFile);
-
-	return std::move(stdoutMsg.str());
+std::string Application::getTestOutput(const std::string& processUuid)
+{
+	if (m_testProcess != nullptr && m_testProcess->getuuid() == processUuid)
+	{
+		auto output = m_testProcess->fecthPipeMessages();
+		if (output.length() == 0 && !m_testProcess->running())
+		{
+			throw std::invalid_argument("Process already finished or killed by timeout event");
+		}
+		return std::move(output);
+	}
+	else
+	{
+		throw std::invalid_argument("No corresponding process running or the given process uuid is wrong");
+	}
 }
 
 web::json::value Application::AsJson(bool returnRuntimeInfo)

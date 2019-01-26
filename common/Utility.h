@@ -84,6 +84,8 @@ public:
 	// Base64
 	static std::string encode64(const std::string &val);
 	static std::string decode64(const std::string &val);
+
+	static std::string createUUID();
 };
 
 #endif

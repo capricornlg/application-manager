@@ -24,6 +24,7 @@ SRCS = \
 	Configuration.cpp \
 	RestHandler.cpp \
 	Process.cpp \
+	MonitoredProcess.cpp \
 	Timer.cpp \
 	TimerActionKill.cpp \
 	DailyLimitation.cpp \

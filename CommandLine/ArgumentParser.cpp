@@ -1,7 +1,8 @@
-#include "ArgumentParser.h"
 #include <iostream>
+#include <thread>
 #include <functional>
 #include <boost/program_options.hpp>
+#include "ArgumentParser.h"
 #include "../common/Utility.h"
 
 using namespace std;
@@ -387,11 +388,24 @@ void ArgumentParser::processTest()
 	{
 		query["timeout"] = std::to_string(m_commandLineVariables["timeout"].as<int>());
 	}
-	// /app/testapp/output?timeout=5
-	string restPath = string("/app/").append(m_commandLineVariables["name"].as<string>()).append("/output");
+	auto appName = m_commandLineVariables["name"].as<string>();
+	// /app/testapp/testrun?timeout=5
+	string restPath = string("/app/").append(appName).append("/testrun");
 	auto response = requestHttp(methods::GET, restPath, query);
 	RESPONSE_CHECK_WITH_RETURN;
-	std::cout << GET_STD_STRING(response.extract_utf8string(true).get()) << std::endl;
+
+	auto process_uuid = GET_STD_STRING(response.extract_utf8string(true).get());
+	while (process_uuid.length())
+	{
+		// /app/testapp/testrun/output?process_uuid=ABDJDD-DJKSJDKF
+		string restPath = string("/app/").append(appName).append("/testrun/output");
+		std::map<string, string> query;
+		query["process_uuid"] = process_uuid;
+		auto response = requestHttp(methods::GET, restPath, query);
+		RESPONSE_CHECK_WITH_RETURN;
+		std::cout << GET_STD_STRING(response.extract_utf8string(true).get());
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 }
 
 bool ArgumentParser::confirmInput(const char* msg)

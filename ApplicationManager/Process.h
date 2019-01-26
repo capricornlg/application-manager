@@ -19,9 +19,11 @@ public:
 	void attach(int pid);
 	void killgroup();
 	void setCgroup(std::string appName,int index, std::shared_ptr<ResourceLimitation>& limit);
+	std::string getuuid();
 private:
 	std::shared_ptr<LinuxCgroup> m_cgroup;
 	std::shared_ptr<ResourceLimitation> m_resourceLimit;
+	std::string m_uuid;
 };
 
 #endif 
