@@ -19,14 +19,6 @@ Supported applications  | Behavior
 Extra Features | Application can define avialable <font color="#0000dd">time range</font> in a day <br> Application can have customerized <font color="#0000dd">envionment variables</font> <br> Application can define resource <font color="#0000dd">(memory & CPU) limitation</font> (cgroup on Linux)
 
 
-## Development tecnical
-- [C++11](http://www.cplusplus.com/articles/cpp11)
-- [ACE-6.3.3](https://github.com/DOCGroup/ACE_TAO)
-- [Microsoft cpprestsdk-2.10.1](https://github.com/Microsoft/cpprestsdk)
-- [boost-1.58.0](https://github.com/boostorg/boost)
-- [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
-- [log4cpp](http://log4cpp.sourceforge.net)
-
 ## Setup build environment on Ubuntu
 ```
 apt-get install g++ git make zlib1g-dev libssl-dev cmake
@@ -209,3 +201,12 @@ PING www.a.shifen.com (220.181.112.244) 56(84) bytes of data.
 64 bytes from 220.181.112.244: icmp_seq=4 ttl=55 time=20.1 ms
 64 bytes from 220.181.112.244: icmp_seq=5 ttl=55 time=20.1 ms
 ```
+
+
+## 3rd party deependencies
+- [C++11](http://www.cplusplus.com/articles/cpp11)
+- [ACE-6.3.3](https://github.com/DOCGroup/ACE_TAO)
+- [Microsoft cpprestsdk-2.10.1](https://github.com/Microsoft/cpprestsdk)
+- [boost-1.58.0](https://github.com/boostorg/boost)
+- [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
+- [log4cpp](http://log4cpp.sourceforge.net)
