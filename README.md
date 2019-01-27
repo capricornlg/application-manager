@@ -1,4 +1,9 @@
-# Introduction
+# Application Manager
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
+![version](https://img.shields.io/badge/version-1.9.0-blue.svg?maxAge=2592000)
+
+## Introduction
 Application Manager is a daemon process to manage different type of sub-applications(process), each application can be a specific jobs, application namager will make sure all defined applications running on-time with defined behavior. provide REST APIs for integrate with outside app, provide command-line to start/stop and register new app easily.
 
 The internal timer is multi-threaded with high-precision that can used to replace Linux cron-tab and supervisor.
