@@ -32,16 +32,17 @@ gem install fpm
 
 ## REST APIs
 
-Method | URI
----|---
-GET | /app/$app-name
-GET | /app/$app-name/output?timeout=5
-GET | /app-manager/applications
-GET | /app-manager/config
-PUT | /app/$app-name
-POST| /app/$app-name?action=start
-POST| /app/$app-name?action=stop
-DELETE| /app/$app-name
+Method | URI | Desc
+---|---|---
+GET | /app/$app-name | Get an application infomation
+GET | /app/$app-name/testrun?timeout=5 | Test run an application
+GET | /app/$app-name/testrun/output?process_uuid==uuidabc | Get the stdout and stderr for the test run
+GET | /app-manager/applications | Get all application infomation
+GET | /app-manager/config | Get all the configuration
+PUT | /app/$app-name | Register a new application
+POST| /app/$app-name?action=start | Start an application
+POST| /app/$app-name?action=stop | Stop an application
+DELETE| /app/$app-name | Unregister an application
 
 
 
