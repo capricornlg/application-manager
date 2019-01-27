@@ -1,6 +1,7 @@
 
 #include <mutex>
 #include <string>
+#include <ace/OS.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
@@ -238,11 +239,30 @@ void Configuration::removeApp(const string& appName)
 
 void Configuration::saveConfigToDisk()
 {
-	std::ofstream ofs(m_jsonFilePath, ios::trunc);
-	if (ofs.is_open())
+	const static char fname[] = "Configuration::saveConfigToDisk() ";
+
+	auto content = GET_STD_STRING(this->getConfigContentStr());
+	if (content.length())
 	{
-		ofs << prettyJson(GET_STD_STRING(this->getConfigContentStr()));
-		ofs.close();
+		auto tmpFile = m_jsonFilePath + "." + std::to_string(Utility::getThreadId());
+		std::ofstream ofs(tmpFile, ios::trunc);
+		if (ofs.is_open())
+		{
+			ofs << prettyJson(content);
+			ofs.close();
+			if (ACE_OS::rename(tmpFile.c_str(), m_jsonFilePath.c_str()) == 0)
+			{
+				LOG_INF << fname << content;
+			}
+			else
+			{
+				LOG_ERR << fname << "Failed to write configuration file <" << m_jsonFilePath << ">, error :" << std::strerror(errno);
+			}
+		}
+	}
+	else
+	{
+		LOG_ERR << fname << "Configuration content is empty";
 	}
 }
 
@@ -306,5 +326,18 @@ std::shared_ptr<Application> Configuration::getApp(const std::string & appName)
 		}
 	}
 	throw std::invalid_argument("No such application found");
+}
+
+std::shared_ptr<Application> Configuration::tryGetApp(const std::string & appName)
+{
+	std::lock_guard<std::recursive_mutex> guard(m_mutex);
+	for (auto app : m_apps)
+	{
+		if (app->getName() == appName)
+		{
+			return app;
+		}
+	}
+	return nullptr;
 }
 

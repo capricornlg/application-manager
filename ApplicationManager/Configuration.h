@@ -29,6 +29,7 @@ public:
 	const utility::string_t getConfigContentStr();
 	web::json::value getApplicationJson();
 	std::shared_ptr<Application> getApp(const std::string& appName);
+	std::shared_ptr<Application> tryGetApp(const std::string& appName);
 	void stopApp(const std::string& appName);
 	void startApp(const std::string& appName);
 	const std::string getLogLevel() const;

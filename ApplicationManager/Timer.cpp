@@ -19,11 +19,17 @@ Timer::~Timer()
 
 void Timer::init()
 {
+	const static char fname[] = "Timer::init()() ";
+	LOG_INF << fname;
+
 	m_timerThread = std::make_shared<boost::thread>(boost::bind(&Timer::runTimerThread, &Timer::get_mutable_instance()));
 }
 
 void Timer::stop()
 {
+	const static char fname[] = "Timer::stop() ";
+	LOG_INF << fname << "Timer thread stopped";
+
 	m_ioWork = nullptr;
 	m_io.stop();
 	if (m_timerThread != nullptr && m_running)
@@ -34,7 +40,9 @@ void Timer::stop()
 
 void Timer::runTimerThread()
 {
-	LOG_INF << "Timer thread started <" << Utility::getThreadId() << ">.";
+	const static char fname[] = "Timer::runTimerThread() ";
+	LOG_INF << fname << "Timer thread started";
+
 	m_running = true;
 	// use work to avoid io_service exit when no job
 	m_ioWork.reset(new boost::asio::io_service::work(m_io));
