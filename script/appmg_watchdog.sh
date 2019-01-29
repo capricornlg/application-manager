@@ -1,35 +1,33 @@
-#! /bin/sh
-PROG_NAME="appsvc"
-PROG_PATH="/opt/appmanager" 
-PROG_ARGS=""
+#! /bin/bash
+
+# give some time while system starting up.
+sleep 1
 
 log(){
 	logger "[`date`]""$1"
 	echo $1
 }
 
-start_appsvc() {
-	cd $PROG_PATH
-	## Change from /dev/null to something like /var/log/$PROG if you want to save output.
-    $PROG_PATH/$PROG_NAME $PROG_ARGS &
-	log "starting Application Manager"
-}
-
-start_appsvc
 while true ; do
-     APPSVC_INSTENCE_NUM=`ps aux | grep -w ${PROG_PATH}/${PROG_NAME} | grep -v grep |wc -l`
-     #echo $APPSVC_INSTENCE_NUM
-     if [ "${APPSVC_INSTENCE_NUM}" -lt "1" ];then
-         log "${PROG_NAME} was killed."		 
-         start_appsvc
-     fi
-     appsvc_STAT=`ps aux | grep -w ${PROG_PATH}/${PRO_NAME} | grep T | grep -v grep | wc -l`
-     if [ "${appsvc_STAT}" -gt "0" ];then
-	     log "zombie ${PROG_NAME},killall ${PROG_NAME}."
-         killall -9 ${PROG_NAME}
-         start_appsvc
-    fi
-     sleep 5s
- done
- 
- exit 0
+	case "$(pidof /opt/appmanager/appsvc | wc -w)" in
+	
+	0)  log "Starting Application Manager:     $(date)"
+		sleep 0.1
+		if pidof -s /opt/appmanager/appsvc; then
+			/opt/appmanager/appsvc > /dev/null &
+		else
+			log "Double check Application Manager is alive: $(date)"
+		fi
+		sleep 2
+		;;
+	1)  # all ok
+		sleep 2
+		;;
+	*)  log "Removed double Application Manager: $(date)"
+		kill $(pidof /opt/appmanager/appsvc | awk '{print $1}')
+		;;
+	esac
+done
+
+# Reference
+# https://stackoverflow.com/questions/20162678/linux-script-to-check-if-process-is-running-and-act-on-the-result
