@@ -11,10 +11,11 @@ log(){
 while true ; do
 	case "$(pidof /opt/appmanager/appsvc | wc -w)" in
 	
-	0)  log "Starting Application Manager:     $(date)"
-		sleep 0.1
-		if pidof -s /opt/appmanager/appsvc; then
-			/opt/appmanager/appsvc > /dev/null &
+	0)  sleep 0.1
+		result=`pidof -s /opt/appmanager/appsvc`
+		if [ -z "$result" ]; then
+			nohup /opt/appmanager/appsvc >/dev/null 2>&1 &
+			log "Starting Application Manager:     $(date)"
 		else
 			log "Double check Application Manager is alive: $(date)"
 		fi
