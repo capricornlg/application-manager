@@ -21,10 +21,11 @@ Extra Features | Application can define avialable <font color="#0000dd">time ran
 
 ## Setup build environment on Ubuntu
 ```
-apt-get install g++ git make zlib1g-dev libssl-dev cmake
-apt-get install libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev liblog4cpp5-dev
-apt-get install ruby ruby-dev rubygems
+apt-get install -y g++ git make zlib1g-dev libssl-dev cmake
+apt-get install -y libboost-all-dev libcpprest-dev libjsoncpp-dev libace-dev liblog4cpp5-dev
+apt-get install -y ruby ruby-dev rubygems
 gem install fpm
+apt-get install -y dos2unix 
 ```
 
 ## REST APIs
