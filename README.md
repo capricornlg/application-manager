@@ -8,7 +8,7 @@ Application Manager is a daemon process to manage different type of sub-applicat
 
 The internal timer is multi-threaded with high-precision that can used to replace Linux cron-tab and supervisor.
 
-![diagram.png](https://github.com/jinneec/application-manager/blob/master/doc/diagram.png?raw=true) 
+![diagram](https://github.com/jinneec/application-manager/blob/master/doc/diagram.png?raw=true) 
 
 
 Supported applications  | Behavior
@@ -202,7 +202,7 @@ PING www.a.shifen.com (220.181.112.244) 56(84) bytes of data.
 64 bytes from 220.181.112.244: icmp_seq=4 ttl=55 time=20.1 ms
 64 bytes from 220.181.112.244: icmp_seq=5 ttl=55 time=20.1 ms
 ```
-
+![example](https://github.com/jinneec/application-manager/blob/master/doc/example.gif?raw=true) 
 
 ## 3rd party deependencies
 - [C++11](http://www.cplusplus.com/articles/cpp11)
