@@ -1,6 +1,6 @@
 # Application Manager
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
+![coverage](https://img.shields.io/badge/coverage-90%25-yellowgreen.svg?maxAge=2592000)
 ![version](https://img.shields.io/badge/version-1.9.0-blue.svg?maxAge=2592000)
 
 ## Introduction
