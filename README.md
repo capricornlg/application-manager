@@ -13,7 +13,6 @@ The internal timer is multi-threaded with high-precision that can used to replac
 
 Supported applications  | Behavior
 ---|---
-<font color="#0000dd">Periodic long running</font> application |Long running applicatin but will be restart periodic
 Long running application | Will always be restarted when exited
 Short runing application | Will be launched periodly
 Periodic long running application |Long running applicatin but will be restart periodic
