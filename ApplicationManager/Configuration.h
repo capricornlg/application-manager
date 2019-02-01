@@ -34,6 +34,10 @@ public:
 	void startApp(const std::string& appName);
 	const std::string getLogLevel() const;
 
+	bool getSslEnabled() const;
+	std::string getSSLCertificateFile() const;
+	std::string getSSLCertificateKeyFile() const;
+
 	static std::string prettyJson(const std::string & jsonStr);
 	void dump();
 
@@ -50,6 +54,10 @@ private:
 
 	std::recursive_mutex m_mutex;
 	std::string m_jsonFilePath;
+
+	bool m_sslEnabled;
+	std::string m_sslCertificateFile;
+	std::string m_sslCertificateKeyFile;
 
 	static std::shared_ptr<Configuration> m_instance;
 };

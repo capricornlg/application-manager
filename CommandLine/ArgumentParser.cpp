@@ -431,8 +431,10 @@ http_response ArgumentParser::requestHttp(const method & mtd, const string& path
 http_response ArgumentParser::requestHttp(const method & mtd, const string& path, std::map<string, string>& query, web::json::value * body)
 {
 	// Create http_client to send the request.
-	auto restPath = (U("http://127.0.0.1:") + GET_STRING_T(std::to_string(m_listenPort)));
-	http_client client(restPath);
+	auto restPath = (U("https://127.0.0.1:") + GET_STRING_T(std::to_string(m_listenPort)));
+	http_client_config config;
+	config.set_validate_certificates(false);
+	http_client client(restPath, config);
 	// Build request URI and start the request.
 	uri_builder builder(GET_STRING_T(path));
 	std::for_each(query.begin(), query.end(), [&builder](const std::pair<std::string, string>& pair)

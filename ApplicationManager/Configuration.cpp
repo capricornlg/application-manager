@@ -60,6 +60,9 @@ std::shared_ptr<Configuration> Configuration::FromJson(const std::string& str)
 	config->m_scheduleInterval = GET_JSON_INT_VALUE(jobj, "ScheduleIntervalSec");
 	config->m_restListenPort = GET_JSON_INT_VALUE(jobj, "RestListenPort");
 	config->m_logLevel = GET_JSON_STR_VALUE(jobj, "LogLevel");
+	config->m_sslEnabled = GET_JSON_BOOL_VALUE(jobj, "SSLEnabled");
+	config->m_sslCertificateFile = GET_JSON_STR_VALUE(jobj, "SSLCertificateFile");
+	config->m_sslCertificateKeyFile = GET_JSON_STR_VALUE(jobj, "SSLCertificateKeyFile");
 	if (config->m_scheduleInterval < 1 || config->m_scheduleInterval > 100)
 	{
 		// Use default value instead
@@ -94,6 +97,10 @@ web::json::value Configuration::AsJson(bool returnRuntimeInfo)
 	result[GET_STRING_T("RestListenPort")] = web::json::value::number(m_restListenPort);
 	result[GET_STRING_T("ScheduleIntervalSec")] = web::json::value::number(m_scheduleInterval);
 	result[GET_STRING_T("LogLevel")] = web::json::value::string(GET_STRING_T(m_logLevel));
+
+	result[GET_STRING_T("SSLEnabled")] = web::json::value::boolean(m_sslEnabled);
+	result[GET_STRING_T("SSLCertificateFile")] = web::json::value::string(GET_STRING_T(m_sslCertificateFile));
+	result[GET_STRING_T("SSLCertificateKeyFile")] = web::json::value::string(GET_STRING_T(m_sslCertificateKeyFile));
 
 	auto arr = web::json::value::array(m_apps.size());
 	for (size_t i = 0; i < m_apps.size(); ++i)
@@ -171,6 +178,21 @@ void Configuration::startApp(const std::string& appName)
 const std::string Configuration::getLogLevel() const
 {
 	return m_logLevel;
+}
+
+bool Configuration::getSslEnabled() const
+{
+	return m_sslEnabled;
+}
+
+std::string Configuration::getSSLCertificateFile() const
+{
+	return m_sslCertificateFile;
+}
+
+std::string Configuration::getSSLCertificateKeyFile() const
+{
+	return m_sslCertificateKeyFile;
 }
 
 void Configuration::dump()

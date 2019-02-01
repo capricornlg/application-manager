@@ -3,6 +3,9 @@
   "ScheduleIntervalSec": 2,
   "RestListenPort": 6060,
   "LogLevel": "DEBUG",
+  "SSLEnabled": true,
+  "SSLCertificateFile": "server.crt",
+  "SSLCertificateKeyFile": "server.key",
   "Applications": [
     {
       "name": "period",

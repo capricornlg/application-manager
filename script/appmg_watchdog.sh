@@ -7,11 +7,11 @@ log(){
 	logger "[`date`]""$1"
 	echo $1
 }
-
+cd /opt/appmanager/
 while true ; do
 	case "$(pidof /opt/appmanager/appsvc | wc -w)" in
 	
-	0)  sleep 0.1
+	0)	sleep 0.1
 		result=`pidof -s /opt/appmanager/appsvc`
 		if [ -z "$result" ]; then
 			nohup /opt/appmanager/appsvc >/dev/null 2>&1 &
@@ -21,10 +21,10 @@ while true ; do
 		fi
 		sleep 2
 		;;
-	1)  # all ok
+	1)	# all ok
 		sleep 2
 		;;
-	*)  log "Removed double Application Manager: $(date)"
+	*)	log "Removed double Application Manager: $(date)"
 		kill $(pidof /opt/appmanager/appsvc | awk '{print $1}')
 		;;
 	esac

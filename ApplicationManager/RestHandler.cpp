@@ -16,12 +16,43 @@
 RestHandler::RestHandler(int port)
 {
 	const static char fname[] = "RestHandler::RestHandler() ";
+	
+	// Construct URI
+	web::uri_builder uri;
+	uri.set_host("0.0.0.0");
+	uri.set_port(port);
+	uri.set_path("/");
+	if (Configuration::instance()->getSslEnabled())
+	{
+		if (!Utility::isFileExist(Configuration::instance()->getSSLCertificateFile()) ||
+			!Utility::isFileExist(Configuration::instance()->getSSLCertificateKeyFile()))
+		{
+			LOG_ERR << "server.crt and server.key not exist";
+		}
+		// Support SSL
+		uri.set_scheme("https");
+		auto server_config = new http_listener_config();
+		server_config->set_ssl_context_callback(
+			[&](boost::asio::ssl::context & ctx) {
+			boost::system::error_code ec;
 
-	// init
-	std::string address = "http://0.0.0.0:";
-	address += std::to_string(port);
+			ctx.set_options(boost::asio::ssl::context::default_workarounds, ec);
+			LOG_INF << "lambda::set_options " << ec.value() << " " << ec.message();
 
-	m_listener = std::make_shared<http_listener>(address);
+			ctx.use_certificate_chain_file(Configuration::instance()->getSSLCertificateFile(), ec);
+			LOG_INF << "lambda::use_certificate_chain_file " << ec.value() << " " << ec.message();
+
+			ctx.use_private_key_file(Configuration::instance()->getSSLCertificateKeyFile(), boost::asio::ssl::context::pem, ec);
+			LOG_INF << "lambda::use_private_key " << ec.value() << " " << ec.message();
+		});
+		m_listener = std::make_shared<http_listener>(uri.to_uri(), *server_config);
+	}
+	else
+	{
+		uri.set_scheme("http");
+		m_listener = std::make_shared<http_listener>(uri.to_uri());
+	}
+	
 	m_listener->support(methods::GET, std::bind(&RestHandler::handle_get, this, std::placeholders::_1));
 	m_listener->support(methods::PUT, std::bind(&RestHandler::handle_put, this, std::placeholders::_1));
 	m_listener->support(methods::POST, std::bind(&RestHandler::handle_post, this, std::placeholders::_1));
@@ -29,7 +60,7 @@ RestHandler::RestHandler(int port)
 
 	this->open();
 
-	LOG_INF << fname << "Listening for requests at:" << address;
+	LOG_INF << fname << "Listening for requests at:" << uri.to_string();
 }
 
 RestHandler::~RestHandler()

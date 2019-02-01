@@ -23,6 +23,8 @@ build_dir:
 	cp ./ApplicationManager/appsvc ${TMP_DIR}/
 	cp ./ApplicationManager/appsvc.json ${TMP_DIR}/
 	cp ./script/*.sh ${TMP_DIR}/script
+	cp ./script/server.crt ${TMP_DIR}/
+	cp ./script/server.key ${TMP_DIR}/
 	chmod +x ${TMP_DIR}/script/*.sh
 	dos2unix ${TMP_DIR}/script/*.sh
 	
