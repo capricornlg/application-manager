@@ -8,7 +8,7 @@ Application Manager is a daemon process to manage different type of sub-applicat
 
 The internal timer is multi-threaded with high-precision that can used to replace Linux cron-tab and supervisor.
 
-![diagram](https://github.com/jinneec/application-manager/blob/master/doc/diagram.png?raw=true) 
+<img src="https://raw.githubusercontent.com/jinneec/application-manager/master/doc/diagram.png" width = 80% height = 80% align=center />
 
 
 Supported applications  | Behavior
