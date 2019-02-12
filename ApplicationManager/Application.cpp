@@ -44,6 +44,9 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 {
 	app->m_name = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "name"));
 	app->m_user = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "run_as"));
+	// Be noticed do not use multiple spaces between command arguments
+	// "ping www.baidu.com    123" equals
+	// "ping www.baidu.com 123"
 	app->m_commandLine = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "command_line"));
 	if (app->m_commandLine.find('>') != std::string::npos)
 	{

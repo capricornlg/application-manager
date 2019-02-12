@@ -10,9 +10,10 @@
 
 #define REST_INFO_PRINT \
 	LOG_DBG << "Method: " << message.method(); \
-	LOG_DBG << "Remote: " << message.remote_address(); \
 	LOG_DBG << "URI: " << http::uri::decode(message.relative_uri().path()); \
 	LOG_DBG << "Query: " << http::uri::decode(message.relative_uri().query());
+	// for new version of cpprestsdk
+	// LOG_DBG << "Remote: " << message.remote_address();
 
 RestHandler::RestHandler(int port)
 {

@@ -85,6 +85,9 @@
     <ClCompile Include="TimerActionKill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdparty\os\linux.hpp" />
+    <ClInclude Include="..\3rdparty\os\process.hpp" />
+    <ClInclude Include="..\3rdparty\os\pstree.hpp" />
     <ClInclude Include="..\common\TimeZoneHelper.h" />
     <ClInclude Include="..\common\Utility.h" />
     <ClInclude Include="Application.h" />
