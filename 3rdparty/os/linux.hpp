@@ -6,7 +6,6 @@
 #ifndef __linux__
 #error "os/linux.hpp is only available on Linux systems."
 #else
-#include <sys/mman.h>
 #include <sys/types.h> // For pid_t.
 #include <sys/sysinfo.h>
 #include <unistd.h> // For sysconf
@@ -16,8 +15,12 @@
 #include <stdlib.h>
 #endif // __linux__
 
+#ifdef __linux__
+#include <linux/version.h>
+#include <sys/sysinfo.h>
+#endif // __linux__
+
 #include <list>
-#include <queue>
 #include <set>
 #include <string>
 #include <assert.h>
@@ -501,6 +504,7 @@ namespace os {
 	}
 
 
+	// lscpu | grep -E '^Thread|^Core|^Socket|^CPU\('
 	// Reads from /proc/cpuinfo and returns a list of CPUs.
 	inline std::list<CPU> cpus()
 	{

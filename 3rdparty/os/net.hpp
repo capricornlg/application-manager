@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <ifaddrs.h>
+#include <netdb.h>
+#include <sys/param.h>
 
 #include <list>
 #include <string>
@@ -16,7 +18,7 @@ namespace net {
 	{
 		std::string name;
 		bool ipv4;
-		string address;
+		std::string address;
 	};
 
 	inline struct addrinfo createAddrInfo(int socktype, int family, int flags)

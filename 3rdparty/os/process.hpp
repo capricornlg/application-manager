@@ -51,6 +51,7 @@ namespace os {
 		const pid_t parent;
 		const pid_t group;
 		const pid_t session;
+		// Resident Set Size
 		const uint64_t rss_bytes;
 		const std::chrono::seconds utime;
 		const std::chrono::seconds stime;
@@ -88,6 +89,17 @@ namespace os {
 			}
 
 			return nullptr;
+		}
+
+		// Count the total RES memory usage in the process tree
+		const uint64_t totalRSS() const
+		{
+			uint64_t result = process.rss_bytes;
+			for (auto tree : children)
+			{
+				result += tree.totalRSS();
+			}
+			return result;
 		}
 
 		// Checks if the specified pid is contained in this process tree.
