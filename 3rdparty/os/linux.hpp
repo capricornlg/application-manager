@@ -346,6 +346,7 @@ namespace os {
 	// and free memory.
 	struct Memory
 	{
+		Memory() :total_bytes(0), free_bytes(0), totalSwap_bytes(0), freeSwap_bytes(0) {}
 		uint64_t total_bytes;
 		uint64_t free_bytes;
 		uint64_t totalSwap_bytes;
@@ -428,23 +429,23 @@ namespace os {
 			return nullptr;
 		}
 
-# if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 3, 23)
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 3, 23))
 		memory.total_bytes = (info.totalram * info.mem_unit);
 		memory.free_bytes = (info.freeram * info.mem_unit);
 		memory.totalSwap_bytes = (info.totalswap * info.mem_unit);
 		memory.freeSwap_bytes = (info.freeswap * info.mem_unit);
-# else
+#else
 		memory.total_bytes = (info.totalram);
 		memory.free_bytes = (info.freeram);
 		memory.totalSwap_bytes = (info.totalswap);
 		memory.freeSwap_bytes = (info.freeswap);
-# endif
+#endif
 
 		return std::make_shared<Memory>(memory);
 	}
 
 
-	
+
 	inline std::list<Process> processes()
 	{
 		const std::set<pid_t> pids = os::pids();
@@ -511,7 +512,7 @@ namespace os {
 		std::ifstream file("/proc/cpuinfo");
 
 		if (!file.is_open()) {
-			LOG_ERR << "Failed to open /proc/cpuinfo";
+			LOG_ERR << fname << "Failed to open /proc/cpuinfo";
 			return results;
 		}
 
@@ -529,13 +530,13 @@ namespace os {
 				std::vector<std::string> tokens = Utility::splitString(line, ": ");
 
 				if (tokens.size() < 2) {
-					LOG_ERR << "Unexpected format in /proc/cpuinfo : " << line;
+					LOG_ERR << fname << "Unexpected format in /proc/cpuinfo : " << line;
 					return std::list<CPU>();
 				}
 
 				if (tokens.back().length() == 0 || !Utility::isNumber(tokens.back()))
 				{
-					LOG_ERR << "Not integer type, unexpected format in /proc/cpuinfo : " << line;
+					LOG_ERR << fname << "Not integer type, unexpected format in /proc/cpuinfo : " << line;
 					return std::list<CPU>();
 				}
 				unsigned int value = std::stoi(tokens.back());
@@ -550,14 +551,14 @@ namespace os {
 				}
 				else if (line.find("physical id") == 0) {
 					if (socket >= 0) {
-						LOG_ERR << "Unexpected format in /proc/cpuinfo  : " << line;
+						LOG_ERR << fname << "Unexpected format in /proc/cpuinfo  : " << line;
 						return std::list<CPU>();
 					}
 					socket = value;
 				}
 				else if (line.find("core id") == 0) {
 					if (core >= 0) {
-						LOG_ERR << "Unexpected format in /proc/cpuinfo  : " << line;
+						LOG_ERR << fname << "Unexpected format in /proc/cpuinfo  : " << line;
 						return std::list<CPU>();
 					}
 					core = value;
@@ -580,7 +581,7 @@ namespace os {
 		}
 
 		if (file.fail() && !file.eof()) {
-			LOG_ERR << "Failed to read /proc/cpuinfo";
+			LOG_ERR << fname << "Failed to read /proc/cpuinfo";
 			return std::list<CPU>();
 		}
 
