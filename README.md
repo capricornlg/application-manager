@@ -79,7 +79,7 @@ id user  active pid   return name        memory command_line
 1  root  start  13839 0      ping        1      ping www.baidu.com
 ```
 
-## Display configurations
+## Display host resource usage
 
 ```
 $ appc resource
