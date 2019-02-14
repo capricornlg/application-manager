@@ -64,7 +64,7 @@ public:
 	static std::string stdStringTrim(const std::string &str, char trimChar, bool trimStart = true, bool trimEnd = true);
 	static std::vector<std::string> splitString(const std::string& s, const std::string& c);
 	static bool startWith(const std::string& str, std::string head);
-	static std::string stringReplace(const std::string &strBase, const std::string strSrc, const std::string strDst);
+	static std::string stringReplace(const std::string &strBase, const std::string& strSrc, const std::string& strDst);
 
 	static void initLogging();
 	static void setLogLevel(const std::string & level);

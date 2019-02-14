@@ -21,7 +21,7 @@ using namespace std;
 
 std::shared_ptr<Configuration> Configuration::m_instance = nullptr;
 Configuration::Configuration()
-	:m_scheduleInterval(0), m_restListenPort(DEFAULT_REST_LISTEN_PORT)
+	:m_scheduleInterval(0), m_restListenPort(DEFAULT_REST_LISTEN_PORT), m_sslEnabled(false)
 {
 	m_jsonFilePath = Utility::getSelfFullPath() + ".json";
 	LOG_INF << "Configuration file <" << m_jsonFilePath << ">";

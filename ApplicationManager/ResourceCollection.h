@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////
 struct HostResource
 {
-	HostResource() :m_cores(0), m_sockets(0), m_total_bytes(0), m_free_bytes(0), m_totalSwap_bytes(0), m_freeSwap_bytes(0) {}
+	HostResource() :m_cores(0), m_sockets(0), m_processors(0), m_total_bytes(0), m_free_bytes(0), m_totalSwap_bytes(0), m_freeSwap_bytes(0) {}
 	
 	// CPU
 	unsigned int m_cores;

@@ -530,7 +530,7 @@ bool Utility::startWith(const std::string & str, std::string head)
 	return false;
 }
 
-std::string Utility::stringReplace(const std::string &strBase, const std::string strSrc, const std::string strDst)
+std::string Utility::stringReplace(const std::string &strBase, const std::string& strSrc, const std::string& strDst)
 {
 	std::string str = strBase;
 	std::string::size_type position = 0;
