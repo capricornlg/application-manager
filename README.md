@@ -34,7 +34,7 @@ Method | URI | Desc
 ---|---|---
 GET | /app/$app-name | Get an application infomation
 GET | /app/$app-name/testrun?timeout=5 | Test run an application
-GET | /app/$app-name/testrun/output?process_uuid==uuidabc | Get the stdout and stderr for the test run
+GET | /app/$app-name/testrun/output?process_uuid=uuidabc | Get the stdout and stderr for the test run
 GET | /app-manager/applications | Get all application infomation
 GET | /app-manager/resources | Get host resource usage
 GET | /app-manager/config | Get all the configuration
