@@ -182,6 +182,7 @@ void Application::start(std::shared_ptr<Application>& self)
 std::string Application::testRun(size_t timeoutSeconds)
 {
 	const static char fname[] = "Application::testRun() ";
+	LOG_DBG << fname << " Entered.";
 
 	if (m_testProcess != nullptr && m_testProcess->running())
 	{
