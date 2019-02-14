@@ -95,7 +95,7 @@ void RestHandler::handle_get(http_request message)
 		}
 		if (path == string("/app-manager/resources"))
 		{
-			message.reply(status_codes::OK, Configuration::prettyJson(GET_STD_STRING(ResourceCollection::instance()->AsJson().to_string())));
+			message.reply(status_codes::OK, Configuration::prettyJson(GET_STD_STRING(ResourceCollection::instance()->AsJson().serialize())));
 		}
 		else if (path == "/app-manager/config")
 		{
