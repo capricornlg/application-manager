@@ -29,6 +29,7 @@ SRCS = \
 	TimerActionKill.cpp \
 	DailyLimitation.cpp \
 	ResourceLimitation.cpp \
+	ResourceCollection.cpp \
 	LinuxCgroup.cpp \
 	TimerAction.cpp \
 	../common/Utility.cpp \

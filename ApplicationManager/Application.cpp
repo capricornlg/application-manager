@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "MonitoredProcess.h"
 #include "TimerActionKill.h"
+#include "ResourceCollection.h"
 #include "../common/Utility.h"
 #include "../common/TimeZoneHelper.h"
 #include "Process.h"
@@ -44,6 +45,9 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 {
 	app->m_name = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "name"));
 	app->m_user = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "run_as"));
+	// Be noticed do not use multiple spaces between command arguments
+	// "ping www.baidu.com    123" equals
+	// "ping www.baidu.com 123"
 	app->m_commandLine = Utility::stdStringTrim(GET_JSON_STR_VALUE(jobj, "command_line"));
 	if (app->m_commandLine.find('>') != std::string::npos)
 	{
@@ -227,6 +231,7 @@ web::json::value Application::AsJson(bool returnRuntimeInfo)
 	{
 		result[GET_STRING_T("pid")] = web::json::value::number(m_pid);
 		result[GET_STRING_T("return")] = web::json::value::number(m_return);
+		result[GET_STRING_T("memory")] = web::json::value::number(ResourceCollection::instance()->getRssMemory(m_pid));
 	}
 	if (m_dailyLimit != nullptr)
 	{

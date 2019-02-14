@@ -59,6 +59,11 @@ void ArgumentParser::parse()
 		// GET /app-manager/applications
 		processView();
 	}
+	else if (cmd == "resource")
+	{
+		// GET /app-manager/resources
+		processResource();
+	}
 	else if (cmd == "config")
 	{
 		// GET /app-manager/config
@@ -303,6 +308,13 @@ void ArgumentParser::processView()
 	}
 }
 
+void ArgumentParser::processResource()
+{
+	string restPath = "/app-manager/resources";
+	auto bodyStr = requestHttp(methods::GET, restPath).extract_utf8string(true).get();
+	std::cout << GET_STD_STRING(bodyStr) << std::endl;
+}
+
 void ArgumentParser::processConfig()
 {
 	string restPath = "/app-manager/config";
@@ -490,6 +502,7 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 		<< setw(6) << ("pid")
 		<< setw(7) << ("return")
 		<< setw(12) << ("name")
+		<< setw(7) << ("memory")
 		<< ("command_line")
 		<< endl;
 
@@ -513,6 +526,7 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 			name += " ";
 		}
 		std::cout << setw(12) << name;
+		std::cout << setw(7) << GET_JSON_INT_VALUE(jobj, "memory")/1024/1024;
 		std::cout << GET_JSON_STR_VALUE(jobj, "command_line");
 
 		std::cout << std::endl;

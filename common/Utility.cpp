@@ -162,6 +162,25 @@ std::string Utility::stdStringTrim(const std::string & str)
 	return len >= start ? str.substr(start, len) : str.substr(start);
 }
 
+std::string Utility::stdStringTrim(const std::string &str, char trimChar, bool trimStart, bool trimEnd)
+{
+	char *line = const_cast <char *> (str.c_str());
+	// trim the line on the left and on the right
+	size_t len = str.length();
+	size_t start = 0;
+	while (trimStart && trimChar == (*line))
+	{
+		++line;
+		--len;
+		++start;
+	}
+	while (trimEnd && len > 0 && trimChar == (line[len - 1]))
+	{
+		--len;
+	}
+	return len >= start ? str.substr(start, len) : str.substr(start);
+}
+
 std::string Utility::getSelfFullPath()
 {
 	const static char fname[] = "Utility::getSelfFullPath() ";
@@ -428,6 +447,51 @@ std::string Utility::decode64(const std::string & val)
 	});
 }
 
+std::string Utility::readFile(const std::string & path)
+{
+	const static char fname[] = "Utility::readFile() ";
+
+	FILE* file = ::fopen(path.c_str(), "r");
+	if (nullptr == file)
+	{
+		LOG_ERR << fname << "Get file stream failed with error : " << std::strerror(errno);
+		return "";
+	}
+
+	// Use a buffer to read the file in BUFSIZ
+	// chunks and append it to the string we return.
+	//
+	// NOTE: We aren't able to use fseek() / ftell() here
+	// to find the file size because these functions don't
+	// work properly for in-memory files like /proc/*/stat.
+	char* buffer = new char[BUFSIZ];
+	std::string result;
+
+	while (true) {
+		size_t read = ::fread(buffer, 1, BUFSIZ, file);
+
+		if (::ferror(file)) {
+			// NOTE: ferror() will not modify errno if the stream
+			// is valid, which is the case here since it is open.
+			LOG_ERR << fname << "fread failed with error : " << std::strerror(errno);
+			delete[] buffer;
+			::fclose(file);
+			return "";
+		}
+
+		result.append(buffer, read);
+
+		if (read != BUFSIZ) {
+			assert(feof(file));
+			break;
+		}
+	};
+
+	::fclose(file);
+	delete[] buffer;
+	return result;
+}
+
 std::string Utility::createUUID()
 {
 	static boost::uuids::random_generator generator;
@@ -464,6 +528,21 @@ bool Utility::startWith(const std::string & str, std::string head)
 		return (str.compare(0, head.size(), head) == 0);
 	}
 	return false;
+}
+
+std::string Utility::stringReplace(const std::string &strBase, const std::string strSrc, const std::string strDst)
+{
+	std::string str = strBase;
+	std::string::size_type position = 0;
+	std::string::size_type srcLen = strSrc.size();
+	std::string::size_type dstLen = strDst.size();
+
+	while ((position = str.find(strSrc, position)) != std::string::npos)
+	{
+		str.replace(position, srcLen, strDst);
+		position += dstLen;
+	}
+	return str;
 }
 
 bool Utility::getUid(std::string userName, long& uid, long& groupid)

@@ -61,8 +61,10 @@ public:
 	// String related
 	static bool isNumber(std::string s);
 	static std::string stdStringTrim(const std::string &str);
+	static std::string stdStringTrim(const std::string &str, char trimChar, bool trimStart = true, bool trimEnd = true);
 	static std::vector<std::string> splitString(const std::string& s, const std::string& c);
 	static bool startWith(const std::string& str, std::string head);
+	static std::string stringReplace(const std::string &strBase, const std::string strSrc, const std::string strDst);
 
 	static void initLogging();
 	static void setLogLevel(const std::string & level);
@@ -84,6 +86,8 @@ public:
 	// Base64
 	static std::string encode64(const std::string &val);
 	static std::string decode64(const std::string &val);
+
+	static std::string readFile(const std::string &path);
 
 	static std::string createUUID();
 };
