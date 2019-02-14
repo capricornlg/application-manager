@@ -28,6 +28,7 @@ private:
 	void processUnReg();
 	void processView();
 	void processConfig();
+	void processResource();
 	void processStartStop(bool start);
 	void processTest();
 

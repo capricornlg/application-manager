@@ -6,6 +6,7 @@
 #include <jsoncpp/json/reader.h>
 #include "RestHandler.h"
 #include "Configuration.h"
+#include "ResourceCollection.h"
 #include "../common/Utility.h"
 
 #define REST_INFO_PRINT \
@@ -91,6 +92,10 @@ void RestHandler::handle_get(http_request message)
 		if (path == string("/app-manager/applications"))
 		{
 			message.reply(status_codes::OK, Configuration::instance()->getApplicationJson());
+		}
+		if (path == string("/app-manager/resources"))
+		{
+			message.reply(status_codes::OK, Configuration::prettyJson(GET_STD_STRING(ResourceCollection::instance()->AsJson().to_string())));
 		}
 		else if (path == "/app-manager/config")
 		{

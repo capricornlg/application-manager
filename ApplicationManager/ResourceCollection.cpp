@@ -69,17 +69,20 @@ HostResource ResourceCollection::getHostResource()
 uint64_t ResourceCollection::getRssMemory(pid_t pid)
 {
 	const static char fname[] = "ResourceCollection::getRssMemory() ";
-
-	auto tree = os::pstree(pid);
-	if (nullptr != tree)
+	if (pid > 0)
 	{
-		return tree->totalRSS();
+		auto tree = os::pstree(pid);
+		if (nullptr != tree)
+		{
+			return tree->totalRSS();
+		}
+		else
+		{
+			LOG_WAR << fname << " Failed to find process" << pid;
+			return 0;
+		}
 	}
-	else
-	{
-		LOG_WAR << fname << " Failed to find process" << pid;
-		return 0;
-	}
+	return 0;
 }
 
 void ResourceCollection::dump()
@@ -88,7 +91,7 @@ void ResourceCollection::dump()
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
-	LOG_DBG << fname << "hostname:" << getHostName();
+	LOG_DBG << fname << "host_name:" << getHostName();
 	LOG_DBG << fname << "m_ipaddress:" << m_resources.m_ipaddress;
 	LOG_DBG << fname << "m_cores:" << m_resources.m_cores;
 	LOG_DBG << fname << "m_sockets:" << m_resources.m_sockets;
@@ -105,7 +108,7 @@ web::json::value ResourceCollection::AsJson()
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
 	web::json::value result = web::json::value::object();
-	result[GET_STRING_T("name")] = web::json::value::string(GET_STRING_T(getHostName()));
+	result[GET_STRING_T("host_name")] = web::json::value::string(GET_STRING_T(getHostName()));
 	result[GET_STRING_T("ip")] = web::json::value::string(GET_STRING_T(m_resources.m_ipaddress));
 	result[GET_STRING_T("cores")] = web::json::value::number(m_resources.m_cores);
 	result[GET_STRING_T("sockets")] = web::json::value::number(m_resources.m_sockets);

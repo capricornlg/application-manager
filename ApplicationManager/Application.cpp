@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "MonitoredProcess.h"
 #include "TimerActionKill.h"
+#include "ResourceCollection.h"
 #include "../common/Utility.h"
 #include "../common/TimeZoneHelper.h"
 #include "Process.h"
@@ -230,6 +231,7 @@ web::json::value Application::AsJson(bool returnRuntimeInfo)
 	{
 		result[GET_STRING_T("pid")] = web::json::value::number(m_pid);
 		result[GET_STRING_T("return")] = web::json::value::number(m_return);
+		result[GET_STRING_T("memory")] = web::json::value::number(ResourceCollection::instance()->getRssMemory(m_pid));
 	}
 	if (m_dailyLimit != nullptr)
 	{
