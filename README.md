@@ -36,6 +36,7 @@ GET | /app/$app-name | Get an application infomation
 GET | /app/$app-name/testrun?timeout=5 | Test run an application
 GET | /app/$app-name/testrun/output?process_uuid==uuidabc | Get the stdout and stderr for the test run
 GET | /app-manager/applications | Get all application infomation
+GET | /app-manager/resources | Get host resource usage
 GET | /app-manager/config | Get all the configuration
 PUT | /app/$app-name | Register a new application
 POST| /app/$app-name?action=start | Start an application
@@ -69,13 +70,30 @@ Usage:  appc [COMMAND] [ARG...] [flags]
 
 ```
 $ appc view
-id user  active pid   return name        command_line
-1  root  stop   0     0      period      /bin/sleep 20
-2  root  stop   0     0      ping        ping www.baidu.com
+id user  active pid   return name        memory command_line
+1  root  start  13838 0      period      0      /bin/sleep 20
+2  root  start  13839 0      ping        1      ping www.baidu.com
 
 $ appc view -n ping
-id user  active pid   return name        command_line
-1  root  stop   0     0      ping        ping www.baidu.com
+id user  active pid   return name        memory command_line
+1  root  start  13839 0      ping        1      ping www.baidu.com
+```
+
+## Display configurations
+
+```
+$ appc resource
+{
+   "cores" : 4,
+   "freeSwap_bytes" : 1023406080,
+   "free_bytes" : 3544236032,
+   "host_name" : "kfc-ubuntu",
+   "ip" : "127.0.1.1",
+   "processors" : 4,
+   "sockets" : 1,
+   "totalSwap_bytes" : 1023406080,
+   "total_bytes" : 5189922816
+}
 ```
 
 ## Display configurations
