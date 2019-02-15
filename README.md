@@ -53,6 +53,7 @@ $ appc
 Commands:
   view        List application[s]
   config      Display configurations
+  resource    Display host resource usage
   start       Start a application
   stop        Stop a application
   restart     Restart a application
