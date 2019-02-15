@@ -13,10 +13,10 @@ The internal timer is multi-threaded with high-precision that can used to replac
 
 Supported applications  | Behavior
 ---|---
-Long running application | Will always be restarted when exited
-Short runing application | Will be launched periodly
+Long running application | Monitor app running alltime and restart when exited
+Short runing application | Periodic startup app
 Periodic long running application |Long running applicatin but will be restart periodic
-Extra Features | Application can define avialable time range in a day <br> Application can have customerized envionment variables <br> Application can define resource (memory & CPU) limitation (cgroup on Linux) <br> SSL support <br> Collect Host/Application resource
+Extra Features | Application can define avialable time range in a day <br> Application can have customerized envionment variables <br> Application can define resource (memory & CPU) limitation (cgroup on Linux) <br> SSL support <br> Collect host/app resource usage
 
 
 ## Setup build environment on Ubuntu
