@@ -56,11 +56,16 @@ HostResource ResourceCollection::getHostResource()
 		res.m_total_bytes = res.m_totalSwap_bytes = res.m_free_bytes = res.m_freeSwap_bytes = 0;
 	}
 	auto addr = net::getIP(net::hostname(), 2);
-	if (addr != nullptr)
+	auto nets = net::links();
+	for (auto net : nets)
 	{
-		res.m_ipaddress = net::getAddressStr(addr.get());
+		// Only show ipv4 here, and do not need show lo
+		if (net.ipv4 && net.address != "127.0.0.1")
+		{
+			res.m_ipaddress[net.name]  = net.address;
+		}
 	}
-	
+
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	m_resources = res;
 	return res;
@@ -92,7 +97,10 @@ void ResourceCollection::dump()
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
 	LOG_DBG << fname << "host_name:" << getHostName();
-	LOG_DBG << fname << "m_ipaddress:" << m_resources.m_ipaddress;
+	for (auto &pair : m_resources.m_ipaddress)
+	{
+		LOG_DBG << fname << "m_ipaddress: " << pair.first << "," << pair.second;
+	}
 	LOG_DBG << fname << "m_cores:" << m_resources.m_cores;
 	LOG_DBG << fname << "m_sockets:" << m_resources.m_sockets;
 	LOG_DBG << fname << "m_processors:" << m_resources.m_processors;
@@ -100,22 +108,31 @@ void ResourceCollection::dump()
 	LOG_DBG << fname << "m_free_bytes:" << m_resources.m_free_bytes;
 	LOG_DBG << fname << "m_totalSwap_bytes:" << m_resources.m_totalSwap_bytes;
 	LOG_DBG << fname << "m_freeSwap_bytes:" << m_resources.m_freeSwap_bytes;
-	
+
 }
 
 web::json::value ResourceCollection::AsJson()
 {
+	this->getHostResource();
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
 	web::json::value result = web::json::value::object();
 	result[GET_STRING_T("host_name")] = web::json::value::string(GET_STRING_T(getHostName()));
-	result[GET_STRING_T("ip")] = web::json::value::string(GET_STRING_T(m_resources.m_ipaddress));
-	result[GET_STRING_T("cores")] = web::json::value::number(m_resources.m_cores);
-	result[GET_STRING_T("sockets")] = web::json::value::number(m_resources.m_sockets);
-	result[GET_STRING_T("processors")] = web::json::value::number(m_resources.m_processors);
-	result[GET_STRING_T("total_bytes")] = web::json::value::number(m_resources.m_total_bytes);
-	result[GET_STRING_T("free_bytes")] = web::json::value::number(m_resources.m_free_bytes);
-	result[GET_STRING_T("totalSwap_bytes")] = web::json::value::number(m_resources.m_totalSwap_bytes);
-	result[GET_STRING_T("freeSwap_bytes")] = web::json::value::number(m_resources.m_freeSwap_bytes);
+	auto arr = web::json::value::array(m_resources.m_ipaddress.size());
+	int idx = 0;
+	std::for_each(m_resources.m_ipaddress.begin(), m_resources.m_ipaddress.end(), [&arr, &idx](const std::pair<std::string, std::string>& pair)
+	{
+		web::json::value net = web::json::value::object();
+		net[GET_STRING_T(pair.first)] = web::json::value::string(GET_STRING_T(pair.second));
+		arr[idx++] = net;
+	});
+	result[GET_STRING_T("net_ip")] = arr;
+	result[GET_STRING_T("cpu_cores")] = web::json::value::number(m_resources.m_cores);
+	result[GET_STRING_T("cpu_sockets")] = web::json::value::number(m_resources.m_sockets);
+	result[GET_STRING_T("cpu_processors")] = web::json::value::number(m_resources.m_processors);
+	result[GET_STRING_T("mem_total_bytes")] = web::json::value::number(m_resources.m_total_bytes);
+	result[GET_STRING_T("mem_free_bytes")] = web::json::value::number(m_resources.m_free_bytes);
+	result[GET_STRING_T("mem_totalSwap_bytes")] = web::json::value::number(m_resources.m_totalSwap_bytes);
+	result[GET_STRING_T("mem_freeSwap_bytes")] = web::json::value::number(m_resources.m_freeSwap_bytes);
 	return result;
 }

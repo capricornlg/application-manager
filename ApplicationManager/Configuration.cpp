@@ -216,7 +216,7 @@ std::shared_ptr<Application> Configuration::addApp(const web::json::value& jsonA
 	bool update = false;
 
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	for_each(m_apps.begin(), m_apps.end(), [&app, &update](std::shared_ptr<Application>& mapApp)
+	std::for_each(m_apps.begin(), m_apps.end(), [&app, &update](std::shared_ptr<Application>& mapApp)
 	{
 		if (mapApp->getName() == app->getName())
 		{	

@@ -84,15 +84,22 @@ id user  active pid   return name        memory command_line
 ```
 $ appc resource
 {
-   "cores" : 4,
-   "freeSwap_bytes" : 1023406080,
-   "free_bytes" : 3544236032,
-   "host_name" : "kfc-ubuntu",
-   "ip" : "127.0.1.1",
-   "processors" : 4,
-   "sockets" : 1,
-   "totalSwap_bytes" : 1023406080,
-   "total_bytes" : 5189922816
+   "cpu_cores" : 4,
+   "cpu_processors" : 4,
+   "cpu_sockets" : 1,
+   "host_name" : "myubuntu",
+   "mem_freeSwap_bytes" : 1023406080,
+   "mem_free_bytes" : 3755048960,
+   "mem_totalSwap_bytes" : 1023406080,
+   "mem_total_bytes" : 5189935104,
+   "net_ip" : [
+      {
+         "docker0" : "172.17.0.1"
+      },
+      {
+         "enp0s3" : "10.0.2.15"
+      }
+   ]
 }
 ```
 

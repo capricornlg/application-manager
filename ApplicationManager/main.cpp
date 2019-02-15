@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
 
 		auto apps = config->getApps();
 		auto process = Utility::getProcessList();
-		for_each(apps.begin(), apps.end(), [&process](std::vector<std::shared_ptr<Application>>::reference p) {p->attach(process); });
+		std::for_each(apps.begin(), apps.end(), [&process](std::vector<std::shared_ptr<Application>>::reference p) {p->attach(process); });
 
 		ResourceCollection::instance()->getHostResource();
 		ResourceCollection::instance()->dump();
