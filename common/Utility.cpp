@@ -133,7 +133,7 @@ std::map<std::string, int> Utility::getProcessList()
 	});
 #endif
 
-	for_each(processList.begin(), processList.end(), [&](std::map<std::string, int>::reference p) { LOG_DBG << "Scan System Process:[" << p.second << "]" << p.first; });
+	std::for_each(processList.begin(), processList.end(), [&](std::map<std::string, int>::reference p) { LOG_DBG << "Scan System Process:[" << p.second << "]" << p.first; });
 
 	return processList;
 }

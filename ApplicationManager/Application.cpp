@@ -245,7 +245,7 @@ web::json::value Application::AsJson(bool returnRuntimeInfo)
 	if (m_envMap.size())
 	{
 		web::json::value envs = web::json::value::object();
-		std::for_each(m_envMap.begin(), m_envMap.end(), [&envs](const std::pair<std::string, string>& pair)
+		std::for_each(m_envMap.begin(), m_envMap.end(), [&envs](const std::pair<std::string, std::string>& pair)
 		{
 			envs[GET_STRING_T(pair.first)] = web::json::value::string(GET_STRING_T(pair.second));
 		});
@@ -295,7 +295,7 @@ int Application::spawnProcess(std::shared_ptr<Process> process, std::shared_ptr<
 	option.inherit_environment(true);
 	option.handle_inheritance(0);
 	option.working_directory(m_workdir.c_str());
-	std::for_each(m_envMap.begin(), m_envMap.end(), [&option](const std::pair<std::string, string>& pair)
+	std::for_each(m_envMap.begin(), m_envMap.end(), [&option](const std::pair<std::string, std::string>& pair)
 	{
 		option.setenv(pair.first.c_str(), "%s", pair.second.c_str());
 	});

@@ -3,6 +3,7 @@
 #include <mutex>
 #include <memory>
 #include <string>
+#include <map>
 
 #include <cpprest/json.h>
 
@@ -25,7 +26,7 @@ struct HostResource
 	// TODO: disk
 
 	// NET
-	std::string m_ipaddress;
+	std::map<std::string, std::string> m_ipaddress;
 };
 
 class ResourceCollection

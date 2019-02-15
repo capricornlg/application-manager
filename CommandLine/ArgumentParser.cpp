@@ -449,7 +449,7 @@ http_response ArgumentParser::requestHttp(const method & mtd, const string& path
 	http_client client(restPath, config);
 	// Build request URI and start the request.
 	uri_builder builder(GET_STRING_T(path));
-	std::for_each(query.begin(), query.end(), [&builder](const std::pair<std::string, string>& pair)
+	std::for_each(query.begin(), query.end(), [&builder](const std::pair<std::string, std::string>& pair)
 	{
 		builder.append_query(GET_STRING_T(pair.first), GET_STRING_T(pair.second));
 	});
@@ -509,7 +509,7 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 	int index = 1;
 	auto jsonArr = json.as_array();
 	auto reduceFunc = std::bind(&ArgumentParser::reduceStr, this, std::placeholders::_1, std::placeholders::_2);
-	for_each(jsonArr.begin(), jsonArr.end(), [&index, &reduceFunc, reduce](web::json::value &x) {
+	std::for_each(jsonArr.begin(), jsonArr.end(), [&index, &reduceFunc, reduce](web::json::value &x) {
 		auto jobj = x.as_object();
 		std::cout << setw(3) << index++;
 		std::cout << setw(6) << reduceFunc(GET_JSON_STR_VALUE(jobj, "run_as"), 6);
