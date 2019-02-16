@@ -7,6 +7,7 @@ VENDER=github
 RELEASE_DIR=./release
 INSTALL_DIR=/opt/${PACKAGE_NAME}
 TMP_DIR=${RELEASE_DIR}${INSTALL_DIR}
+TMP_LIB_DIR=${TMP_DIR}/lib64
 
 all:
 	echo ${BUILD_TAG}
@@ -19,6 +20,7 @@ all:
 build_dir:
 	rm -rf ${RELEASE_DIR}
 	mkdir -p ${TMP_DIR}/script
+	mkdir -p ${TMP_LIB_DIR}
 	cp ./CommandLine/appc ${TMP_DIR}/
 	cp ./ApplicationManager/appsvc ${TMP_DIR}/
 	cp ./ApplicationManager/appsvc.json ${TMP_DIR}/
@@ -27,6 +29,13 @@ build_dir:
 	cp ./script/server.key ${TMP_DIR}/
 	chmod +x ${TMP_DIR}/script/*.sh
 	dos2unix ${TMP_DIR}/script/*.sh
+	ldd ./ApplicationManager/appsvc | grep boost | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appsvc | grep jsoncpp | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appsvc | grep ACE | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appsvc | grep cpprest | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appsvc | grep ssl | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appsvc | grep crypto | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appsvc | grep log4cpp | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
 	
 deb:
 	rm -f *.deb

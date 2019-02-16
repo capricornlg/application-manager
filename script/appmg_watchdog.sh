@@ -8,6 +8,7 @@ log(){
 	echo $1
 }
 cd /opt/appmanager/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/appmanager/lib64
 while true ; do
 	case "$(pidof /opt/appmanager/appsvc | wc -w)" in
 	
