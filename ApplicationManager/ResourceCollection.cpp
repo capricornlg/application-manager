@@ -126,7 +126,7 @@ web::json::value ResourceCollection::AsJson()
 		net[GET_STRING_T(pair.first)] = web::json::value::string(GET_STRING_T(pair.second));
 		arr[idx++] = net;
 	});
-	result[GET_STRING_T("net_ip")] = arr;
+	result[GET_STRING_T("net_interfaces")] = arr;
 	result[GET_STRING_T("cpu_cores")] = web::json::value::number(m_resources.m_cores);
 	result[GET_STRING_T("cpu_sockets")] = web::json::value::number(m_resources.m_sockets);
 	result[GET_STRING_T("cpu_processors")] = web::json::value::number(m_resources.m_processors);
@@ -134,5 +134,10 @@ web::json::value ResourceCollection::AsJson()
 	result[GET_STRING_T("mem_free_bytes")] = web::json::value::number(m_resources.m_free_bytes);
 	result[GET_STRING_T("mem_totalSwap_bytes")] = web::json::value::number(m_resources.m_totalSwap_bytes);
 	result[GET_STRING_T("mem_freeSwap_bytes")] = web::json::value::number(m_resources.m_freeSwap_bytes);
+	auto allAppMem = os::pstree();
+	if (nullptr != allAppMem)
+	{
+		result[GET_STRING_T("mem_applications")] = web::json::value::number(allAppMem->totalRSS());
+	}
 	return result;
 }
