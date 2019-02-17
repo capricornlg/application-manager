@@ -6,7 +6,7 @@ if [ -f "/etc/init.d/appsvc" ];then
 	systemctl disable appsvc
 fi
 
-rm -rf $apppath
+#rm -rf $apppath
 
 rm -f /usr/bin/appc
 rm -f /etc/init.d/appsvc
