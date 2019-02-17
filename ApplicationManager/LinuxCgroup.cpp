@@ -6,7 +6,7 @@
 
 std::string LinuxCgroup::cgroupMemRootName;
 std::string LinuxCgroup::cgroupCpuRootName;
-std::string LinuxCgroup::cgroupBaseDir = "/appmanager";
+const std::string LinuxCgroup::cgroupBaseDir = "/appmanager";
 LinuxCgroup::LinuxCgroup(long long memLimitBytes, long long memSwapBytes, long long cpuShares)
 	:m_memLimitMb(memLimitBytes), m_memSwapMb(memSwapBytes), m_cpuShares(cpuShares), m_pid(0), cgroupEnabled(false)
 {
@@ -29,7 +29,7 @@ LinuxCgroup::LinuxCgroup(long long memLimitBytes, long long memSwapBytes, long l
 	{
 		// Only need retrieve once for all
 		static bool retrieved = false;
-		if (!retrieved) { retrieveCgroupHeirarchy(); retrieved = true; }
+		if (!retrieved) { retrieveCgroupHeirarchy(); retrieved = true; return; }
 
 		// Check whether swap limit is enabled for OS, by default, Ubuntu does not enable swap limit
 		if (m_memSwapMb > 0 && !Utility::isFileExist(cgroupMemRootName + "/memory.memsw.limit_in_bytes"))
