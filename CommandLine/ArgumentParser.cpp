@@ -527,7 +527,16 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 			name += " ";
 		}
 		std::cout << setw(12) << name;
-		std::cout << setw(7) << GET_JSON_INT_VALUE(jobj, "memory")/1024/1024;
+		auto mem = GET_JSON_INT_VALUE(jobj, "memory");
+		std::string memStr = "0";
+		if (mem > 0)
+		{
+			char buff[32] = { 0 };
+			snprintf(buff, sizeof(buff), "%.1fM", (float)mem / 1024 / 1024);
+			memStr = buff;
+		}
+		
+		std::cout << setw(7) << memStr;
 		std::cout << GET_JSON_STR_VALUE(jobj, "command_line");
 
 		std::cout << std::endl;
