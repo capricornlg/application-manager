@@ -124,7 +124,7 @@ $ appc config
          "keep_running" : true,
          "name" : "period",
          "posix_timezone" : "CST+8:00:00",
-         "resource_limitation" : {
+         "resource_limit" : {
             "cpu_shares" : 100,
             "memory_mb" : 200,
             "memory_virt_mb" : 300

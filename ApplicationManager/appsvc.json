@@ -24,7 +24,7 @@
         "daily_start": "09:00:00",
         "daily_end": "23:00:00"
       },
-      "resource_limitation": {
+      "resource_limit": {
         "memory_mb": 200,
         "memory_virt_mb": 300,
         "cpu_shares": 100

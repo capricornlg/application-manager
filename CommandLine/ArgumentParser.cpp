@@ -211,7 +211,7 @@ void ArgumentParser::processReg()
 		if (m_commandLineVariables.count("memory")) objResourceLimitation["memory_mb"] = web::json::value::number(m_commandLineVariables["memory"].as<int>());
 		if (m_commandLineVariables.count("virtual_memory")) objResourceLimitation["memory_virt_mb"] = web::json::value::number(m_commandLineVariables["virtual_memory"].as<int>());
 		if (m_commandLineVariables.count("cpu_shares")) objResourceLimitation["cpu_shares"] = web::json::value::number(m_commandLineVariables["cpu_shares"].as<int>());
-		jsobObj["resource_limitation"] = objResourceLimitation;
+		jsobObj["resource_limit"] = objResourceLimitation;
 	}
 
 

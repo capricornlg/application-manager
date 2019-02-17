@@ -62,9 +62,9 @@ void Application::FromJson(std::shared_ptr<Application>& app, const web::json::o
 	{
 		app->m_dailyLimit = DailyLimitation::FromJson(jobj.at(GET_STRING_T("daily_limitation")).as_object());
 	}
-	if (HAS_JSON_FIELD(jobj, "resource_limitation"))
+	if (HAS_JSON_FIELD(jobj, "resource_limit"))
 	{
-		app->m_resourceLimit = ResourceLimitation::FromJson(jobj.at(GET_STRING_T("resource_limitation")).as_object());
+		app->m_resourceLimit = ResourceLimitation::FromJson(jobj.at(GET_STRING_T("resource_limit")).as_object());
 	}
 	if (HAS_JSON_FIELD(jobj, "env"))
 	{
@@ -240,7 +240,7 @@ web::json::value Application::AsJson(bool returnRuntimeInfo)
 	}
 	if (m_resourceLimit != nullptr)
 	{
-		result[GET_STRING_T("resource_limitation")] = m_resourceLimit->AsJson();
+		result[GET_STRING_T("resource_limit")] = m_resourceLimit->AsJson();
 	}
 	if (m_envMap.size())
 	{
