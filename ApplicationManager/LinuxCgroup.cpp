@@ -25,12 +25,12 @@ LinuxCgroup::LinuxCgroup(long long memLimitBytes, long long memSwapBytes, long l
 	}
 	cgroupEnabled = (m_memLimitMb > 0 || m_memSwapMb > 0 || m_cpuShares > 0);
 
-	if (cgroupEnabled)
+	// Only need retrieve once for all
+	static bool retrieved = false;
+	if (cgroupEnabled && !retrieved)
 	{
-		// Only need retrieve once for all
-		static bool retrieved = false;
-		if (!retrieved) { retrieveCgroupHeirarchy(); retrieved = true; return; }
-
+		retrieved = true;
+		retrieveCgroupHeirarchy();
 		// Check whether swap limit is enabled for OS, by default, Ubuntu does not enable swap limit
 		if (m_memSwapMb > 0 && !Utility::isFileExist(cgroupMemRootName + "/memory.memsw.limit_in_bytes"))
 		{
