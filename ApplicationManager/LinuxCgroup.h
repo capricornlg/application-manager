@@ -25,9 +25,9 @@ private:
 	std::string cgroupCpuPath;
 	bool cgroupEnabled;
 
-	std::string cgroupMemRootName;
-	std::string cgroupCpuRootName;
-	const static std::string cgroupBaseDir;
+	static std::string cgroupMemRootName;
+	static std::string cgroupCpuRootName;
+	static const std::string cgroupBaseDir;
 };
 
 #endif
