@@ -349,56 +349,58 @@ unsigned long long Utility::getThreadId()
 
 std::chrono::system_clock::time_point Utility::convertStr2Time(const std::string & strTime)
 {
-	struct tm tm = { 0 };
-	std::istringstream ss(strTime);
-	// ss.imbue(std::locale("de_DE.utf-8"));
-	ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
-	if (ss.fail())
-	{
-		string msg = "error when convert string to time :";
-		msg += strTime;
-		throw std::invalid_argument(msg);
-	}
-	return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+	char *str = (char*)strTime.data();
+	struct tm tm_ = { 0 };
+	int year, month, day, hour, minute, second;
+	// "%Y-%m-%d %H:%M:%S"
+	sscanf(str, "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &minute, &second);
+	tm_.tm_year = year - 1900;
+	tm_.tm_mon = month - 1;
+	tm_.tm_mday = day;
+	tm_.tm_hour = hour;
+	tm_.tm_min = minute;
+	tm_.tm_sec = second;
+	tm_.tm_isdst = 0;
+
+	return std::chrono::system_clock::from_time_t(std::mktime(&tm_));
 }
 
 std::string Utility::convertTime2Str(const std::chrono::system_clock::time_point & time)
 {
-	// https://en.cppreference.com/w/cpp/io/manip/put_time
+	char buff[70] = { 0 };
+	// put_time is not ready when gcc version < 5
 	auto timet = std::chrono::system_clock::to_time_t(time);
-	std::tm tm = *std::localtime(&timet);
-	std::stringstream ss;
-	ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
-	return ss.str();
+	std::tm timetm = *std::localtime(&timet);
+	strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", &timetm);
+	return std::string(buff);
 }
 
 std::chrono::system_clock::time_point Utility::convertStr2DayTime(const std::string & strTime)
 {
-	struct tm tm = { 0 };
-	std::istringstream ss(strTime);
-	// ss.imbue(std::locale("de_DE.utf-8"));
-	ss >> std::get_time(&tm, "%H:%M:%S");
-	if (ss.fail())
-	{
-		string msg = "error when convert string to time :";
-		msg += strTime;
-		throw std::invalid_argument(msg);
-	}
-	// Give a fixed date.
-	tm.tm_year = 2000 - 1900;
-	tm.tm_mon = 1;
-	tm.tm_mday = 17;
-	return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+	struct tm tm_ = { 0 };
+
+	char *str = (char*)strTime.data();
+	int hour, minute, second;
+	// "%H:%M:%S"
+	sscanf(str, "%d:%d:%d", &hour, &minute, &second);
+	tm_.tm_year = 2000 - 1900;
+	tm_.tm_mon = 1;
+	tm_.tm_mday = 17;
+	tm_.tm_hour = hour;
+	tm_.tm_min = minute;
+	tm_.tm_sec = second;
+	tm_.tm_isdst = 0;
+	return std::chrono::system_clock::from_time_t(std::mktime(&tm_));
 }
 
 std::string Utility::convertDayTime2Str(const std::chrono::system_clock::time_point & time)
 {
-	// https://en.cppreference.com/w/cpp/io/manip/put_time
+	char buff[70] = { 0 };
+	// put_time is not ready when gcc version < 5
 	auto timet = std::chrono::system_clock::to_time_t(time);
-	std::tm tm = *std::localtime(&timet);
-	std::stringstream ss;
-	ss << std::put_time(&tm, "%H:%M:%S");
-	return ss.str();
+	std::tm timetm = *std::localtime(&timet);
+	strftime(buff, sizeof(buff), "%H:%M:%S", &timetm);
+	return std::string(buff);
 }
 
 std::string Utility::getSystemPosixTimeZone()
@@ -408,9 +410,9 @@ std::string Utility::getSystemPosixTimeZone()
 	time_t cur_time = 0; // time(NULL);
 	localtime_r(&cur_time, &local_tm);
 
-	std::stringstream ss;
-	ss << std::put_time(&local_tm, "%Z%z");
-	auto str = ss.str();
+	char buff[70] = { 0 };
+	strftime(buff, sizeof(buff), "%Z%z", &local_tm);
+	std::string str = buff;
 
 	// remove un-used zero post-fix : 
 	// CST+0800  => CST+08
