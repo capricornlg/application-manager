@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <unistd.h>
 
 #include <cpprest/json.h>
 

@@ -3,6 +3,7 @@
 #define UTILITY_H
 
 #include <string>
+#include <cstring>
 #include <map>
 #include <chrono>
 #include <cpprest/json.h>
