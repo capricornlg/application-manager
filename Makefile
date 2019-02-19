@@ -16,11 +16,13 @@ all:
 	cd CommandLine; make
 	make build_dir
 	make deb
+	make rpm
 
 build_dir:
 	rm -rf ${RELEASE_DIR}
 	mkdir -p ${TMP_DIR}/script
 	mkdir -p ${TMP_LIB_DIR}
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/
 	cp ./CommandLine/appc ${TMP_DIR}/
 	cp ./ApplicationManager/appsvc ${TMP_DIR}/
 	cp ./ApplicationManager/appsvc.json ${TMP_DIR}/
@@ -39,10 +41,10 @@ build_dir:
 	
 deb:
 	rm -f *.deb
-	fpm -s dir -t deb -v ${VERSION} -n ${PACKAGE_NAME} --vendor ${VENDER} --description ${VENDER} --post-install ${TMP_DIR}/script/install_ubuntu.sh --before-remove ${TMP_DIR}/script/pre_uninstall_ubuntu.sh --after-remove ${TMP_DIR}/script/uninstall_ubuntu.sh -C ${RELEASE_DIR}
+	fpm -s dir -t deb -v ${VERSION} -n ${PACKAGE_NAME} --vendor ${VENDER} --description ${VENDER} --post-install ${TMP_DIR}/script/install.sh --before-remove ${TMP_DIR}/script/pre_uninstall.sh --after-remove ${TMP_DIR}/script/uninstall.sh -C ${RELEASE_DIR}
 rpm:
 	rm -f *.rpm
-	fpm -s dir -t rpm -v ${VERSION} -n ${PACKAGE_NAME} --vendor ${VENDER} --description ${VENDER} --post-install ${TMP_DIR}/script/install_ubuntu.sh --before-remove ${TMP_DIR}/script/pre_uninstall_ubuntu.sh --after-remove ${TMP_DIR}/script/uninstall_ubuntu.sh -C ${RELEASE_DIR}
+	fpm -s dir -t rpm -v ${VERSION} -n ${PACKAGE_NAME} --vendor ${VENDER} --description ${VENDER} --post-install ${TMP_DIR}/script/install.sh --before-remove ${TMP_DIR}/script/pre_uninstall.sh --after-remove ${TMP_DIR}/script/uninstall.sh -C ${RELEASE_DIR}
 cppcheck:
 	cppcheck --enable=all --quiet --std=c++11 --platform=native .
 install:

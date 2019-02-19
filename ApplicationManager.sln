@@ -11,12 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		script\appmg_service.sh = script\appmg_service.sh
 		script\appmg_watchdog.sh = script\appmg_watchdog.sh
-		script\install_ubuntu.sh = script\install_ubuntu.sh
+		script\install.sh = script\install.sh
 		Makefile = Makefile
 		common\Makefile = common\Makefile
-		script\pre_uninstall_ubuntu.sh = script\pre_uninstall_ubuntu.sh
+		script\pre_uninstall.sh = script\pre_uninstall.sh
 		README.md = README.md
-		script\uninstall_ubuntu.sh = script\uninstall_ubuntu.sh
+		script\uninstall.sh = script\uninstall.sh
 	EndProjectSection
 EndProject
 Global
