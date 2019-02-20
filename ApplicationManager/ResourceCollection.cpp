@@ -63,6 +63,7 @@ const HostResource& ResourceCollection::getHostResource()
 	}
 	
 	// Net
+	auto nets = net::links();
 	for (auto net : nets)
 	{
 		// Only show ipv4 here, and do not need show lo
