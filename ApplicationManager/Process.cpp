@@ -75,9 +75,11 @@ void Process::getSymProcessList(std::map<std::string, int>& processList, const v
 	{
 		tree = (os::ProcessTree*)pt;
 	}
-	processList[tree->process.command] = tree->process.pid;
 
-	LOG_DBG << fname << "Process: <" << tree->process.command << "> pid: " << tree->process.pid;
+	auto pname = Utility::stdStringTrim(tree->process.command);
+	processList[pname] = tree->process.pid;
+
+	LOG_DBG << fname << "Process: <" << pname << "> pid: " << tree->process.pid;
 
 	for (auto it = tree->children.begin(); it != tree->children.end(); ++it)
 	{
