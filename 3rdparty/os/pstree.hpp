@@ -6,14 +6,11 @@
 
 #include <unistd.h>
 #include "process.hpp"
-
+#include "linux.hpp"
 #include "../../common/Utility.h"
 
 
 namespace os {
-
-	// Forward declaration.
-	inline std::list<Process> processes();
 
 	// Returns a process tree rooted at the specified pid using the
 	// specified list of processes (or an error if one occurs).
