@@ -32,6 +32,7 @@ build_dir:
 	chmod +x ${TMP_DIR}/script/*.sh
 	dos2unix ${TMP_DIR}/script/*.sh
 	ldd ./ApplicationManager/appsvc | grep boost | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
+	ldd ./ApplicationManager/appc | grep boost | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
 	ldd ./ApplicationManager/appsvc | grep jsoncpp | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
 	ldd ./ApplicationManager/appsvc | grep ACE | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
 	ldd ./ApplicationManager/appsvc | grep cpprest | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";system(cmd)}'
