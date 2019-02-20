@@ -55,7 +55,7 @@ HostResource ResourceCollection::getHostResource()
 	{
 		res.m_total_bytes = res.m_totalSwap_bytes = res.m_free_bytes = res.m_freeSwap_bytes = 0;
 	}
-	auto addr = net::getIP(net::hostname(), 2);
+	
 	auto nets = net::links();
 	for (auto net : nets)
 	{
