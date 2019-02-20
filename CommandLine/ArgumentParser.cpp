@@ -502,8 +502,8 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 		<< setw(7) << ("active")
 		<< setw(6) << ("pid")
 		<< setw(7) << ("return")
-		<< setw(12) << ("name")
 		<< setw(7) << ("memory")
+		<< setw(12) << ("name")
 		<< ("command_line")
 		<< endl;
 
@@ -526,7 +526,6 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 		{
 			name += " ";
 		}
-		std::cout << setw(12) << name;
 		auto mem = GET_JSON_INT_VALUE(jobj, "memory");
 		std::string memStr = "0";
 		if (mem > 0)
@@ -537,6 +536,7 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 		}
 		
 		std::cout << setw(7) << memStr;
+		std::cout << setw(12) << name;
 		std::cout << GET_JSON_STR_VALUE(jobj, "command_line");
 
 		std::cout << std::endl;
