@@ -40,7 +40,7 @@ public:
 	static ResourceCollection* instance();
 
 	std::string getHostName();
-	HostResource getHostResource();
+	const HostResource& getHostResource();
 
 	uint64_t getRssMemory(pid_t pid = getpid());
 

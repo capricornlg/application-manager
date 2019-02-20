@@ -1,15 +1,7 @@
-
 #include "../common/Utility.h"
 #include <string>
 #include <map>
-#include <fstream>
-#include <iostream>
-#include <stdio.h>
 #include <algorithm>
-#include <cctype>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #ifdef _WIN32
 #include <process.h>
 #include <Windows.h>
@@ -19,15 +11,12 @@
 #include <errno.h>
 #include <pwd.h>
 #include <unistd.h>
-#include <limits.h>
+#include "../3rdparty/os/pstree.hpp"
 #endif
 #include <thread>
-#include <iomanip>
-#include <boost/asio/ip/host_name.hpp>
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
-#include <boost/algorithm/string.hpp>
 
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
@@ -40,105 +29,42 @@
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/RollingFileAppender.hh>
 #include <log4cpp/OstreamAppender.hh>
-using namespace log4cpp;
 
-using namespace std;
 
 Utility::Utility()
 {
 }
 
-
 Utility::~Utility()
 {
 }
 
-#if	!defined(WIN32)
-using file_filter_type = std::function<bool(const char*)>;
-
-static  std::vector<std::string> for_each_file(const std::string&dirName, file_filter_type filter)
-{
-	std::vector<std::string> fileList;
-	auto dir = opendir(dirName.data());
-	if (dir)
-	{
-		struct dirent *rent = NULL;
-		while ((rent = readdir(dir)) != NULL)
-		{
-			if (rent->d_name == nullptr || strlen(rent->d_name) == 0 || 
-				0 == strcmp(rent->d_name, "..") || 0 == strcmp(rent->d_name, "."))
-			{
-				continue;
-			}
-			auto path = std::string(dirName).append("/").append(rent->d_name);
-			if (filter(rent->d_name))
-			{
-				LOG_DBG << "Process:" << rent->d_name;
-				fileList.emplace_back(rent->d_name);
-			}
-		}
-		closedir(dir);
-	}
-	return std::move(fileList);
-}
-#endif
-
-std::map<std::string, int> Utility::getProcessList()
+void Utility::getProcessList(std::map<std::string, int>& processList, void* pt)
 {
 	const static char fname[] = "Utility::getProcessList() ";
 
-	std::map<std::string, int> processList;
-
-#if	!defined(WIN32)
-	auto procDir = "/proc";
-	auto filterFunc = [](const char* name) 
-	{ 
-		return isNumber(name) && access(std::string("/proc/").append(name).append("/cmdline").c_str(), F_OK) == 0;
-	};
-	auto fileList = for_each_file(procDir, filterFunc);
-	std::for_each(fileList.begin(), fileList.end(), [&](std::vector<std::string>::reference p)
+	std::shared_ptr<os::ProcessTree> ptree;
+	os::ProcessTree* tree;
+	if (pt == nullptr)
 	{
-		try
-		{
-			// /proc/123/cmdline
-			ifstream file(std::string(procDir).append("/").append(p).append("/cmdline"));
-			if (file.is_open() && !file.eof() && !file.fail() && !file.bad())
-			{
-				char maxCmdStrBuf[PATH_MAX+1];
-				memset(maxCmdStrBuf, 0, sizeof(maxCmdStrBuf));
-				size_t getSize = file.get(maxCmdStrBuf, PATH_MAX, '\r').gcount();
-				file.close();
-				if (getSize > 0 && !file.fail() && !file.bad())
-				{
-					// Parse cmdline : https://stackoverflow.com/questions/1585989/how-to-parse-proc-pid-cmdline
-					for (size_t i = 0; i < getSize; i++)
-					{
-						if (maxCmdStrBuf[i] == '\0') maxCmdStrBuf[i] = ' ';
-						if (maxCmdStrBuf[i] == '\r') maxCmdStrBuf[i] = '\0';
-					}
-					std::string str = maxCmdStrBuf;
-					str = stdStringTrim(str);
-					processList[str] = atoi(p.c_str());
-				}
-			}
-		}
-		catch (const std::exception& e)
-		{
-			LOG_ERR << fname << e.what();
-		}
-		catch (...)
-		{
-			LOG_ERR << fname << "unknown exception";
-		}
-	});
-#endif
+		auto ptree = os::pstree(1);
+		tree = ptree.get();
+	}
+	else
+	{
+		tree = (os::ProcessTree*)pt;
+	}
+	processList[tree->process.command] = tree->process.pid;
 
-	std::for_each(processList.begin(), processList.end(), [&](std::map<std::string, int>::reference p) { LOG_DBG << "Scan System Process:[" << p.second << "]" << p.first; });
+	LOG_DBG << fname << "Process: <" << tree->process.command << "> pid: " << tree->process.pid;
 
-	return processList;
+	for (auto process : tree->children)
+	{
+		getProcessList(processList, tree);
+	}
 }
 
-bool Utility::isNumber(string s)
+bool Utility::isNumber(std::string s)
 {
 	return !s.empty() && std::find_if(s.begin(), s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
@@ -283,6 +209,8 @@ bool Utility::removeDir(const std::string & path)
 
 void Utility::initLogging()
 {
+	using namespace log4cpp;
+
 	createDirectory("./log", 00655);
 	auto consoleLayout = new PatternLayout();
 	consoleLayout->setConversionPattern("%d: [%t] %p %c: %m%n");
@@ -509,7 +437,7 @@ std::vector<std::string> Utility::splitString(const std::string & source, const 
 	pos1 = 0;
 	while (std::string::npos != pos2)
 	{
-		string str = stdStringTrim(source.substr(pos1, pos2 - pos1));
+		std::string str = stdStringTrim(source.substr(pos1, pos2 - pos1));
 		if (str.length() > 0) result.push_back(str);
 
 		pos1 = pos2 + splitFlag.size();
@@ -517,7 +445,7 @@ std::vector<std::string> Utility::splitString(const std::string & source, const 
 	}
 	if (pos1 != source.length())
 	{
-		string str = stdStringTrim(source.substr(pos1));
+		std::string str = stdStringTrim(source.substr(pos1));
 		if (str.length() > 0) result.push_back(str);
 	}
 	return std::move(result);

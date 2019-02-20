@@ -41,7 +41,8 @@ int main(int argc, char * argv[])
 		m_httpHandler = std::make_shared<RestHandler>(config->getRestListenPort());
 
 		auto apps = config->getApps();
-		auto process = Utility::getProcessList();
+		std::map<std::string, int> process;
+		Utility::getProcessList(process);
 		std::for_each(apps.begin(), apps.end(), [&process](std::vector<std::shared_ptr<Application>>::reference p) {p->attach(process); });
 
 		ResourceCollection::instance()->getHostResource();
