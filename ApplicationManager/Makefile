@@ -54,7 +54,7 @@ $(TARGET): $(OBJS)
 	$(CXX) ${CXXFLAGS} -o $@ $^ $(DEP_LIBS)
 
 format:
-	dos2unix *.cpp *.h *.json
+	#dos2unix *.cpp *.h *.json
 
 .PHONY: clean
 clean:
