@@ -27,48 +27,53 @@ std::string ResourceCollection::getHostName()
 	return net::hostname();
 }
 
-HostResource ResourceCollection::getHostResource()
+const HostResource& ResourceCollection::getHostResource()
 {
-	HostResource res;
+	static auto cpus = os::cpus();
+	auto nets = net::links();
+	auto mem = os::memory();
 
+	std::lock_guard<std::recursive_mutex> guard(m_mutex);
+
+	m_resources.m_ipaddress.clear();
+
+	// CPU
 	std::set<int> sockets;
 	std::set<int> processers;
-	auto cpus = os::cpus();
 	for (auto c : cpus)
 	{
 		sockets.insert(c.socket);
 		processers.insert(c.id);
 	}
-	res.m_cores = cpus.size();
-	res.m_sockets = sockets.size();
-	res.m_processors = processers.size();
+	m_resources.m_cores = cpus.size();
+	m_resources.m_sockets = sockets.size();
+	m_resources.m_processors = processers.size();
 
-	auto mem = os::memory();
+	// Memory
 	if (mem != nullptr)
 	{
-		res.m_total_bytes = mem->total_bytes;
-		res.m_totalSwap_bytes = mem->totalSwap_bytes;
-		res.m_free_bytes = mem->free_bytes;
-		res.m_freeSwap_bytes = mem->freeSwap_bytes;
+		m_resources.m_total_bytes = mem->total_bytes;
+		m_resources.m_totalSwap_bytes = mem->totalSwap_bytes;
+		m_resources.m_free_bytes = mem->free_bytes;
+		m_resources.m_freeSwap_bytes = mem->freeSwap_bytes;
 	}
 	else
 	{
-		res.m_total_bytes = res.m_totalSwap_bytes = res.m_free_bytes = res.m_freeSwap_bytes = 0;
+		m_resources.m_total_bytes = m_resources.m_totalSwap_bytes = m_resources.m_free_bytes = m_resources.m_freeSwap_bytes = 0;
 	}
 	
+	// Net
 	auto nets = net::links();
 	for (auto net : nets)
 	{
 		// Only show ipv4 here, and do not need show lo
 		if (net.ipv4 && net.address != "127.0.0.1")
 		{
-			res.m_ipaddress[net.name]  = net.address;
+			m_resources.m_ipaddress[net.name]  = net.address;
 		}
 	}
 
-	std::lock_guard<std::recursive_mutex> guard(m_mutex);
-	m_resources = res;
-	return res;
+	return m_resources;
 }
 
 uint64_t ResourceCollection::getRssMemory(pid_t pid)

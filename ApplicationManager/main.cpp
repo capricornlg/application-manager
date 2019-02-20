@@ -18,11 +18,11 @@ using namespace std;
 // whether use a dedicate thread for timer event
 #define USE_SEPERATE_TIMER_THREAD false
 
-static std::shared_ptr<Configuration> readConfiguration();
 static std::string                    m_applicationPath;
 static std::shared_ptr<RestHandler>   m_httpHandler;
 static std::shared_ptr<boost::asio::deadline_timer> m_timer;
 void monitorAllApps(const boost::system::error_code &ec);
+static std::shared_ptr<Configuration> readConfiguration();
 
 int main(int argc, char * argv[])
 {
@@ -41,7 +41,8 @@ int main(int argc, char * argv[])
 		m_httpHandler = std::make_shared<RestHandler>(config->getRestListenPort());
 
 		auto apps = config->getApps();
-		auto process = Utility::getProcessList();
+		std::map<std::string, int> process;
+		Process::getSymProcessList(process, nullptr);
 		std::for_each(apps.begin(), apps.end(), [&process](std::vector<std::shared_ptr<Application>>::reference p) {p->attach(process); });
 
 		ResourceCollection::instance()->getHostResource();

@@ -20,6 +20,8 @@ public:
 	void killgroup();
 	void setCgroup(std::string appName,int index, std::shared_ptr<ResourceLimitation>& limit);
 	std::string getuuid();
+	
+	static void getSymProcessList(std::map<std::string, int>& processList, const void* pt = nullptr);
 private:
 	std::shared_ptr<LinuxCgroup> m_cgroup;
 	std::shared_ptr<ResourceLimitation> m_resourceLimit;

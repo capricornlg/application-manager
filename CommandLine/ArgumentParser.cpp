@@ -526,6 +526,7 @@ void ArgumentParser::printApps(web::json::value json, bool reduce)
 		{
 			name += " ";
 		}
+
 		auto mem = GET_JSON_INT_VALUE(jobj, "memory");
 		std::string memStr = "0";
 		if (mem > 0)

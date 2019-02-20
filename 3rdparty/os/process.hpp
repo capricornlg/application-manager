@@ -90,6 +90,17 @@ namespace os {
 			return result;
 		}
 
+		std::list<os::Process> getProcesses() const
+		{
+			std::list<os::Process> result;
+			result.push_back(this->process);
+			for (auto tree : children)
+			{
+				result.merge(tree.getProcesses());
+			}
+			return result;
+		}
+
 		// Checks if the specified pid is contained in this process tree.
 		bool contains(pid_t pid) const
 		{
