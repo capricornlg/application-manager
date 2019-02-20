@@ -59,12 +59,12 @@ std::string Process::getuuid()
 	return m_uuid;
 }
 
-void Process::getSymProcessList(std::map<std::string, int>& processList, void * pt)
+void Process::getSymProcessList(std::map<std::string, int>& processList, const void * pt)
 {
 	const static char fname[] = "Process::getSymProcessList() ";
 
 	std::shared_ptr<os::ProcessTree> ptree;
-	os::ProcessTree* tree;
+	const os::ProcessTree* tree;
 	if (pt == nullptr)
 	{
 		// 1 is linux root process
@@ -79,8 +79,8 @@ void Process::getSymProcessList(std::map<std::string, int>& processList, void * 
 
 	LOG_DBG << fname << "Process: <" << tree->process.command << "> pid: " << tree->process.pid;
 
-	for (auto process : tree->children)
+	for (auto it = tree->children.begin(); it != tree->children.end(); ++it)
 	{
-		getSymProcessList(processList, tree);
+		getSymProcessList(processList, &(*it));
 	}
 }
