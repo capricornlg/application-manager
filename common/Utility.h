@@ -51,7 +51,6 @@ public:
 	virtual ~Utility();
 
 	// OS related
-	static void getProcessList(std::map<std::string, int>&, void* ptree = 0);
 	static std::string getSelfFullPath();
 	static bool isDirExist(std::string path);
 	static bool isFileExist(std::string path);

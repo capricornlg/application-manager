@@ -1,6 +1,7 @@
 #include <thread>
 #include "Process.h"
 #include "../common/Utility.h"
+#include "../3rdparty/os/pstree.hpp"
 #include "LinuxCgroup.h"
 
 Process::Process()
@@ -56,4 +57,30 @@ void Process::setCgroup(std::string appName, int index, std::shared_ptr<Resource
 std::string Process::getuuid()
 {
 	return m_uuid;
+}
+
+void Process::getSymProcessList(std::map<std::string, int>& processList, void * pt)
+{
+	const static char fname[] = "Process::getSymProcessList() ";
+
+	std::shared_ptr<os::ProcessTree> ptree;
+	os::ProcessTree* tree;
+	if (pt == nullptr)
+	{
+		// 1 is linux root process
+		auto ptree = os::pstree(1);
+		tree = ptree.get();
+	}
+	else
+	{
+		tree = (os::ProcessTree*)pt;
+	}
+	processList[tree->process.command] = tree->process.pid;
+
+	LOG_DBG << fname << "Process: <" << tree->process.command << "> pid: " << tree->process.pid;
+
+	for (auto process : tree->children)
+	{
+		getSymProcessList(processList, tree);
+	}
 }

@@ -11,7 +11,6 @@
 #include <errno.h>
 #include <pwd.h>
 #include <unistd.h>
-#include "../3rdparty/os/pstree.hpp"
 #endif
 #include <thread>
 #include <boost/archive/iterators/binary_from_base64.hpp>
@@ -37,31 +36,6 @@ Utility::Utility()
 
 Utility::~Utility()
 {
-}
-
-void Utility::getProcessList(std::map<std::string, int>& processList, void* pt)
-{
-	const static char fname[] = "Utility::getProcessList() ";
-
-	std::shared_ptr<os::ProcessTree> ptree;
-	os::ProcessTree* tree;
-	if (pt == nullptr)
-	{
-		auto ptree = os::pstree(1);
-		tree = ptree.get();
-	}
-	else
-	{
-		tree = (os::ProcessTree*)pt;
-	}
-	processList[tree->process.command] = tree->process.pid;
-
-	LOG_DBG << fname << "Process: <" << tree->process.command << "> pid: " << tree->process.pid;
-
-	for (auto process : tree->children)
-	{
-		getProcessList(processList, tree);
-	}
 }
 
 bool Utility::isNumber(std::string s)
