@@ -68,7 +68,7 @@ void Process::getSymProcessList(std::map<std::string, int>& processList, const v
 	if (pt == nullptr)
 	{
 		// 1 is linux root process
-		auto ptree = os::pstree(1);
+		ptree = os::pstree(1);
 		tree = ptree.get();
 	}
 	else
