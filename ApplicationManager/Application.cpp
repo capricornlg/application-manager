@@ -1,18 +1,8 @@
-#include <iostream>
-#include <mutex>
-#include <algorithm>
-#include <sstream>
-#include <ace/Time_Value.h>
-#include <ace/OS.h>
 #include "Application.h"
-#include "MonitoredProcess.h"
 #include "TimerActionKill.h"
 #include "ResourceCollection.h"
 #include "../common/Utility.h"
 #include "../common/TimeZoneHelper.h"
-#include "Process.h"
-using namespace std;
-
 
 Application::Application()
 	:m_active(NORMAL), m_return(0),m_pid(-1), m_processIndex(0)

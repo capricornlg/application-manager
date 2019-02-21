@@ -1,24 +1,17 @@
 #include "../common/Utility.h"
 #include <string>
-#include <map>
 #include <algorithm>
 #ifdef _WIN32
 #include <process.h>
 #include <Windows.h>
 #else
-#include <dirent.h>
-#include <sys/stat.h>
-#include <errno.h>
 #include <pwd.h>
-#include <unistd.h>
 #endif
 #include <thread>
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
-#include <boost/algorithm/string.hpp>
 
-#include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
@@ -222,23 +215,23 @@ void Utility::initLogging()
 
 void Utility::setLogLevel(const std::string & level)
 {
-	std::map<std::string, Priority::PriorityLevel> levelMap = {
-		{ "NOTSET", Priority::NOTSET },
-		{ "DEBUG", Priority::DEBUG },
-		{ "INFO", Priority::INFO },
-		{ "NOTICE", Priority::NOTICE },
-		{ "WARN", Priority::WARN },
-		{ "ERROR", Priority::ERROR },
-		{ "CRIT", Priority::CRIT },
-		{ "ALERT", Priority::ALERT },
-		{ "FATAL", Priority::FATAL },
-		{ "EMERG", Priority::EMERG }
+	std::map<std::string, log4cpp::Priority::PriorityLevel> levelMap = {
+		{ "NOTSET", log4cpp::Priority::NOTSET },
+		{ "DEBUG", log4cpp::Priority::DEBUG },
+		{ "INFO", log4cpp::Priority::INFO },
+		{ "NOTICE", log4cpp::Priority::NOTICE },
+		{ "WARN", log4cpp::Priority::WARN },
+		{ "ERROR", log4cpp::Priority::ERROR },
+		{ "CRIT", log4cpp::Priority::CRIT },
+		{ "ALERT", log4cpp::Priority::ALERT },
+		{ "FATAL", log4cpp::Priority::FATAL },
+		{ "EMERG", log4cpp::Priority::EMERG }
 	};
 
 	if (level.length()> 0 && levelMap.find(level) != levelMap.end())
 	{
 		LOG_INF << "Setting log level to " << level;
-		Category::getRoot().setPriority(levelMap[level]);
+		log4cpp::Category::getRoot().setPriority(levelMap[level]);
 	}
 }
 

@@ -1,9 +1,3 @@
-
-#include <mutex>
-#include <iomanip>
-#include <time.h>
-#include <chrono>
-#include <ace/Time_Value.h>
 #include "ApplicationShortRun.h"
 #include "../common/Utility.h"
 #include "../common/TimeZoneHelper.h"

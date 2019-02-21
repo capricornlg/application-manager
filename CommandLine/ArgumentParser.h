@@ -14,6 +14,9 @@ using namespace concurrency::streams;       // Asynchronous streams
 using namespace std;
 namespace po = boost::program_options;
 
+//////////////////////////////////////////////////////////////////////////
+// Command Line arguments parse and request/print
+//////////////////////////////////////////////////////////////////////////
 class ArgumentParser
 {
 public:

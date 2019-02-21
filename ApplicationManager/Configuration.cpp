@@ -1,22 +1,8 @@
-
-#include <mutex>
-#include <string>
-#include <ace/OS.h>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-
-#include <jsoncpp/json/config.h>
-#include <jsoncpp/json/value.h>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
-
 #include "Configuration.h"
-#include "cpprest/http_msg.h"
+#include <jsoncpp/json/reader.h>
 #include "../common/Utility.h"
-#include "ApplicationShortRun.h"
 #include "ApplicationPeriodRun.h"
 
-using namespace std;
 #define DEFAULT_SCHEDULE_INTERVAL 5
 
 std::shared_ptr<Configuration> Configuration::m_instance = nullptr;
@@ -238,7 +224,7 @@ std::shared_ptr<Application> Configuration::addApp(const web::json::value& jsonA
 	return app;
 }
 
-void Configuration::removeApp(const string& appName)
+void Configuration::removeApp(const std::string& appName)
 {
 	std::lock_guard<std::recursive_mutex> guard(m_mutex);
 	// Update in-memory app
@@ -321,7 +307,7 @@ std::shared_ptr<Application> Configuration::parseApp(web::json::value jsonApp)
 	return app;
 }
 
-std::string Configuration::prettyJson(const string & jsonStr)
+std::string Configuration::prettyJson(const std::string & jsonStr)
 {
 	Json::Reader jsonReader;
 	Json::Value root;
@@ -331,7 +317,7 @@ std::string Configuration::prettyJson(const string & jsonStr)
 	}
 	else
 	{
-		string msg = "Failed to parse json : " + jsonStr;
+		std::string msg = "Failed to parse json : " + jsonStr;
 		LOG_ERR << msg;
 		throw std::invalid_argument(msg);
 	}

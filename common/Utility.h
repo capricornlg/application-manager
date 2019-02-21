@@ -1,21 +1,13 @@
-
 #ifndef UTILITY_H
 #define UTILITY_H
 
 #include <string>
-#include <cstring>
 #include <map>
 #include <chrono>
 #include <cpprest/json.h>
 
 #include <log4cpp/Category.hh>
-#include <log4cpp/Appender.hh>
-#include <log4cpp/FileAppender.hh>
 #include <log4cpp/Priority.hh>
-#include <log4cpp/PatternLayout.hh>
-#include <log4cpp/RollingFileAppender.hh>
-
-using namespace log4cpp;
 
 #define LOG_TRC    log4cpp::Category::getRoot() << log4cpp::Priority::TRACE
 #define LOG_DBG    log4cpp::Category::getRoot() << log4cpp::Priority::DEBUG
