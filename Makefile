@@ -8,6 +8,7 @@ RELEASE_DIR=./release
 INSTALL_DIR=/opt/${PACKAGE_NAME}
 TMP_DIR=${RELEASE_DIR}${INSTALL_DIR}
 TMP_LIB_DIR=${TMP_DIR}/lib64
+LDPATH=$(LD_LIBRARY_PATH):/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/
 
 all:
 	echo ${BUILD_TAG}
@@ -30,21 +31,21 @@ build_dir:
 	cp ./script/server.key ${TMP_DIR}/
 	chmod +x ${TMP_DIR}/script/*.sh
 	dos2unix ${TMP_DIR}/script/*.sh
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep boost | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./CommandLine/appc | grep boost | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep jsoncpp | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep ACE | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep cpprest | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep ssl | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep crypto | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
-	env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib64:/usr/local/lib/:/usr/local/ace/lib/ \
+	env LD_LIBRARY_PATH=${LDPATH} \
 	ldd ./ApplicationManager/appsvc | grep log4cpp | awk '{cmd="cp "$$3" ${TMP_LIB_DIR}";print(cmd);system(cmd)}'
 	
 deb:
